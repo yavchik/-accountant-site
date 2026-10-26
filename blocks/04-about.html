@@ -181,6 +181,26 @@
       max-width: 36rem;
     }
 
+    /* Виділений факт у кроці */
+    .abt__fact {
+      display: grid;
+      gap: var(--sp-1);
+      max-width: 36rem;
+      margin-top: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+      border: var(--hairline) solid var(--line-strong);
+      border-left: var(--stroke) solid var(--accent);
+      border-radius: var(--r-xs);
+      background: var(--bg-raised);
+    }
+    .abt__fact-value {
+      color: var(--accent);
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-bold);
+      line-height: 1.2;
+    }
+    .abt__fact-text { color: var(--fg-muted); font-size: var(--fs-small); }
+
     /* Фінальний крок — компанія */
     .abt__step--now .abt__dot { border-color: var(--accent); }
     .abt__step--now .abt__step-title { color: var(--accent); }
@@ -314,7 +334,7 @@
 
             <li class="abt__step abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
-              <p class="t-label abt__step-label"><span class="abt__step-num">01</span> · Київ</p>
+              <p class="t-label abt__step-label"><span class="abt__step-num">01</span> · Київ · Спецторг</p>
               <h3 class="abt__step-title">Перші документи</h3>
               <p class="abt__step-text">Ще під час навчання на бухгалтера почала працювати оператором: первинні документи для клієнтів, податкові накладні, акти звірки, довіреності.</p>
             </li>
@@ -326,13 +346,13 @@
             </li>
             <li class="abt__step abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
-              <p class="t-label abt__step-label"><span class="abt__step-num">03</span> · Магазин</p>
+              <p class="t-label abt__step-label"><span class="abt__step-num">03</span> · Спецторг</p>
               <h3 class="abt__step-title">Головний бухгалтер</h3>
               <p class="abt__step-text">Повернулась у магазин, з якого починала, вже головним бухгалтером.</p>
             </li>
             <li class="abt__step abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
-              <p class="t-label abt__step-label"><span class="abt__step-num">04</span> · Мережа аптек</p>
+              <p class="t-label abt__step-label"><span class="abt__step-num">04</span> · Фоззі Фарм</p>
               <h3 class="abt__step-title">Касова дисципліна всієї мережі</h3>
               <p class="abt__step-text">Помітила, що звіти після зміни виправляти важко або вже неможливо. Тож почала попереджати помилки: проводила навчання для фармацевтів, писала інструкції, презентації й шпаргалки для новачків.</p>
             </li>
@@ -347,6 +367,7 @@
               <p class="t-label abt__step-label"><span class="abt__step-num">06</span> · Дистрибуційна компанія</p>
               <h3 class="abt__step-title">Фінансова директорка</h3>
               <p class="abt__step-text">Прийшла в момент продажу бізнесу, переносу бази й переїзду складу. Побудувала фінансовий відділ, змінила документообіг і вибудувала систему контролю.</p>
+              <p class="abt__fact"><span class="abt__fact-value t-num">1,5 млн → 10–12 тис грн</span><span class="abt__fact-text">нестачі на складі на місяць після змін у документообігу та команді</span></p>
             </li>
             <li class="abt__step abt__step--now abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
