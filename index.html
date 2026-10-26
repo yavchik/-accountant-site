@@ -1,0 +1,1131 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Згенеровано з blocks/ скриптом tools/build.py — правте блоки, а не цей файл. -->
+  <title>Happy Finance — бухгалтерський супровід ФОП і ТОВ</title>
+  <meta name="description" content="Бухгалтерський супровід ФОП і ТОВ: облік, звітність, податки, кадри й фінансовий моніторинг у банку. Вартість після консультації.">
+  <meta name="theme-color" content="#121420">
+  <link rel="canonical" href="https://yavchik.github.io/-accountant-site/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="uk_UA">
+  <meta property="og:site_name" content="Happy Finance">
+  <meta property="og:title" content="Happy Finance — бухгалтерський супровід ФОП і ТОВ">
+  <meta property="og:description" content="Бухгалтерський супровід ФОП і ТОВ: облік, звітність, податки, кадри й фінансовий моніторинг у банку. Вартість після консультації.">
+  <meta property="og:url" content="https://yavchik.github.io/-accountant-site/">
+  <meta property="og:image" content="https://yavchik.github.io/-accountant-site/assets/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Happy Finance. Бухгалтерія — це ваш спокій.">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/images/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+
+  <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/site.css">
+
+  <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="js/config.js" defer></script>
+  <script src="js/contacts.js" defer></script>
+  <script src="js/site.js" defer></script>
+  <script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "FAQPage",
+"mainEntity": [
+  { "@type": "Question", "name": "Скільки коштують ваші послуги?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Вартість залежить від вашої ситуації, тому ми називаємо її після консультації. Розкажіть про свій бізнес, і ми запропонуємо формат супроводу та ціну." } },
+  { "@type": "Question", "name": "Я тільки відкриваю ФОП. З чого почати?",
+    "acceptedAnswer": { "@type": "Answer", "text": "З консультації. Ми підберемо КВЕДи й оптимальну систему оподаткування, а потім зареєструємо ФОП онлайн, без вашої участі." } },
+  { "@type": "Question", "name": "Ви працюєте з ТОВ на загальній системі і з ПДВ?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Так. Ведемо ТОВ на єдиному податку і на загальній системі, з ПДВ і без, зокрема з експортом та імпортом. Реєструємо податкові накладні й подаємо звіти з ПДВ." } },
+  { "@type": "Question", "name": "Банк просить пояснення щодо операцій. Допоможете?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Так. Ми супроводжуємо фінансовий моніторинг у банку будь-якої складності." } },
+  { "@type": "Question", "name": "Податкова зупинила реєстрацію податкової накладної. Що робити?",
+    "acceptedAnswer": { "@type": "Answer", "text": "Напишіть нам. Ми займаємось розблокуванням податкових накладних і розберемо вашу ситуацію." } }
+]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти до змісту</a>
+
+  <header class="hdr" data-hdr data-theme="dark">
+    <div class="hdr__bg" aria-hidden="true"></div>
+
+    <div class="container hdr__inner">
+      <a class="hdr__logo" href="#top" aria-label="Happy Finance, на початок сторінки">
+        <img class="hdr__logo-img hdr__logo-img--light" src="assets/images/logo-inline-white.svg" width="196" height="16" alt="">
+        <img class="hdr__logo-img hdr__logo-img--dark" src="assets/images/logo-inline-navy.svg" width="196" height="16" alt="">
+      </a>
+
+      <nav class="hdr__nav" aria-label="Основна навігація">
+        <ul class="hdr__list" role="list">
+          <li><a class="hdr__link" href="#services">Послуги</a></li>
+          <li><a class="hdr__link" href="#about">Про нас</a></li>
+          <li><a class="hdr__link" href="#process">Як працюємо</a></li>
+          <li><a class="hdr__link" href="#faq">FAQ</a></li>
+          <li><a class="hdr__link" href="#contact">Контакти</a></li>
+        </ul>
+        <span class="hdr__indicator" aria-hidden="true"></span>
+      </nav>
+
+      <a class="btn btn--primary btn--sm hdr__cta" href="#match">Підібрати послугу</a>
+
+      <button class="hdr__burger" type="button" aria-expanded="false" aria-controls="hdr-menu" aria-label="Відкрити меню">
+        <span class="hdr__burger-line"></span>
+        <span class="hdr__burger-line"></span>
+      </button>
+    </div>
+
+    <div class="hdr__menu" id="hdr-menu" data-theme="dark" aria-label="Меню">
+      <div class="hdr__menu-grid" aria-hidden="true"></div>
+      <div class="container hdr__menu-inner">
+        <ul class="hdr__menu-list" role="list">
+          <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>
+          <li class="hdr__menu-item" style="--i:1"><a class="hdr__menu-link" href="#about"><span class="t-label hdr__menu-num">02</span>Про нас</a></li>
+          <li class="hdr__menu-item" style="--i:2"><a class="hdr__menu-link" href="#process"><span class="t-label hdr__menu-num">03</span>Як працюємо</a></li>
+          <li class="hdr__menu-item" style="--i:3"><a class="hdr__menu-link" href="#faq"><span class="t-label hdr__menu-num">04</span>FAQ</a></li>
+          <li class="hdr__menu-item" style="--i:4"><a class="hdr__menu-link" href="#contact"><span class="t-label hdr__menu-num">05</span>Контакти</a></li>
+        </ul>
+        <div class="hdr__menu-foot" style="--i:5">
+          <a class="btn btn--primary btn--block" href="#match">Підібрати послугу</a>
+          <ul class="hdr__contacts" role="list">
+            <li>Телефон: <span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></li>
+            <li>Telegram / Viber: <span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></li>
+            <li>Email: <span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+
+<main id="main">
+
+  <section class="hero" id="top" data-theme="dark" data-hero aria-labelledby="hero-title">
+    <div class="hero__pin">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__grid"></div>
+        <div class="hero__glow"></div>
+      </div>
+
+      <div class="container hero__inner">
+        <div class="hero__content">
+          <p class="t-label hero__label hero__fade" style="--i:0">Бухгалтерський супровід ФОП і ТОВ</p>
+          <h1 class="hero__title" id="hero-title">
+            <span class="hero__line"><span class="hero__line-in" style="--i:0">Бухгалтерія&nbsp;—</span></span>
+            <span class="hero__line"><span class="hero__line-in" style="--i:1">це ваш</span></span>
+            <span class="hero__line"><span class="hero__line-in hero__line-in--accent" style="--i:2">спокій</span></span>
+          </h1>
+          <p class="t-lead hero__lead hero__fade" style="--i:1">Ведемо облік, звітність і кадри, щоб ви бачили цифри свого бізнесу і займалися його розвитком.</p>
+          <div class="hero__actions hero__fade" style="--i:2">
+            <a class="btn btn--primary btn--lg" href="#match">
+              Підібрати послугу
+              <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn--outline btn--lg" href="#services">Послуги</a>
+          </div>
+          <p class="t-label hero__meta hero__fade" style="--i:3">
+            <span class="hero__meta-strong">7 років</span>
+            <span class="hero__meta-dot" aria-hidden="true"></span>
+            <span>клієнти приходять за рекомендаціями</span>
+          </p>
+        </div>
+
+        <!-- Сцена декоративна: для скрінрідерів її немає -->
+        <div class="hero__stage" aria-hidden="true">
+          <p class="t-label hero__state">
+            <span class="hero__state-swap">
+              <span class="hero__state-word hero__state-word--chaos">01 / Хаос</span>
+              <span class="hero__state-word hero__state-word--order">02 / Порядок</span>
+            </span>
+            <span>Звіт</span>
+          </p>
+
+          <div class="hero__scene">
+            <div class="hero__frame">
+              <span class="hero__frame-line hero__frame-line--t"></span>
+              <span class="hero__frame-line hero__frame-line--r"></span>
+              <span class="hero__frame-line hero__frame-line--b"></span>
+              <span class="hero__frame-line hero__frame-line--l"></span>
+              <span class="hero__frame-corner hero__frame-corner--tl"></span>
+              <span class="hero__frame-corner hero__frame-corner--br"></span>
+            </div>
+
+            <div class="hero__board">
+              <!-- A · Акт (1×2) -->
+              <div class="hero__piece" style="--c:0;--r:0;--w:1;--h:2" data-x="-0.10" data-y="-0.03" data-z="120" data-rx="10" data-ry="-18" data-rz="-14">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag hero__tag--accent">Акт</span>
+                  <span class="hero__bar hero__bar--strong" style="--bw:70%"></span>
+                  <div class="hero__bars">
+                    <span class="hero__bar"></span><span class="hero__bar" style="--bw:85%"></span><span class="hero__bar" style="--bw:92%"></span><span class="hero__bar" style="--bw:60%"></span>
+                    <span class="hero__bar"></span><span class="hero__bar" style="--bw:78%"></span><span class="hero__bar" style="--bw:88%"></span>
+                  </div>
+                  <span class="hero__bar hero__bar--strong" style="--bw:40%;margin-top:auto"></span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- B · Таблиця (2×1) -->
+              <div class="hero__piece" style="--c:1;--r:0;--w:2;--h:1" data-x="0.12" data-y="-0.30" data-z="-60" data-rx="-12" data-ry="14" data-rz="8">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag">Облік · таблиця</span>
+                  <div class="hero__table">
+                    <span class="hero__cell hero__cell--head"></span><span class="hero__cell hero__cell--head"></span><span class="hero__cell hero__cell--head"></span><span class="hero__cell hero__cell--head"></span>
+                    <span class="hero__cell"></span><span class="hero__cell hero__cell--accent"></span><span class="hero__cell"></span><span class="hero__cell"></span>
+                    <span class="hero__cell"></span><span class="hero__cell"></span><span class="hero__cell"></span><span class="hero__cell hero__cell--accent"></span>
+                  </div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- C · Гривня (1×1) -->
+              <div class="hero__piece" style="--c:3;--r:0;--w:1;--h:1" data-x="0.10" data-y="-0.08" data-z="180" data-rx="18" data-ry="22" data-rz="18">
+                <div class="hero__float"><div class="hero__card hero__card--money">
+                  <span class="hero__tag">Податки</span>
+                  <span class="hero__money-sign">₴</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- D · Виписка (2×1) -->
+              <div class="hero__piece" style="--c:1;--r:1;--w:2;--h:1" data-x="-0.08" data-y="0.06" data-z="40" data-rx="8" data-ry="-10" data-rz="-6">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag">Виписка банку</span>
+                  <div class="hero__rows">
+                    <div class="hero__row"><span class="hero__bar" style="--bw:45%"></span><span class="hero__bar hero__bar--strong" style="--bw:18%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:55%"></span><span class="hero__bar hero__bar--accent" style="--bw:14%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:38%"></span><span class="hero__bar hero__bar--strong" style="--bw:22%"></span></div>
+                  </div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- E · Чек ПРРО (1×2) -->
+              <div class="hero__piece" style="--c:3;--r:1;--w:1;--h:2" data-x="0.08" data-y="0.16" data-z="90" data-rx="-10" data-ry="24" data-rz="12">
+                <div class="hero__float"><div class="hero__card hero__card--receipt" data-theme="light">
+                  <span class="hero__tag">Чек · ПРРО</span>
+                  <div class="hero__bars">
+                    <span class="hero__bar" style="--bw:80%"></span><span class="hero__bar" style="--bw:60%"></span>
+                  </div>
+                  <div class="hero__dots"></div>
+                  <div class="hero__rows">
+                    <div class="hero__row"><span class="hero__bar" style="--bw:50%"></span><span class="hero__bar" style="--bw:22%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:40%"></span><span class="hero__bar" style="--bw:22%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:58%"></span><span class="hero__bar" style="--bw:22%"></span></div>
+                  </div>
+                  <div class="hero__dots"></div>
+                  <div class="hero__total"><span>Σ</span><span>₴</span></div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- F · Декларація (1×2) -->
+              <div class="hero__piece" style="--c:0;--r:2;--w:1;--h:2" data-x="-0.06" data-y="0.18" data-z="-40" data-rx="14" data-ry="-16" data-rz="9">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag hero__tag--accent">Декларація</span>
+                  <span class="hero__bar hero__bar--strong" style="--bw:80%"></span>
+                  <div class="hero__bars">
+                    <div class="hero__checkbox"><span class="hero__box hero__box--on"></span><span class="hero__bar" style="--bw:70%"></span></div>
+                    <div class="hero__checkbox"><span class="hero__box"></span><span class="hero__bar" style="--bw:55%"></span></div>
+                    <div class="hero__checkbox"><span class="hero__box hero__box--on"></span><span class="hero__bar" style="--bw:80%"></span></div>
+                    <div class="hero__checkbox"><span class="hero__box"></span><span class="hero__bar" style="--bw:62%"></span></div>
+                  </div>
+                  <span class="hero__bar" style="--bw:50%;margin-top:auto"></span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- G · Графік (2×1) -->
+              <div class="hero__piece" style="--c:1;--r:2;--w:2;--h:1" data-x="0.14" data-y="0.22" data-z="140" data-rx="-16" data-ry="-8" data-rz="-10">
+                <div class="hero__float"><div class="hero__card">
+                  <span class="hero__tag">Дохід · місяці</span>
+                  <div class="hero__chart">
+                    <span class="hero__chart-bar" style="--bh:38%"></span><span class="hero__chart-bar" style="--bh:52%"></span><span class="hero__chart-bar" style="--bh:46%"></span>
+                    <span class="hero__chart-bar" style="--bh:64%"></span><span class="hero__chart-bar" style="--bh:58%"></span><span class="hero__chart-bar hero__chart-bar--accent" style="--bh:82%"></span>
+                  </div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- H · Нотатка (1×1) -->
+              <div class="hero__piece" style="--c:1;--r:3;--w:1;--h:1" data-x="-0.12" data-y="0.10" data-z="200" data-rx="6" data-ry="20" data-rz="-22">
+                <div class="hero__float"><div class="hero__card hero__card--note">
+                  <span class="hero__tag" style="color:inherit">Нагадування</span>
+                  <span class="hero__note-text">до 20&#8209;го!</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- I · Печатка (1×1) -->
+              <div class="hero__piece" style="--c:2;--r:3;--w:1;--h:1" data-x="0.06" data-y="0.10" data-z="-100" data-rx="20" data-ry="-14" data-rz="28">
+                <div class="hero__float"><div class="hero__card hero__card--stamp" data-theme="light">
+                  <span class="hero__stamp">Прийнято</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- J · Файл (1×1) -->
+              <div class="hero__piece" style="--c:3;--r:3;--w:1;--h:1" data-x="0.10" data-y="0.04" data-z="60" data-rx="-14" data-ry="-20" data-rz="-16">
+                <div class="hero__float"><div class="hero__card hero__card--file">
+                  <span class="hero__file-icon"></span>
+                  <span class="hero__file-ext">.xlsx</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- Повідомлення: зникають, коли все впорядковано -->
+              <div class="hero__piece hero__piece--bubble" style="--bx:46%;--by:6%" data-x="0.04" data-y="-0.12" data-z="230" data-rx="0" data-ry="-12" data-rz="-4">
+                <div class="hero__float"><p class="hero__bubble"><span class="hero__bubble-meta">клієнт · 21:47</span>Де виписка за березень?</p></div>
+              </div>
+              <div class="hero__piece hero__piece--bubble" style="--bx:2%;--by:42%" data-x="-0.04" data-y="0.02" data-z="170" data-rx="6" data-ry="14" data-rz="5">
+                <div class="hero__float"><p class="hero__bubble"><span class="hero__bubble-meta">клієнт · 08:12</span>Коли подавати декларацію?</p></div>
+              </div>
+              <div class="hero__piece hero__piece--bubble" style="--bx:50%;--by:66%" data-x="0.06" data-y="0.14" data-z="250" data-rx="-6" data-ry="-16" data-rz="-6">
+                <div class="hero__float"><p class="hero__bubble"><span class="hero__bubble-meta">клієнт · 19:30</span>Прийшов лист з податкової</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="t-label hero__hint" aria-hidden="true"><span class="hero__hint-line"></span>Гортайте</p>
+    </div>
+  </section>
+  
+
+  <section class="svc" id="services" data-theme="light" data-svc aria-labelledby="svc-title">
+    <div class="container">
+
+      <div class="svc__head svc__reveal">
+        <p class="t-label svc__label">Послуги</p>
+        <h2 class="svc__title" id="svc-title">Що беремо на себе</h2>
+        <p class="svc__lead">Оберіть форму бізнесу.
+          <span class="svc__lead-map">Наведіть мишку або натисніть на вузол карти, і побачите, що входить у послугу.</span>
+          <span class="svc__lead-list">Натисніть на послугу, щоб побачити, що в неї входить.</span>
+        </p>
+      </div>
+
+      <div class="svc__layout">
+        <div class="svc__panels">
+          <div class="svc__tabs" role="tablist" aria-label="Форма бізнесу" data-active="0">
+            <span class="svc__tab-pill" aria-hidden="true"></span>
+            <button class="svc__tab" type="button" role="tab" id="svc-tab-fop" aria-selected="true" aria-controls="svc-panel-fop">ФОП <span class="svc__tab-count">6</span></button>
+            <button class="svc__tab" type="button" role="tab" id="svc-tab-tov" aria-selected="false" aria-controls="svc-panel-tov" tabindex="-1">ТОВ <span class="svc__tab-count">8</span></button>
+          </div>
+
+          <!-- ===== ФОП ===== -->
+          <div class="svc__map" id="svc-panel-fop" role="tabpanel" aria-labelledby="svc-tab-fop">
+            <div class="svc__stage">
+              <svg class="svc__lines" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <ellipse class="svc__orbit" cx="50" cy="35" rx="34" ry="24"/>
+                <g class="svc__spokes"></g>
+              </svg>
+              <p class="svc__core" aria-hidden="true"><span class="svc__core-small">Ваш</span><span class="svc__core-big">ФОП</span></p>
+              <ol class="svc__nodes" role="list">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-1" id="svc-fop-1-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">01</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Відкриття</span><span class="svc__node-full">Відкриття ФОП</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-1" role="region" aria-labelledby="svc-fop-1-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 01 / 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-1-title">Відкриття ФОП</h3>
+                  <p class="svc__for">Для тих, хто тільки починає власну справу</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Підбір КВЕДів</li>
+                      <li class="svc__item">Підбір оптимальної системи оподаткування</li>
+                      <li class="svc__item">Онлайн-реєстрація ФОП без вашої участі</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-2" id="svc-fop-2-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">02</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Щомісячний супровід</span><span class="svc__node-full">Щомісячний бухгалтерський супровід</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-2" role="region" aria-labelledby="svc-fop-2-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 02 / 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-2-title">Щомісячний бухгалтерський супровід</h3>
+                  <p class="svc__for">Для ФОП, які хочуть забути про рутину й дедлайни</p>
+                  <p class="t-label svc__info-label">Що входить · 12 пунктів</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Аудит особистого кабінету в податковій</li>
+                      <li class="svc__item">Реквізити для оплати податків</li>
+                      <li class="svc__item">Контроль своєчасності та правильності сплати податків</li>
+                      <li class="svc__item">Щомісячна перевірка банківської виписки</li>
+                      <li class="svc__item">Контроль ліміту доходу за обраною системою оподаткування</li>
+                      <li class="svc__item">Заповнення книги обліку доходів</li>
+                      <li class="svc__item">Онлайн-зміна КВЕДів за потреби</li>
+                      <li class="svc__item">Реєстрація ПРРО і віддалена робота в ньому</li>
+                      <li class="svc__item">Первинні документи: рахунки, акти, видаткові накладні</li>
+                      <li class="svc__item">Шаблони договорів надання послуг і реалізації продукції</li>
+                      <li class="svc__item">Звіти в податкову</li>
+                      <li class="svc__item">Акти звірки з постачальниками та покупцями</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-3" id="svc-fop-3-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">03</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Фінансовий облік</span><span class="svc__node-full">Фінансовий супровід</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-3" role="region" aria-labelledby="svc-fop-3-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 03 / 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-3-title">Фінансовий супровід</h3>
+                  <p class="svc__for">Для тих, хто росте і хоче керувати бізнесом через цифри</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Автоматизація обліку в CRM-системах</li>
+                      <li class="svc__item">Розроблення структури компанії та бізнес-процесів</li>
+                      <li class="svc__item">Фінансові документи під ваш запит: первинні документи обліку або фінансові звіти</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-4" id="svc-fop-4-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">04</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Кадри</span><span class="svc__node-full">Кадровий облік</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-4" role="region" aria-labelledby="svc-fop-4-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 04 / 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-4-title">Кадровий облік</h3>
+                  <p class="svc__for">Для ФОП з працівниками</p>
+                  <p class="t-label svc__info-label">Що входить · 7 пунктів</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Прийняття на роботу, зокрема під гранти</li>
+                      <li class="svc__item">Трудові договори</li>
+                      <li class="svc__item">Нарахування зарплати</li>
+                      <li class="svc__item">Табель обліку робочого часу</li>
+                      <li class="svc__item">Лікарняні та декретні</li>
+                      <li class="svc__item">Звільнення</li>
+                      <li class="svc__item">Звіти</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-5" id="svc-fop-5-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">05</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Фінмоніторинг</span><span class="svc__node-full">Фінансовий моніторинг у банку</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-5" role="region" aria-labelledby="svc-fop-5-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 05 / 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-5-title">Фінансовий моніторинг у банку</h3>
+                  <p class="svc__for">Коли банк просить пояснити операції або надати документи</p>
+                  <p class="t-label svc__info-label">Що входить · 1 пункт</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Супровід фінансового моніторингу в банку будь-якої складності</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-6" id="svc-fop-6-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">06</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Закриття</span><span class="svc__node-full">Закриття ФОП</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-6" role="region" aria-labelledby="svc-fop-6-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 06 / 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-6-title">Закриття ФОП</h3>
+                  <p class="svc__for">Коли справу завершено або ви змінюєте формат роботи</p>
+                  <p class="t-label svc__info-label">Що входить · 1 пункт</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Супровід закриття ФОП</li>
+                  </ul>
+                </div></div>
+              </li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- ===== ТОВ ===== -->
+          <div class="svc__map" id="svc-panel-tov" role="tabpanel" aria-labelledby="svc-tab-tov">
+            <div class="svc__stage">
+              <svg class="svc__lines" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <ellipse class="svc__orbit" cx="50" cy="35" rx="34" ry="24"/>
+                <g class="svc__spokes"></g>
+              </svg>
+              <p class="svc__core" aria-hidden="true"><span class="svc__core-small">Ваше</span><span class="svc__core-big">ТОВ</span></p>
+              <ol class="svc__nodes" role="list">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-1" id="svc-tov-1-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">01</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Відкриття</span><span class="svc__node-full">Відкриття ТОВ</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-1" role="region" aria-labelledby="svc-tov-1-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 01 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-1-title">Відкриття ТОВ</h3>
+                  <p class="svc__for">Для тих, хто запускає компанію</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Підбір КВЕДів</li>
+                      <li class="svc__item">Підбір оптимальної системи оподаткування</li>
+                      <li class="svc__item">Онлайн-реєстрація за модельним статутом</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-2" id="svc-tov-2-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">02</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Щомісячний супровід</span><span class="svc__node-full">Щомісячний повний супровід</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-2" role="region" aria-labelledby="svc-tov-2-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 02 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-2-title">Щомісячний повний супровід</h3>
+                  <p class="svc__for">Для компаній на будь-якій системі оподаткування</p>
+                  <p class="t-label svc__info-label">Що входить · 7 пунктів</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Єдиний податок або загальна система оподаткування</li>
+                      <li class="svc__item">З ПДВ і без ПДВ, експорт та імпорт</li>
+                      <li class="svc__item">Первинні документи: рахунки, видаткові накладні, акти надання послуг, договори, ТТН, ПРРО, акти звірки</li>
+                      <li class="svc__item">Клієнт-банк: оформлення платежів і проведення в програмі</li>
+                      <li class="svc__item">Проведення первинних документів усіх господарських операцій у програмі</li>
+                      <li class="svc__item">Контроль взаєморозрахунків</li>
+                      <li class="svc__item">Контроль роботи працівників з документами</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-3" id="svc-tov-3-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">03</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">ПДВ</span><span class="svc__node-full">ПДВ</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-3" role="region" aria-labelledby="svc-tov-3-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 03 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-3-title">ПДВ</h3>
+                  <p class="svc__for">Для платників ПДВ</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Реєстрація податкових накладних</li>
+                      <li class="svc__item">Розблокування податкових накладних</li>
+                      <li class="svc__item">Звіти з ПДВ</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-4" id="svc-tov-4-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">04</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Кадри</span><span class="svc__node-full">Кадровий облік</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-4" role="region" aria-labelledby="svc-tov-4-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 04 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-4-title">Кадровий облік</h3>
+                  <p class="svc__for">Для компаній з командою</p>
+                  <p class="t-label svc__info-label">Що входить · 7 пунктів</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Прийняття на роботу, зокрема під гранти</li>
+                      <li class="svc__item">Трудові договори</li>
+                      <li class="svc__item">Нарахування зарплати</li>
+                      <li class="svc__item">Табель обліку робочого часу</li>
+                      <li class="svc__item">Лікарняні та декретні</li>
+                      <li class="svc__item">Звільнення</li>
+                      <li class="svc__item">Звіти</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-5" id="svc-tov-5-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">05</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Звітність</span><span class="svc__node-full">Звітність</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-5" role="region" aria-labelledby="svc-tov-5-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 05 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-5-title">Звітність</h3>
+                  <p class="svc__for">Щоб усі звіти подавались вчасно</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Щомісячні, щоквартальні та щорічні звіти в податкову</li>
+                      <li class="svc__item">Звіти до статистики</li>
+                      <li class="svc__item">Звіти до ПФУ</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-6" id="svc-tov-6-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">06</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Управлінський облік</span><span class="svc__node-full">Управлінський облік для власника</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-6" role="region" aria-labelledby="svc-tov-6-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 06 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-6-title">Управлінський облік для власника</h3>
+                  <p class="svc__for">Для власників, яким потрібні цифри для рішень</p>
+                  <p class="t-label svc__info-label">Що входить · 4 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Звіти P&amp;L, Cashflow, Balance</li>
+                      <li class="svc__item">Бланки звітів для контролю й управління підрозділами</li>
+                      <li class="svc__item">Аудит бізнес-процесів у команді</li>
+                      <li class="svc__item">Пошук проблемних точок, виправлення та оптимізація процесів</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-7" id="svc-tov-7-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">07</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Фінансова система</span><span class="svc__node-full">Ревізія і побудова фінансової системи</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-7" role="region" aria-labelledby="svc-tov-7-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 07 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-7-title">Ревізія і побудова фінансової системи</h3>
+                  <p class="svc__for">Коли потрібна прозорість у фінвідділі та документах</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Ревізія роботи фінансового відділу та бухгалтерського обліку</li>
+                      <li class="svc__item">Побудова організаційної структури компанії</li>
+                      <li class="svc__item">Документообіг і точки контролю для власника під реалії вашої компанії</li>
+                  </ul>
+                </div></div>
+              </li>
+
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-8" id="svc-tov-8-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">08</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Навчання</span><span class="svc__node-full">Навчання бухгалтерів і фінансистів</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-8" role="region" aria-labelledby="svc-tov-8-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 08 / 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-8-title">Навчання бухгалтерів і фінансистів</h3>
+                  <p class="svc__for">Для вашої команди</p>
+                  <p class="t-label svc__info-label">Що входить · 1 пункт</p>
+                  <ul class="svc__items" role="list">
+                      <li class="svc__item">Підвищення кваліфікації бухгалтерів і фінансистів</li>
+                  </ul>
+                </div></div>
+              </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель опису: у режимі карти JS переносить сюди вміст вузлів -->
+        <div class="svc__detail" data-svc-detail></div>
+
+        <aside class="svc__aside svc__reveal" aria-labelledby="svc-card-title">
+          <div class="svc__card">
+            <p class="t-label svc__card-label">Підбір</p>
+            <h3 class="svc__card-title" id="svc-card-title">Не знаєте, що обрати?</h3>
+            <p class="svc__card-text">Дайте відповідь на кілька коротких питань, і ми підкажемо, який формат супроводу вам підходить.</p>
+            <a class="btn btn--primary btn--block" href="#match">
+              Підібрати послугу
+              <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <p class="t-small svc__price"><span class="svc__price-sign" aria-hidden="true">₴</span>Вартість після консультації</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+  
+
+  <section class="abt" id="about" data-theme="dark" data-abt aria-labelledby="abt-title">
+    <div class="container">
+      <div class="abt__layout">
+
+        <div class="abt__person abt__reveal">
+          <p class="t-label abt__label">Про нас</p>
+          <!-- [ПЛЕЙСХОЛДЕР] Коли буде фото: замінити блок на
+               <img class="abt__portrait" src="assets/images/maria.webp" width="840" height="1050" alt="Марія Панченко" loading="lazy"> -->
+          <div class="abt__portrait" role="img" aria-label="Місце для фото Марії Панченко">
+            <span class="abt__portrait-grid" aria-hidden="true"></span>
+            <span class="abt__portrait-corner" aria-hidden="true"></span>
+            <span class="abt__initials" aria-hidden="true">МП</span>
+            <span class="placeholder abt__portrait-note" aria-hidden="true">[ПЛЕЙСХОЛДЕР: фото]</span>
+          </div>
+          <div>
+            <p class="abt__name">Марія Панченко</p>
+            <p class="t-label abt__role">Засновниця Happy Finance</p>
+          </div>
+          <blockquote class="abt__quote">
+            <p>Без цифр управління бізнесом неможливе. Тоді це не управління, а ілюзія.</p>
+            <footer class="t-label">Марія Панченко</footer>
+          </blockquote>
+        </div>
+
+        <div class="abt__story">
+          <h2 class="abt__title abt__reveal" id="abt-title">Від первинних документів до фінансового директора</h2>
+          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу. Тому консультує з погляду не лише законодавства, а й живого бізнесу.</p>
+
+          <div class="abt__tl" data-abt-timeline>
+            <span class="abt__rail" aria-hidden="true"></span>
+            <span class="abt__progress" aria-hidden="true"></span>
+          <ol class="abt__timeline" role="list">
+
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">01</span> · Київ · Спецторг</p>
+              <h3 class="abt__step-title">Перші документи</h3>
+              <p class="abt__step-text">Ще під час навчання на бухгалтера почала працювати оператором: первинні документи для клієнтів, податкові накладні, акти звірки, довіреності.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">02</span> · Управлінська компанія</p>
+              <h3 class="abt__step-title">Старший бухгалтер</h3>
+              <p class="abt__step-text">Опанувала касову дисципліну й авансові звіти. Відповідала за касу, банківські платежі, авансові звіти та послуги по всіх філіях компанії.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">03</span> · Спецторг</p>
+              <h3 class="abt__step-title">Головний бухгалтер</h3>
+              <p class="abt__step-text">Повернулась у магазин, з якого починала, вже головним бухгалтером.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">04</span> · Фоззі Фарм</p>
+              <h3 class="abt__step-title">Касова дисципліна всієї мережі</h3>
+              <p class="abt__step-text">Помітила, що звіти після зміни виправляти важко або вже неможливо. Тож почала попереджати помилки: проводила навчання для фармацевтів, писала інструкції, презентації й шпаргалки для новачків.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">05</span> · Кропивницький</p>
+              <h3 class="abt__step-title">Облік з нуля і директорка кафе</h3>
+              <p class="abt__step-text">У кавʼярні, де облік вели в зошитах, побудувала облік у 1С. Згодом стала директоркою кафе й розвивала кондитерський цех: оптові продажі, експорт, каталоги, етикетки, технічні документи і фінансові показники.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">06</span> · Дистрибуційна компанія</p>
+              <h3 class="abt__step-title">Фінансова директорка</h3>
+              <p class="abt__step-text">Прийшла в момент продажу бізнесу, переносу бази й переїзду складу. Побудувала фінансовий відділ, змінила документообіг і вибудувала систему контролю.</p>
+              <div class="abt__fact">
+                <p class="t-label abt__fact-label">Нестачі на складі за місяць</p>
+                <dl class="abt__fact-pair">
+                  <div class="abt__fact-col"><dt class="abt__fact-term">Було</dt><dd class="abt__fact-num abt__fact-num--before t-num">1,5&nbsp;млн&nbsp;грн</dd></div>
+                  <span class="abt__fact-arrow" aria-hidden="true">→</span>
+                  <div class="abt__fact-col"><dt class="abt__fact-term">Стало</dt><dd class="abt__fact-num abt__fact-num--after t-num">10–12&nbsp;тис&nbsp;грн</dd></div>
+                </dl>
+                <p class="abt__fact-text">Після того як Марія змінила документообіг і команду складу.</p>
+              </div>
+            </li>
+            <li class="abt__step abt__step--now abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">07</span> · Сьогодні</p>
+              <h3 class="abt__step-title">Happy Finance</h3>
+              <p class="abt__step-text">Компанія виросла сама, з рекомендацій клієнтів. Сьогодні ми ведемо ФОП і ТОВ у виробництві, агросекторі, освіті, імпорті та сфері послуг.</p>
+            </li>
+          </ol>
+          </div>
+
+          <div class="abt__dash">
+            <div class="abt__dash-head abt__reveal">
+              <p class="t-label abt__dash-label">Цифри бізнесу</p>
+              <h3 class="abt__dash-title">Облік дає змогу бачити цифри, а цифри показують стан бізнесу</h3>
+              <p class="abt__dash-text">Саме за такими показниками власник ухвалює рішення. Ось як це може виглядати для ФОП.</p>
+            </div>
+
+            <figure class="abt__panel abt__reveal" data-abt-dash aria-labelledby="abt-dash-cap">
+              <div class="abt__panel-bar">
+                <p class="t-label abt__panel-title" id="abt-dash-cap">Огляд · ФОП, 3 група</p>
+                <p class="t-label abt__panel-chip">Приклад · цифри умовні</p>
+              </div>
+              <ul class="abt__cards" role="list">
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Дохід за місяць</p>
+                  <p class="abt__card-value"><span class="t-num" data-count="486200">486&nbsp;200</span><span class="abt__card-unit">грн</span></p>
+                  <div class="abt__bars" aria-hidden="true">
+                      <span class="abt__bar" style="--h:0.42;--i:0"></span>
+                      <span class="abt__bar" style="--h:0.55;--i:1"></span>
+                      <span class="abt__bar" style="--h:0.48;--i:2"></span>
+                      <span class="abt__bar" style="--h:0.63;--i:3"></span>
+                      <span class="abt__bar" style="--h:0.58;--i:4"></span>
+                      <span class="abt__bar" style="--h:0.71;--i:5"></span>
+                      <span class="abt__bar" style="--h:0.66;--i:6"></span>
+                      <span class="abt__bar" style="--h:0.84;--i:7"></span>
+                      <span class="abt__bar" style="--h:1;--i:8"></span>
+                  </div>
+                </li>
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Податки за місяць</p>
+                  <p class="abt__card-value"><span class="t-num" data-count="29172">29&nbsp;172</span><span class="abt__card-unit">грн</span></p>
+                  <ul class="abt__rows" role="list">
+                    <li class="abt__row"><span>Єдиний податок, 5%</span><span class="abt__row-num t-num">24&nbsp;310 грн</span></li>
+                    <li class="abt__row"><span>Військовий збір, 1%</span><span class="abt__row-num t-num">4&nbsp;862 грн</span></li>
+                  </ul>
+                </li>
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Ліміт доходу ФОП</p>
+                  <p class="abt__card-value"><span class="t-num" data-count="46">46</span><span class="abt__card-unit">% використано</span></p>
+                  <div class="abt__meter" aria-hidden="true"><span class="abt__meter-fill" style="--v:0.46"></span></div>
+                  <p class="t-label abt__meter-scale" aria-hidden="true"><span>0%</span><span>100%</span></p>
+                  <p class="abt__card-note">Від річного ліміту для 3 групи</p>
+                </li>
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Звіти й контроль</p>
+                  <ul class="abt__checks" role="list">
+                    <li class="abt__check" style="--i:0"><span class="abt__check-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Декларація платника єдиного податку</span><span class="t-label abt__check-status">Подано</span></li>
+                    <li class="abt__check" style="--i:1"><span class="abt__check-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Книга обліку доходів</span><span class="t-label abt__check-status">Заповнено</span></li>
+                    <li class="abt__check" style="--i:2"><span class="abt__check-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Банківська виписка</span><span class="t-label abt__check-status">Перевірено</span></li>
+                    <li class="abt__check abt__check--wait" style="--i:3"><span class="abt__check-mark" aria-hidden="true"></span><span>Сплата податків</span><span class="t-label abt__check-status">У плані</span></li>
+                  </ul>
+                </li>
+              </ul>
+            </figure>
+          </div>
+
+          <div class="abt__approach">
+            <div class="abt__approach-head abt__reveal">
+              <p class="t-label abt__approach-label">Наш підхід</p>
+              <h3 class="abt__approach-title">Бухгалтерія — це не лише документи для податкової. Це цифри, за якими власник ухвалює рішення.</h3>
+            </div>
+            <ul class="abt__principles" role="list">
+              <li class="abt__principle abt__reveal" style="--i:0">
+                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M17.5 17.5L24 24"/></svg>
+                <h4 class="abt__principle-title">Спершу аналіз</h4>
+                <p class="abt__principle-text">Перш ніж будувати облік, розбираємось, як бізнес працює зараз. Лише так видно вузькі місця і те, що варто автоматизувати.</p>
+              </li>
+              <li class="abt__principle abt__reveal" style="--i:1">
+                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 22V6M4 14h10l4-8M14 14l4 8M18 6h6M18 22h6"/></svg>
+                <h4 class="abt__principle-title">Варіанти рішень</h4>
+                <p class="abt__principle-text">У будь-якій ситуації пропонуємо варіанти, а для кожного рішення готуємо фінансові показники й законодавчі норми.</p>
+              </li>
+              <li class="abt__principle abt__reveal" style="--i:2">
+                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 24h20M7 24V14M12.5 24V9M18 24v-7M23 24V5"/></svg>
+                <h4 class="abt__principle-title">Управлінський погляд</h4>
+                <p class="abt__principle-text">Через цифри й документообіг видно, як працює команда. Допомагаємо власнику бачити ситуацію в бізнесі й аналізувати її.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  
+
+  <section class="prc" id="process" data-theme="light" data-prc aria-labelledby="prc-title">
+    <div class="container">
+
+      <div class="prc__head">
+        <p class="t-label prc__label">Як ми працюємо</p>
+        <h2 class="prc__title" id="prc-title">Як почати співпрацю</h2>
+        <p class="prc__lead">Від першого повідомлення до щомісячного супроводу. Ви завжди знаєте, що відбувається і що буде далі.</p>
+      </div>
+
+      <div class="prc__track">
+        <span class="prc__rail" aria-hidden="true"></span>
+        <span class="prc__rail-fill" aria-hidden="true"></span>
+
+        <ol class="prc__steps" role="list" tabindex="0" aria-label="Кроки співпраці" data-prc-steps>
+          <li class="prc__step prc__reveal" style="--i:0">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">01</span>
+            <h3 class="prc__step-title">Знайомство</h3>
+            <p class="prc__step-text">Ви пишете або телефонуєте, ми ставимо кілька питань про ваш бізнес.</p>
+          </li>
+          <li class="prc__step prc__reveal" style="--i:1">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">02</span>
+            <h3 class="prc__step-title">Аналіз</h3>
+            <p class="prc__step-text">Дивимось, як усе працює зараз: документи, звітність, податки. Так видно вузькі місця.</p>
+          </li>
+          <li class="prc__step prc__reveal" style="--i:2">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">03</span>
+            <h3 class="prc__step-title">Пропозиція</h3>
+            <p class="prc__step-text">Пропонуємо формат супроводу під ваші задачі й називаємо вартість.</p>
+          </li>
+          <li class="prc__step prc__reveal" style="--i:3">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">04</span>
+            <h3 class="prc__step-title">Запуск</h3>
+            <p class="prc__step-text">Налаштовуємо зручний документообіг і точки контролю під ваш бізнес.</p>
+          </li>
+          <li class="prc__step prc__step--last prc__reveal" style="--i:4">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">05</span>
+            <h3 class="prc__step-title">Супровід</h3>
+            <p class="prc__step-text">Щомісяця ведемо облік і звітність, нагадуємо про строки. Ви займаєтесь бізнесом.</p>
+          </li>
+        </ol>
+
+        <div class="prc__nav">
+          <p class="t-label prc__count" aria-hidden="true"><span class="prc__count-current" data-prc-current>1</span> / 5</p>
+          <div class="prc__arrows">
+            <button class="prc__arrow" type="button" data-prc-prev aria-label="Попередній крок" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="prc__arrow" type="button" data-prc-next aria-label="Наступний крок">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prc__cta">
+        <p class="prc__cta-text">Перший крок — просто написати.</p>
+        <a class="btn btn--primary" href="#match">
+          Підібрати послугу
+          <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+  
+
+  <section class="faq" id="faq" data-theme="light" data-faq aria-labelledby="faq-title">
+    <div class="container">
+      <div class="faq__layout">
+
+        <div class="faq__aside faq__reveal">
+          <p class="t-label faq__label">FAQ</p>
+          <h2 class="faq__title" id="faq-title">Часті питання</h2>
+          <p class="faq__lead">Коротко про те, що найчастіше хочуть знати перед початком співпраці.</p>
+          <a class="btn btn--ghost faq__more" href="#contact">Не знайшли відповідь? Напишіть нам</a>
+        </div>
+
+        <div class="faq__list-wrap">
+          <ol class="faq__list" role="list">
+            <li class="faq__item faq__reveal" style="--i:0">
+              <h3 class="faq__q">
+                <button class="faq__trigger" type="button" aria-expanded="false" aria-controls="faq-a1" id="faq-q1">
+                  <span>Скільки коштують ваші послуги?</span><span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div class="faq__a-inner">
+                <p class="faq__a-text">Вартість залежить від вашої ситуації, тому ми називаємо її після консультації. Розкажіть про свій бізнес, і ми запропонуємо формат супроводу та ціну.</p>
+              </div></div>
+            </li>
+            <li class="faq__item faq__reveal" style="--i:1">
+              <h3 class="faq__q">
+                <button class="faq__trigger" type="button" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">
+                  <span>Я тільки відкриваю ФОП. З чого почати?</span><span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div class="faq__a-inner">
+                <p class="faq__a-text">З консультації. Ми підберемо КВЕДи й оптимальну систему оподаткування, а потім зареєструємо ФОП онлайн, без вашої участі.</p>
+              </div></div>
+            </li>
+            <li class="faq__item faq__reveal" style="--i:2">
+              <h3 class="faq__q">
+                <button class="faq__trigger" type="button" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">
+                  <span>Ви працюєте з ТОВ на загальній системі і з ПДВ?</span><span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div class="faq__a-inner">
+                <p class="faq__a-text">Так. Ведемо ТОВ на єдиному податку і на загальній системі, з ПДВ і без, зокрема з експортом та імпортом. Реєструємо податкові накладні й подаємо звіти з ПДВ.</p>
+              </div></div>
+            </li>
+            <li class="faq__item faq__reveal" style="--i:3">
+              <h3 class="faq__q">
+                <button class="faq__trigger" type="button" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">
+                  <span>Банк просить пояснення щодо операцій. Допоможете?</span><span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div class="faq__a-inner">
+                <p class="faq__a-text">Так. Ми супроводжуємо фінансовий моніторинг у банку будь-якої складності.</p>
+              </div></div>
+            </li>
+            <li class="faq__item faq__reveal" style="--i:4">
+              <h3 class="faq__q">
+                <button class="faq__trigger" type="button" aria-expanded="false" aria-controls="faq-a5" id="faq-q5">
+                  <span>Податкова зупинила реєстрацію податкової накладної. Що робити?</span><span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__a" id="faq-a5" role="region" aria-labelledby="faq-q5"><div class="faq__a-inner">
+                <p class="faq__a-text">Напишіть нам. Ми займаємось розблокуванням податкових накладних і розберемо вашу ситуацію.</p>
+              </div></div>
+            </li>
+            <!-- [ПЛЕЙСХОЛДЕР] Питання 6–8 додати після відповідей Марії:
+                 передача обліку від іншого бухгалтера; онлайн чи офіс; години звʼязку. -->
+          </ol>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Розмітка FAQ для пошуковиків. Під час інтеграції перенести в <head> index.html; тексти мають збігатися з видимими. -->
+  
+
+  <section class="cta" id="contact" data-theme="dark" data-cta aria-labelledby="cta-title">
+    <div class="cta__bg" aria-hidden="true"></div>
+    <div class="cta__glow" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="cta__layout">
+
+        <div class="cta__intro">
+          <p class="t-label cta__label">Контакти</p>
+          <h2 class="cta__title" id="cta-title">Розкажіть про свій бізнес, і ми підкажемо, з чого почати</h2>
+          <p class="cta__lead">Дайте відповідь на кілька коротких питань і отримайте готове повідомлення для месенджера. Або напишіть чи зателефонуйте одразу.</p>
+
+          <div class="cta__contacts-wrap">
+            <ul class="cta__contacts" role="list">
+              <li class="cta__contact"><span class="t-label cta__contact-key">Телефон</span><span class="cta__contact-val" data-contact="phone"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Telegram</span><span class="cta__contact-val" data-contact="telegram"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Viber</span><span class="cta__contact-val" data-contact="viber"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">WhatsApp</span><span class="cta__contact-val" data-contact="whatsapp"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Email</span><span class="cta__contact-val" data-contact="email"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Місто</span><span class="cta__contact-val" data-contact="city"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            </ul>
+          </div>
+          <p class="t-small cta__price"><span class="cta__price-sign" aria-hidden="true">₴</span>Вартість після консультації</p>
+        </div>
+
+        <div class="cta__card" id="match">
+          <div class="cta__card-head">
+            <p class="t-label cta__card-label">Підбір послуги</p>
+            <p class="t-label cta__card-step" data-cta-counter aria-hidden="true">Крок 1 / 4</p>
+          </div>
+          <div class="cta__progress" aria-hidden="true">
+            <span class="cta__seg"></span><span class="cta__seg"></span><span class="cta__seg"></span><span class="cta__seg"></span>
+          </div>
+
+          <form class="cta__form" data-cta-form novalidate>
+            <div class="cta__stage" aria-live="polite">
+
+              <fieldset class="cta__step" data-step="form">
+                <legend class="cta__q">Яка у вас форма бізнесу?</legend>
+                <p class="cta__hint">Оберіть один варіант.</p>
+                <div class="cta__options">
+                  <label class="cta__option"><input class="cta__input" type="radio" name="form" value="fop" id="cta-form-fop"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">ФОП</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="form" value="tov" id="cta-form-tov"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">ТОВ</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="form" value="new" id="cta-form-new"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Ще не зареєстрований<span class="cta__tile-sub">Плануєте відкрити ФОП або ТОВ</span></span></span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="cta__step" data-step="staff" hidden>
+                <legend class="cta__q">Чи є у вас працівники?</legend>
+                <p class="cta__hint">Від цього залежить, чи потрібен кадровий облік.</p>
+                <div class="cta__options cta__options--two">
+                  <label class="cta__option"><input class="cta__input" type="radio" name="staff" value="yes" id="cta-staff-yes"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Так, є</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="staff" value="no" id="cta-staff-no"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Ні, працюю сам(а)</span></span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="cta__step" data-step="vat" hidden>
+                <legend class="cta__q">Ви платник ПДВ?</legend>
+                <p class="cta__hint">Якщо не впевнені, оберіть «Не знаю», розберемось разом.</p>
+                <div class="cta__options">
+                  <label class="cta__option"><input class="cta__input" type="radio" name="vat" value="yes" id="cta-vat-yes"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Так</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="vat" value="no" id="cta-vat-no"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Ні</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="vat" value="unknown" id="cta-vat-unknown"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Не знаю</span></span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="cta__step" data-step="goals" hidden>
+                <legend class="cta__q">Що зараз найважливіше?</legend>
+                <p class="cta__hint">Можна обрати кілька варіантів.</p>
+                <div class="cta__options cta__options--multi">
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="reports" id="cta-goal-reports"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Вчасна звітність і податки</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="docs" id="cta-goal-docs"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Первинні документи й договори</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="bank" id="cta-goal-bank"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Банк і фінансовий моніторинг</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="numbers" id="cta-goal-numbers"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Цифри для управління бізнесом</span></span></label>
+                  <label class="cta__option" data-only="fop"><input class="cta__input" type="checkbox" name="goals" value="close" id="cta-goal-close"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Закрити ФОП</span></span></label>
+                </div>
+              </fieldset>
+
+              <div class="cta__result" data-cta-result hidden>
+                <h3 class="cta__result-title" tabindex="-1">Вам підійде</h3>
+                <ul class="cta__picks" role="list" data-cta-picks></ul>
+                <p class="t-label cta__msg-label"><label for="cta-msg">Готове повідомлення</label></p>
+                <textarea class="cta__msg" id="cta-msg" name="message" rows="4" data-cta-msg></textarea>
+                <div class="cta__send">
+                  <button class="btn btn--primary" type="button" data-cta-copy>Скопіювати текст</button>
+                  <div class="cta__messengers">
+                    <a class="btn btn--outline btn--sm" data-messenger="telegram" href="#contact" target="_blank" rel="noopener">Telegram</a>
+                    <a class="btn btn--outline btn--sm" data-messenger="viber" href="#contact">Viber</a>
+                    <a class="btn btn--outline btn--sm" data-messenger="whatsapp" href="#contact" target="_blank" rel="noopener">WhatsApp</a>
+                  </div>
+                </div>
+                <p class="cta__status" role="status" data-cta-status></p>
+                <p class="cta__note">Це орієнтир. Формат і вартість уточнимо на консультації. Ми нічого не зберігаємо: повідомлення ви надсилаєте самі.</p>
+                <button class="btn btn--ghost cta__restart" type="button" data-cta-restart>Пройти ще раз</button>
+              </div>
+            </div>
+
+            <div class="cta__actions" data-cta-actions>
+              <button class="btn btn--ghost cta__back" type="button" data-cta-back hidden>Назад</button>
+              <button class="btn btn--primary" type="submit" data-cta-next disabled>
+                Далі
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  
+
+</main>
+
+  <footer class="ftr" data-theme="dark" data-ftr>
+    <div class="ftr__bg" aria-hidden="true"></div>
+    <div class="container">
+
+      <div class="ftr__top">
+        <div class="ftr__brand ftr__reveal">
+          <p class="ftr__title">Бухгалтерія — це ваш спокій.</p>
+          <p class="ftr__tagline">Бухгалтерський супровід ФОП і ТОВ</p>
+          <a class="btn btn--primary" href="#match">
+            Підібрати послугу
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <nav class="ftr__col ftr__col--nav ftr__reveal" aria-labelledby="ftr-nav-title">
+          <p class="t-label ftr__col-title" id="ftr-nav-title">Розділи</p>
+          <ul class="ftr__links" role="list">
+            <li><a class="ftr__link" href="#services">Послуги</a></li>
+            <li><a class="ftr__link" href="#about">Про нас</a></li>
+            <li><a class="ftr__link" href="#process">Як ми працюємо</a></li>
+            <li><a class="ftr__link" href="#faq">Питання</a></li>
+            <li><a class="ftr__link" href="#contact">Контакти</a></li>
+          </ul>
+        </nav>
+
+        <div class="ftr__col ftr__col--contacts ftr__reveal">
+          <p class="t-label ftr__col-title">Контакти</p>
+          <ul class="ftr__contacts" role="list">
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Телефон</span><span class="ftr__contact-val" data-contact="phone"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Telegram</span><span class="ftr__contact-val" data-contact="telegram"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Viber</span><span class="ftr__contact-val" data-contact="viber"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">WhatsApp</span><span class="ftr__contact-val" data-contact="whatsapp"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Email</span><span class="ftr__contact-val" data-contact="email"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Місто</span><span class="ftr__contact-val" data-contact="city"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- декоративний напис: назва вже є в рядку © -->
+      <div class="ftr__mark" aria-hidden="true">
+        <p class="ftr__word" data-ftr-word>HAPPY FINANCE</p>
+      </div>
+
+      <div class="ftr__bottom">
+        <p class="t-small">© <span data-ftr-year>2026</span> Happy Finance</p>
+        <a class="ftr__up" href="#top" data-ftr-up>
+          <span class="t-small">Вгору</span>
+          <span class="ftr__up-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+  
+</body>
+</html>

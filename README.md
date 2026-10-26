@@ -1,31 +1,53 @@
 # Happy Finance — сайт бухгалтерського супроводу
 
-Статичний сайт без збирачів: HTML, CSS (custom properties), vanilla JS.
-Розробляється блоками: один блок = один HTML-файл у `blocks/`, що відкривається окремо.
+Статичний сайт без збирачів і npm: HTML, CSS (custom properties), vanilla JS.
+GSAP + ScrollTrigger (з cdnjs) використовується лише для сцени «Хаос → порядок» на головному екрані.
 
 ## Структура
 
 ```
-index.html            — збирається після погодження всіх блоків
+index.html            — сторінка сайту (згенерована з blocks/, див. нижче)
 css/tokens.css        — кольори, шрифти, відступи, радіуси, тіні, рух
 css/base.css          — шрифти, reset, типографіка, контейнер, кнопки
-blocks/00-design-system.html — превʼю дизайн-системи
-blocks/NN-*.html      — блоки сайту
-js/main.js            — спільна ініціалізація (з'явиться разом з першим блоком, якому потрібен)
+css/site.css          — стилі всіх блоків (згенеровано)
+js/config.js          — КОНТАКТИ: телефон, месенджери, email, місто
+js/contacts.js        — посилання для контактів і їх підстановка на сторінку
+js/site.js            — скрипти всіх блоків (згенеровано)
+blocks/NN-*.html      — блоки сайту, кожен відкривається окремо (джерело для index.html)
+tools/build.py        — збирає index.html, css/site.css, js/site.js з blocks/
 assets/fonts          — Onest, IBM Plex Mono (woff2, кирилиця + латиниця)
-assets/images         — логотипи та зображення
+assets/images         — логотипи, іконки вкладки, картинка для соцмереж
 ```
+
+## Як заповнити контакти
+
+Відкрийте `js/config.js` і впишіть значення в лапках (формат підписаний у файлі).
+Контакти зʼявляться в блоці «Контакти», у підвалі та в кнопках Telegram, Viber, WhatsApp.
+Збирати сайт після цього не потрібно.
+
+## Як змінити блок
+
+1. Правите файл у `blocks/` (наприклад, `blocks/06-faq.html`) і перевіряєте його окремо.
+2. Запускаєте `python3 tools/build.py` — оновляться `index.html`, `css/site.css`, `js/site.js`.
+
+`tools/build.py` потрібен лише Python 3 (без пакетів); на роботу сайту він не впливає.
 
 ## Як переглянути локально
 
-Шрифти й стилі підключаються відносними шляхами, тому найнадійніше відкривати через локальний сервер:
-
 ```bash
 python3 -m http.server 8000
-# відкрити http://localhost:8000/blocks/00-design-system.html
+# сайт:        http://localhost:8000/
+# окремий блок: http://localhost:8000/blocks/03-services.html
 ```
 
-Подвійний клік по файлу теж працює в Chrome/Edge, але Firefox може не завантажити шрифти з `../assets`.
+## Публікація на GitHub Pages
+
+1. На GitHub відкрийте репозиторій → **Settings** → **Pages**.
+2. **Source**: Deploy from a branch.
+3. **Branch**: гілка з сайтом (зараз `claude/project-thread-6hfbbp`), папка `/ (root)` → **Save**.
+4. Через 1–2 хвилини сайт буде за адресою `https://yavchik.github.io/-accountant-site/`.
+
+Якщо зʼявиться власний домен, змініть `SITE_URL` у `tools/build.py` (для картинки в соцмережах і canonical) і запустіть збирання.
 
 ## Правила для блоків
 
@@ -33,11 +55,14 @@ python3 -m http.server 8000
 - Кольори лише через семантичні токени: `--bg`, `--fg`, `--fg-strong`, `--fg-muted`, `--accent`, `--accent-text`, `--on-accent`, `--line`.
 - Темна секція: атрибут `data-theme="dark"`.
 - Анімуються лише `transform` і `opacity`; `prefers-reduced-motion` вимикає рух.
-- Дані, яких ще немає, позначаються `<span class="placeholder">[ПЛЕЙСХОЛДЕР: …]</span>`.
+- Дані, яких ще немає, позначаються `<span class="placeholder">[ПЛЕЙСХОЛДЕР]</span>`.
+- Демо-стилі блоку починаються з коментаря `/* ===== ДЕМО` і в сайт не потрапляють.
 
-## Публікація
+## Що ще чекає даних
 
-GitHub Pages: Settings → Pages → Deploy from a branch → `main` / root.
+- Контакти — `js/config.js`.
+- Фото Марії — замість плейсхолдера «МП» у `blocks/04-about.html` (розмітка для фото там у коментарі).
+- Питання FAQ 6–8 — після відповідей Марії.
 
 ## Шрифти
 

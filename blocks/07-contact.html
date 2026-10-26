@@ -6,7 +6,7 @@
   <title>07 CTA і контакти — Happy Finance</title>
   <meta name="robots" content="noindex">
   <!--
-    Бібліотеки: немає.
+    Бібліотеки: немає. Контакти: ../js/config.js (дані) і ../js/contacts.js (посилання).
     Міні-підбір нічого не відправляє і не зберігає: він складає текст повідомлення,
     який відвідувач сам копіює або надсилає в месенджер. Форма демонстраційна в тому сенсі,
     що до обробника заявок (бот, CRM) не підключена.
@@ -14,6 +14,8 @@
   <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/tokens.css">
   <link rel="stylesheet" href="../css/base.css">
+  <script src="../js/config.js"></script>
+  <script src="../js/contacts.js"></script>
   <style>
     /* ===== 07 CTA + Контакти. Префікс класів: cta__ ===== */
 
@@ -444,14 +446,9 @@
 
   <script>
     (function initContact() {
-      /* ===== [ПЛЕЙСХОЛДЕР] КОНТАКТИ: заповніть тут, і вони зʼявляться на сайті та в кнопках =====
-         phone:    "+380 XX XXX XX XX"     (як показувати)
-         telegram: "username"              (без @)
-         viber:    "380XXXXXXXXX"          (лише цифри)
-         whatsapp: "380XXXXXXXXX"          (лише цифри)
-         email:    "name@example.com"
-         city:     "Кропивницький"                                                              */
-      var CONTACTS = { phone: "", telegram: "", viber: "", whatsapp: "", email: "", city: "" };
+      // Контакти заповнюються в одному місці: js/config.js
+      var CONTACTS = window.HFContacts.data;
+      var digits = window.HFContacts.digits;
 
       var root = document.querySelector("[data-cta]");
       if (!root) return;
@@ -470,29 +467,7 @@
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       /* ---------- Контакти ---------- */
-      var digits = function (s) { return String(s).replace(/\D/g, ""); };
-      var contactHref = {
-        phone: function (v) { return "tel:+" + digits(v); },
-        telegram: function (v) { return "https://t.me/" + v.replace(/^@/, ""); },
-        viber: function (v) { return "viber://chat?number=%2B" + digits(v); },
-        whatsapp: function (v) { return "https://wa.me/" + digits(v); },
-        email: function (v) { return "mailto:" + v; }
-      };
-      root.querySelectorAll("[data-contact]").forEach(function (el) {
-        var key = el.getAttribute("data-contact");
-        var v = CONTACTS[key];
-        if (!v) return;
-        el.textContent = "";
-        if (contactHref[key]) {
-          var a = document.createElement("a");
-          a.href = contactHref[key](v);
-          a.textContent = key === "telegram" ? "@" + v.replace(/^@/, "") : v;
-          if (/^https/.test(a.href)) { a.target = "_blank"; a.rel = "noopener"; }
-          el.appendChild(a);
-        } else {
-          el.textContent = v;
-        }
-      });
+      window.HFContacts.fill(root);
 
       /* ---------- Підбір ---------- */
       var order = ["form", "staff", "vat", "goals"];
@@ -618,7 +593,7 @@
           a.removeAttribute("aria-disabled");
           a.removeAttribute("title");
           // WhatsApp підставляє текст сам; у Telegram і Viber текст треба вставити зі буфера
-          a.href = key === "whatsapp" ? "https://wa.me/" + digits(v) + "?text=" + enc : contactHref[key](v);
+          a.href = key === "whatsapp" ? "https://wa.me/" + digits(v) + "?text=" + enc : window.HFContacts.href(key, v);
         });
       }
 
