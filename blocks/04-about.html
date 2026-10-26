@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 Про Марію — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <!-- Бібліотеки: немає. Лінія таймлайну рахується від скролу на vanilla JS (один пасивний слухач + rAF). -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 04 Про Марію. Префікс класів: abt__ ===== */
+
+    .abt {
+      position: relative;
+      padding-block: var(--section-y);
+      overflow: clip;
+    }
+
+    .abt__layout {
+      display: grid;
+      gap: var(--sp-8);
+    }
+
+    /* --- Портрет і цитата --- */
+    .abt__person {
+      display: grid;
+      gap: var(--sp-5);
+      align-content: start;
+      min-width: 0;
+    }
+    .abt__label { color: var(--brand-beige); }
+
+    .abt__portrait {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      background-color: var(--bg-raised);
+    }
+    /* Плейсхолдер замість фото: сітка бренду, ініціали, позначка */
+    .abt__portrait-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
+        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
+      background-size: 32px 32px;
+    }
+    .abt__portrait-corner {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 22%;
+      aspect-ratio: 1;
+      background: var(--accent);
+    }
+    .abt__initials {
+      position: absolute;
+      left: var(--sp-5);
+      bottom: var(--sp-7);
+      color: var(--fg);
+      font-size: clamp(5rem, 3rem + 8vw, 8.5rem);
+      font-weight: var(--fw-black);
+      line-height: 0.8;
+      letter-spacing: var(--ls-display);
+    }
+    .abt__portrait-note {
+      position: absolute;
+      left: var(--sp-5);
+      bottom: var(--sp-4);
+    }
+
+    .abt__name {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-semibold);
+      color: var(--fg-strong);
+      line-height: 1.2;
+    }
+    .abt__role { color: var(--fg-muted); margin-top: var(--sp-1); }
+
+    .abt__quote {
+      position: relative;
+      max-width: 26rem;
+      margin: var(--sp-3) 0 0;
+      padding-left: var(--sp-5);
+      border-left: var(--stroke) solid var(--accent);
+    }
+    .abt__quote p {
+      color: var(--fg);
+      font-size: var(--fs-lead);
+      line-height: 1.45;
+    }
+    .abt__quote footer { margin-top: var(--sp-3); color: var(--fg-muted); }
+
+    /* --- Історія --- */
+    .abt__story { min-width: 0; }
+    .abt__title {
+      font-size: var(--fs-h2);
+      max-width: 16ch;
+      margin-bottom: var(--sp-5);
+    }
+    .abt__intro {
+      color: var(--fg-muted);
+      font-size: var(--fs-lead);
+      line-height: 1.5;
+      max-width: 36rem;
+      margin-bottom: var(--sp-8);
+    }
+
+    /* --- Таймлайн --- */
+    .abt__tl { position: relative; }
+    .abt__tl .abt__timeline {   /* .abt__tl перебиває ol[role="list"] з base.css */
+      position: relative;
+      margin: 0;
+      padding: 0 0 0 var(--sp-7);
+      list-style: none;
+    }
+    .abt__rail,
+    .abt__progress {
+      position: absolute;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      left: 7px;
+      width: var(--stroke);
+    }
+    .abt__rail { background: var(--line); }
+    .abt__progress {
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: center top;
+      will-change: transform;
+    }
+    .abt__step {
+      position: relative;
+      padding-bottom: var(--sp-7);
+    }
+    .abt__step:last-child { padding-bottom: 0; }
+    .abt__dot {
+      position: absolute;
+      top: 0.3rem;
+      left: calc(var(--sp-7) * -1);
+      width: 16px;
+      height: 16px;
+      border: var(--stroke) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      background: var(--bg);
+    }
+    .abt__dot::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      transform: scale(0);
+      transition: transform var(--dur-base) var(--ease-spring);
+    }
+    .abt__step.is-lit .abt__dot::after { transform: scale(1); }
+
+    .abt__step-label {
+      color: var(--fg-muted);
+      margin-bottom: var(--sp-2);
+      opacity: 0.7;
+      transition: opacity var(--dur-base) var(--ease-out);
+    }
+    .abt__step.is-lit .abt__step-label { opacity: 1; }
+    .abt__step-num { color: var(--accent-text); }
+    .abt__step-title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-semibold);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--sp-2);
+    }
+    .abt__step-text {
+      color: var(--fg-muted);
+      max-width: 36rem;
+    }
+
+    /* Фінальний крок — компанія */
+    .abt__step--now .abt__dot { border-color: var(--accent); }
+    .abt__step--now .abt__step-title { color: var(--accent); }
+
+    /* --- Підхід --- */
+    .abt__approach {
+      margin-top: var(--sp-9);
+      padding-top: var(--sp-7);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .abt__approach-head {
+      display: grid;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-7);
+    }
+    .abt__approach-label { color: var(--brand-beige); }
+    .abt__approach-title { font-size: var(--fs-h3); font-weight: var(--fw-semibold); max-width: 28ch; }
+    .abt__principles {
+      display: grid;
+      gap: var(--sp-6);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .abt__principle {
+      display: grid;
+      gap: var(--sp-3);
+      align-content: start;
+      padding-top: var(--sp-5);
+      border-top: var(--hairline) solid var(--line-strong);
+    }
+    .abt__principle-mark {
+      width: 28px;
+      height: 28px;
+      color: var(--accent);
+    }
+    .abt__principle-title {
+      font-size: var(--fs-lead);
+      font-weight: var(--fw-semibold);
+      line-height: 1.3;
+      letter-spacing: -0.005em;
+    }
+    .abt__principle-text { color: var(--fg-muted); }
+
+    /* --- Поява --- */
+    .abt__reveal {
+      transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * var(--stagger));
+    }
+    @media (scripting: enabled) {
+      .abt__reveal:not(.is-shown) { opacity: 0; transform: translateY(var(--reveal-shift)); }
+    }
+    @media (scripting: none) {
+      .abt__progress { transform: none; }
+      .abt__dot::after { transform: scale(1); }
+    }
+
+    /* ===== Планшет 768+ ===== */
+    @media (min-width: 768px) {
+      .abt__principles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); }
+      .abt__person { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); column-gap: var(--grid-gap); align-items: end; }
+      .abt__label { grid-column: 1 / -1; }
+      .abt__portrait { grid-row: span 3; }
+    }
+
+    /* ===== Десктоп 1024+: липкий портрет зліва, історія справа ===== */
+    @media (min-width: 1024px) {
+      .abt__layout {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        align-items: start;
+      }
+      .abt__person {
+        grid-column: 1 / span 4;
+        grid-template-columns: 1fr;
+        align-items: start;
+        position: sticky;
+        top: calc(var(--header-h) + var(--sp-6));
+      }
+      .abt__portrait { grid-row: auto; }
+      .abt__story { grid-column: 6 / -1; }
+      .abt__approach-head {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: end;
+        column-gap: var(--grid-gap);
+      }
+      .abt__approach-label { grid-column: 1 / -1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .abt__progress { transform: none; }
+    }
+  </style>
+</head>
+<body>
+<main id="main">
+
+  <!-- ================= БЛОК 04 ПРО МАРІЮ ================= -->
+  <section class="abt" id="about" data-theme="dark" data-abt aria-labelledby="abt-title">
+    <div class="container">
+      <div class="abt__layout">
+
+        <div class="abt__person abt__reveal">
+          <p class="t-label abt__label">Про нас</p>
+          <!-- [ПЛЕЙСХОЛДЕР] Коли буде фото: замінити блок на
+               <img class="abt__portrait" src="../assets/images/maria.webp" width="840" height="1050" alt="Марія Панченко" loading="lazy"> -->
+          <div class="abt__portrait" role="img" aria-label="Місце для фото Марії Панченко">
+            <span class="abt__portrait-grid" aria-hidden="true"></span>
+            <span class="abt__portrait-corner" aria-hidden="true"></span>
+            <span class="abt__initials" aria-hidden="true">МП</span>
+            <span class="placeholder abt__portrait-note" aria-hidden="true">[ПЛЕЙСХОЛДЕР: фото]</span>
+          </div>
+          <div>
+            <p class="abt__name">Марія Панченко</p>
+            <p class="t-label abt__role">Засновниця Happy Finance</p>
+          </div>
+          <blockquote class="abt__quote">
+            <p>Без цифр управління бізнесом неможливе. Тоді це не управління, а ілюзія.</p>
+            <footer class="t-label">Марія Панченко</footer>
+          </blockquote>
+        </div>
+
+        <div class="abt__story">
+          <h2 class="abt__title abt__reveal" id="abt-title">Від первинних документів до фінансового директора</h2>
+          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу. Тому консультує з погляду не лише законодавства, а й живого бізнесу.</p>
+
+          <div class="abt__tl" data-abt-timeline>
+            <span class="abt__rail" aria-hidden="true"></span>
+            <span class="abt__progress" aria-hidden="true"></span>
+          <ol class="abt__timeline" role="list">
+
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">01</span> · Київ</p>
+              <h3 class="abt__step-title">Перші документи</h3>
+              <p class="abt__step-text">Ще під час навчання на бухгалтера почала працювати оператором: первинні документи для клієнтів, податкові накладні, акти звірки, довіреності.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">02</span> · Управлінська компанія</p>
+              <h3 class="abt__step-title">Старший бухгалтер</h3>
+              <p class="abt__step-text">Опанувала касову дисципліну й авансові звіти. Відповідала за касу, банківські платежі, авансові звіти та послуги по всіх філіях компанії.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">03</span> · Магазин</p>
+              <h3 class="abt__step-title">Головний бухгалтер</h3>
+              <p class="abt__step-text">Повернулась у магазин, з якого починала, вже головним бухгалтером.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">04</span> · Мережа аптек</p>
+              <h3 class="abt__step-title">Касова дисципліна всієї мережі</h3>
+              <p class="abt__step-text">Помітила, що звіти після зміни виправляти важко або вже неможливо. Тож почала попереджати помилки: проводила навчання для фармацевтів, писала інструкції, презентації й шпаргалки для новачків.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">05</span> · Кропивницький</p>
+              <h3 class="abt__step-title">Облік з нуля і директорка кафе</h3>
+              <p class="abt__step-text">У кавʼярні, де облік вели в зошитах, побудувала облік у 1С. Згодом стала директоркою кафе й розвивала кондитерський цех: оптові продажі, експорт, каталоги, етикетки, технічні документи і фінансові показники.</p>
+            </li>
+            <li class="abt__step abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">06</span> · Дистрибуційна компанія</p>
+              <h3 class="abt__step-title">Фінансова директорка</h3>
+              <p class="abt__step-text">Прийшла в момент продажу бізнесу, переносу бази й переїзду складу. Побудувала фінансовий відділ, змінила документообіг і вибудувала систему контролю.</p>
+            </li>
+            <li class="abt__step abt__step--now abt__reveal">
+              <span class="abt__dot" aria-hidden="true"></span>
+              <p class="t-label abt__step-label"><span class="abt__step-num">07</span> · Сьогодні</p>
+              <h3 class="abt__step-title">Happy Finance</h3>
+              <p class="abt__step-text">Компанія виросла сама, з рекомендацій клієнтів. Сьогодні ми ведемо ФОП і ТОВ у виробництві, агросекторі, освіті, імпорті та сфері послуг.</p>
+            </li>
+          </ol>
+          </div>
+
+          <div class="abt__approach">
+            <div class="abt__approach-head abt__reveal">
+              <p class="t-label abt__approach-label">Наш підхід</p>
+              <h3 class="abt__approach-title">Бухгалтерія — це не лише документи для податкової. Це цифри, за якими власник ухвалює рішення.</h3>
+            </div>
+            <ul class="abt__principles" role="list">
+              <li class="abt__principle abt__reveal" style="--i:0">
+                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M17.5 17.5L24 24"/></svg>
+                <h4 class="abt__principle-title">Спершу аналіз</h4>
+                <p class="abt__principle-text">Перш ніж будувати облік, розбираємось, як бізнес працює зараз. Лише так видно вузькі місця і те, що варто автоматизувати.</p>
+              </li>
+              <li class="abt__principle abt__reveal" style="--i:1">
+                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 22V6M4 14h10l4-8M14 14l4 8M18 6h6M18 22h6"/></svg>
+                <h4 class="abt__principle-title">Варіанти рішень</h4>
+                <p class="abt__principle-text">У будь-якій ситуації пропонуємо варіанти, а для кожного рішення готуємо фінансові показники й законодавчі норми.</p>
+              </li>
+              <li class="abt__principle abt__reveal" style="--i:2">
+                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 24h20M7 24V14M12.5 24V9M18 24v-7M23 24V5"/></svg>
+                <h4 class="abt__principle-title">Управлінський погляд</h4>
+                <p class="abt__principle-text">Через цифри й документообіг видно, як працює команда. Допомагаємо власнику бачити ситуацію в бізнесі й аналізувати її.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function initAbout() {
+      var root = document.querySelector("[data-abt]");
+      if (!root) return;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var reveals = root.querySelectorAll(".abt__reveal");
+      var timeline = root.querySelector("[data-abt-timeline]");
+      var progress = root.querySelector(".abt__progress");
+      var steps = Array.prototype.slice.call(root.querySelectorAll(".abt__step"));
+
+      /* ---------- Поява ---------- */
+      if (reduce || !("IntersectionObserver" in window)) {
+        Array.prototype.forEach.call(reveals, function (el) { el.classList.add("is-shown"); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add("is-shown"); io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -10% 0px" });
+        Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
+      }
+
+      /* ---------- Лінія таймлайну: доходить до точки на 60% висоти екрана ---------- */
+      if (reduce) {
+        steps.forEach(function (s) { s.classList.add("is-lit"); });
+        return;
+      }
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var box = timeline.getBoundingClientRect();
+        var mark = window.innerHeight * 0.6;
+        var p = Math.min(1, Math.max(0, (mark - box.top) / box.height));
+        progress.style.transform = "scaleY(" + p.toFixed(4) + ")";
+        steps.forEach(function (s) {
+          var dot = s.querySelector(".abt__dot").getBoundingClientRect();
+          s.classList.toggle("is-lit", dot.top + dot.height / 2 <= mark);
+        });
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll, { passive: true });
+      update();
+    })();
+  </script>
+  <!-- ================= /БЛОК 04 ПРО МАРІЮ ================= -->
+
+</main>
+</body>
+</html>
