@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Дизайн-система — Happy Finance</title>
+  <meta name="description" content="Кольори, типографіка, кнопки, сітка й рух сайту Happy Finance.">
+  <meta name="robots" content="noindex">
+  <!-- Бібліотеки: немає. Цей блок працює на чистому CSS і кількох рядках JS. -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 00 Design system: превʼю токенів. Префікс класів: ds__ ===== */
+
+    /* --- Верхня панель (демо glass-шапки) --- */
+    .ds__top {
+      position: sticky;
+      top: 0;
+      z-index: var(--z-header);
+      border-bottom: var(--hairline) solid var(--glass-border);
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(16px) saturate(140%);
+    }
+    .ds__top-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      min-height: var(--header-h);
+    }
+    .ds__top-logo { width: 140px; height: auto; }
+    .ds__top-meta { color: var(--fg-muted); white-space: nowrap; }
+    .ds__top-meta--wide { display: none; }
+
+    /* --- Інтро --- */
+    .ds__intro {
+      position: relative;
+      overflow: hidden;
+      padding-block: var(--sp-9) var(--sp-8);
+    }
+    .ds__intro-grid {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: min(52%, 640px);
+      background-image:
+        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
+        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
+      background-size: 48px 48px;
+      -webkit-mask-image: linear-gradient(to left, #000 30%, transparent);
+      mask-image: linear-gradient(to left, #000 30%, transparent);
+      pointer-events: none;
+    }
+    .ds__intro-block {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: clamp(56px, 14vw, 240px);
+      height: clamp(56px, 14vw, 240px);
+      background: var(--accent);
+      transform-origin: top right;
+      animation: ds-block-in var(--dur-reveal) var(--ease-out) both;
+    }
+    @keyframes ds-block-in {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+    .ds__intro-inner { position: relative; }
+    .ds__intro-logo {
+      width: clamp(200px, 40vw, 420px);
+      height: auto;
+      margin-bottom: var(--sp-8);
+    }
+    .ds__intro-label { color: var(--brand-beige); margin-bottom: var(--sp-4); }
+    .ds__intro-title { margin-bottom: var(--sp-5); max-width: 12ch; }
+    .ds__intro-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2) var(--sp-5);
+      margin-top: var(--sp-7);
+      padding: 0;
+      list-style: none;
+    }
+    .ds__intro-nav a {
+      color: var(--fg);
+      text-decoration: none;
+      opacity: 0.72;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+    .ds__intro-nav a:hover { opacity: 1; }
+
+    /* --- Загальне для секцій превʼю --- */
+    .ds__section { border-top: var(--hairline) solid var(--line); }
+    .ds__head {
+      display: grid;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-7);
+    }
+    .ds__head-label { color: var(--accent-text); }
+    .ds__head-note { color: var(--fg-muted); max-width: var(--measure); }
+
+    /* --- 01 Палітра --- */
+    .ds__swatches {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap);
+      padding: 0;
+      list-style: none;
+    }
+    .ds__swatch {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-4);
+    }
+    .ds__chip {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      padding: var(--sp-4);
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-xs);
+      text-align: left;
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    @media (hover: hover) {
+      .ds__chip:hover { transform: translateY(-4px); }
+    }
+    .ds__chip-role { font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: var(--ls-label); text-transform: uppercase; }
+    .ds__chip-hex { font-size: var(--fs-h3); font-weight: var(--fw-bold); letter-spacing: 0.02em; }
+    .ds__chip-copy {
+      position: absolute;
+      top: var(--sp-4);
+      right: var(--sp-4);
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      opacity: 0;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+    .ds__chip:hover .ds__chip-copy,
+    .ds__chip:focus-visible .ds__chip-copy { opacity: 0.8; }
+
+    .ds__chip--navy { background: var(--brand-navy); color: var(--brand-white); }
+    .ds__chip--white { background: var(--brand-white); color: var(--brand-navy); }
+    .ds__chip--orange { background: var(--brand-orange); color: var(--brand-navy); }
+    .ds__chip--beige { background: var(--brand-beige); color: var(--brand-navy); }
+    .ds__chip--ink { background: var(--ink-900); color: var(--brand-white); }
+    .ds__chip--ink800 { background: var(--ink-800); color: var(--brand-white); }
+    .ds__chip--paper { background: var(--paper-100); color: var(--ink-900); }
+    .ds__chip--paper200 { background: var(--paper-200); color: var(--ink-900); }
+    .ds__chip--slate600 { background: var(--slate-600); color: var(--brand-white); }
+    .ds__chip--slate300 { background: var(--slate-300); color: var(--ink-900); }
+    .ds__chip--orange700 { background: var(--orange-700); color: var(--brand-white); }
+
+    .ds__swatch-name { font-weight: var(--fw-semibold); color: var(--fg-strong); }
+    .ds__swatch-use { color: var(--fg-muted); font-size: var(--fs-small); }
+    .ds__ratios {
+      display: grid;
+      gap: var(--sp-1);
+      margin: 0;
+      padding-top: var(--sp-3);
+      border-top: var(--hairline) solid var(--line);
+      font-size: var(--fs-small);
+    }
+    .ds__ratio {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--sp-3);
+    }
+    .ds__ratio dt { color: var(--fg-muted); }
+    .ds__ratio dd { margin: 0; font-family: var(--font-mono); }
+    .ds__ok { color: var(--fg-strong); }
+    .ds__ok::before { content: "✓ "; color: var(--accent-text); }
+    .ds__bad { color: var(--fg-muted); text-decoration: line-through; }
+
+    .ds__subhead { margin: var(--sp-8) 0 var(--sp-5); color: var(--fg-strong); }
+    .ds__swatches--derived .ds__chip { aspect-ratio: 16 / 9; }
+
+    /* --- 02 Теми --- */
+    .ds__themes {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap);
+    }
+    .ds__theme {
+      display: grid;
+      align-content: start;
+      gap: var(--sp-4);
+      padding: clamp(var(--sp-5), 4vw, var(--sp-7));
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-md);
+    }
+    .ds__theme-label { color: var(--accent-text); }
+    .ds__theme-text { color: var(--fg-muted); }
+    .ds__theme-actions { display: flex; flex-wrap: wrap; gap: var(--sp-4); margin-top: var(--sp-3); }
+    .ds__glass {
+      padding: var(--sp-5);
+      border: var(--hairline) solid var(--glass-border);
+      border-radius: var(--r-md);
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    /* --- 03 Типографіка --- */
+    .ds__fonts {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap);
+      margin-bottom: var(--sp-8);
+    }
+    .ds__font {
+      display: grid;
+      gap: var(--sp-3);
+      padding: var(--sp-5);
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--bg-raised);
+    }
+    .ds__font-aa {
+      font-size: clamp(4rem, 3rem + 5vw, 7rem);
+      font-weight: var(--fw-black);
+      line-height: 1;
+      color: var(--fg-strong);
+    }
+    .ds__font-aa--mono { font-family: var(--font-mono); font-weight: var(--fw-medium); }
+    .ds__font-chars { color: var(--fg-muted); word-break: break-all; }
+    .ds__font-chars--mono { font-family: var(--font-mono); }
+
+    .ds__type { margin: 0; padding: 0; list-style: none; }
+    .ds__type-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-3);
+      padding-block: var(--sp-6);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .ds__type-meta { color: var(--fg-muted); }
+    .ds__type-meta code { font-family: var(--font-mono); color: var(--fg-strong); }
+    .ds__type-sample { min-width: 0; }
+
+    /* --- 04 Кнопки --- */
+    .ds__btn-panels {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap);
+    }
+    .ds__btn-panel {
+      display: grid;
+      gap: var(--sp-5);
+      padding: clamp(var(--sp-5), 4vw, var(--sp-7));
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-md);
+    }
+    .ds__btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sp-4);
+    }
+    .ds__btn-caption { color: var(--fg-muted); width: 100%; }
+
+    /* --- 05 Сітка, відступи, радіуси --- */
+    .ds__gridbox {
+      position: relative;
+      height: 160px;
+      margin-bottom: var(--sp-8);
+    }
+    .ds__gridcol {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: var(--sp-2);
+      background: var(--bg-sunken);
+      border-top: var(--stroke) solid var(--accent);
+      color: var(--fg-muted);
+      transform-origin: bottom;
+    }
+    .ds__gridcol:nth-child(n + 5) { display: none; }
+
+    .ds__spaces { display: grid; gap: var(--sp-3); margin: 0 0 var(--sp-8); padding: 0; list-style: none; }
+    .ds__space {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      align-items: center;
+      gap: var(--sp-4);
+    }
+    .ds__space-bar {
+      height: 12px;
+      background: var(--accent);
+      transform-origin: left;
+    }
+    .ds__space-name { color: var(--fg-muted); }
+
+    .ds__radii {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--grid-gap);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ds__radius {
+      display: grid;
+      gap: var(--sp-3);
+      color: var(--fg-muted);
+    }
+    .ds__radius-box {
+      width: 100%;
+      max-width: 160px;
+      aspect-ratio: 1;
+      border: var(--stroke) solid var(--fg-strong);
+      border-top-color: var(--accent);
+      border-right-color: var(--accent);
+      background: var(--bg-raised);
+    }
+
+    /* --- 06 Рух --- */
+    .ds__motion { display: grid; gap: var(--sp-5); margin: 0 0 var(--sp-6); padding: 0; list-style: none; }
+    .ds__ease {
+      display: grid;
+      gap: var(--sp-2);
+    }
+    .ds__ease-track {
+      position: relative;
+      height: 40px;
+      border-bottom: var(--hairline) solid var(--line-strong);
+    }
+    .ds__ease-dot {
+      position: absolute;
+      left: 0;
+      bottom: 8px;
+      width: 24px;
+      height: 24px;
+      background: var(--accent);
+      border-radius: var(--r-xs);
+      transition: transform var(--dur-reveal) var(--ease, linear);
+    }
+    .ds__ease--out { --ease: var(--ease-out); }
+    .ds__ease--inout { --ease: var(--ease-in-out); }
+    .ds__ease--spring { --ease: var(--ease-spring); }
+    .ds__motion.is-played .ds__ease-dot { transform: translateX(var(--travel, 0px)); }
+    .ds__ease-name { display: flex; justify-content: space-between; gap: var(--sp-3); color: var(--fg-muted); }
+    .ds__ease-name code { font-family: var(--font-mono); color: var(--fg-strong); }
+    .ds__motion-note { color: var(--fg-muted); margin-top: var(--sp-5); }
+
+    /* --- 07 Лого --- */
+    .ds__logos {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ds__logo-card {
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: var(--sp-5);
+      min-height: 240px;
+      padding: var(--sp-6);
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-md);
+    }
+    .ds__logo-card img { align-self: center; justify-self: start; }
+    .ds__logo-img--stacked { width: min(240px, 100%); height: auto; }
+    .ds__logo-img--inline { width: min(320px, 100%); height: auto; }
+    .ds__logo-cap { color: var(--fg-muted); }
+
+    /* --- Підвал превʼю --- */
+    .ds__foot {
+      padding-block: var(--sp-7);
+      border-top: var(--hairline) solid var(--line);
+      color: var(--fg-muted);
+    }
+    .ds__foot-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--sp-4); }
+
+    /* --- Тиха поява при скролі (еталон для всіх блоків) --- */
+    .ds__reveal {
+      opacity: 0;
+      transform: translateY(var(--reveal-shift));
+      transition: opacity var(--dur-reveal) var(--ease-out),
+                  transform var(--dur-reveal) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * var(--stagger));
+    }
+    .ds__reveal.is-visible { opacity: 1; transform: none; }
+    .ds--no-js .ds__reveal { opacity: 1; transform: none; }
+
+    /* --- Статус копіювання --- */
+    .ds__toast {
+      position: fixed;
+      left: 50%;
+      bottom: var(--sp-5);
+      z-index: var(--z-overlay);
+      padding: var(--sp-3) var(--sp-5);
+      border-radius: var(--r-sm);
+      background: var(--brand-navy);
+      color: var(--brand-white);
+      font-size: var(--fs-small);
+      opacity: 0;
+      transform: translate(-50%, 12px);
+      transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+      pointer-events: none;
+    }
+    .ds__toast.is-shown { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ===== Планшет 768+ ===== */
+    @media (min-width: 768px) {
+      .ds__top-meta--wide { display: inline; }
+      .ds__top-logo { width: 176px; }
+      .ds__swatches { grid-template-columns: repeat(2, 1fr); }
+      .ds__chip { aspect-ratio: 4 / 3; }
+      .ds__swatches--derived { grid-template-columns: repeat(4, 1fr); }
+      .ds__themes,
+      .ds__btn-panels,
+      .ds__fonts,
+      .ds__logos { grid-template-columns: repeat(2, 1fr); }
+      .ds__type-row { grid-template-columns: 14rem 1fr; gap: var(--sp-6); align-items: baseline; }
+      .ds__gridcol:nth-child(n + 5) { display: flex; }
+      .ds__radii { grid-template-columns: repeat(4, 1fr); }
+      .ds__head { grid-template-columns: 1fr 1fr; align-items: end; column-gap: var(--grid-gap); }
+      .ds__head-label { grid-column: 1 / -1; }
+    }
+
+    /* ===== Десктоп 1280+ ===== */
+    @media (min-width: 1280px) {
+      .ds__swatches { grid-template-columns: repeat(4, 1fr); }
+      .ds__type-row { grid-template-columns: 18rem 1fr; }
+      .ds__intro { padding-block: var(--sp-10) var(--sp-9); }
+    }
+
+    /* ===== Без руху ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .ds__intro-block { animation: none; }
+      .ds__reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#ds-main">Перейти до змісту</a>
+
+  <header class="ds__top">
+    <div class="container ds__top-inner">
+      <img class="ds__top-logo" src="../assets/images/logo-inline-navy.svg" width="176" height="14" alt="Happy Finance">
+      <p class="t-label ds__top-meta">00 / Design system<span class="ds__top-meta--wide"> · 2026 / draft</span></p>
+    </div>
+  </header>
+
+  <main id="ds-main">
+    <!-- ===== Інтро ===== -->
+    <section class="ds__intro" data-theme="dark" aria-labelledby="ds-title">
+      <div class="ds__intro-grid" aria-hidden="true"></div>
+      <div class="ds__intro-block" aria-hidden="true"></div>
+      <div class="container ds__intro-inner">
+        <img class="ds__intro-logo" src="../assets/images/logo-stacked-white.svg" width="420" height="144" alt="Happy Finance">
+        <p class="t-label ds__intro-label">Бухгалтерський супровід бізнесу</p>
+        <h1 id="ds-title" class="t-display ds__intro-title">Дизайн-система</h1>
+        <p class="t-lead">Кольори, шрифти, кнопки, сітка й рух, з яких складається кожен блок сайту. Усі значення живуть у <code>css/tokens.css</code>, тож зміна в одному місці оновлює весь сайт.</p>
+        <ul class="ds__intro-nav t-label" role="list">
+          <li><a href="#ds-colors">01 Палітра</a></li>
+          <li><a href="#ds-themes">02 Теми</a></li>
+          <li><a href="#ds-type">03 Типографіка</a></li>
+          <li><a href="#ds-buttons">04 Кнопки</a></li>
+          <li><a href="#ds-grid">05 Сітка</a></li>
+          <li><a href="#ds-motion">06 Рух</a></li>
+          <li><a href="#ds-logo">07 Лого</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 01 Палітра ===== -->
+    <section class="section ds__section" id="ds-colors" aria-labelledby="ds-colors-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">01 / Палітра</p>
+          <h2 id="ds-colors-title" class="t-h2">Чотири кольори бренду</h2>
+          <p class="ds__head-note">Синій тримає довіру, помаранчевий веде до дії, беж додає тепла. Натисніть на колір, щоб скопіювати HEX. Поруч контраст за WCAG: для звичайного тексту потрібно щонайменше 4.5:1.</p>
+        </div>
+
+        <ul class="ds__swatches" role="list">
+          <li class="ds__swatch ds__reveal" style="--i:0">
+            <button class="ds__chip ds__chip--navy" type="button" data-copy="#102662">
+              <span class="ds__chip-role">01 / основний</span>
+              <span class="ds__chip-copy" aria-hidden="true">копіювати</span>
+              <span class="ds__chip-hex">#102662</span>
+            </button>
+            <p class="ds__swatch-name">Глибокий синій <code class="t-small t-muted">--brand-navy</code></p>
+            <p class="ds__swatch-use">Заголовки, логотип, текст на помаранчевому.</p>
+            <dl class="ds__ratios">
+              <div class="ds__ratio"><dt>на білому</dt><dd class="ds__ok">14.2:1</dd></div>
+              <div class="ds__ratio"><dt>на світлому фоні</dt><dd class="ds__ok">12.9:1</dd></div>
+            </dl>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:1">
+            <button class="ds__chip ds__chip--white" type="button" data-copy="#FFFFFF">
+              <span class="ds__chip-role">02 / базовий</span>
+              <span class="ds__chip-copy" aria-hidden="true">копіювати</span>
+              <span class="ds__chip-hex">#FFFFFF</span>
+            </button>
+            <p class="ds__swatch-name">Білий <code class="t-small t-muted">--brand-white</code></p>
+            <p class="ds__swatch-use">Картки на світлому фоні, текст на темному.</p>
+            <dl class="ds__ratios">
+              <div class="ds__ratio"><dt>на темному фоні</dt><dd class="ds__ok">18.3:1</dd></div>
+              <div class="ds__ratio"><dt>на синьому</dt><dd class="ds__ok">14.2:1</dd></div>
+            </dl>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:2">
+            <button class="ds__chip ds__chip--orange" type="button" data-copy="#FB6835">
+              <span class="ds__chip-role">03 / акцентний</span>
+              <span class="ds__chip-copy" aria-hidden="true">копіювати</span>
+              <span class="ds__chip-hex">#FB6835</span>
+            </button>
+            <p class="ds__swatch-name">Помаранчевий <code class="t-small t-muted">--brand-orange</code></p>
+            <p class="ds__swatch-use">Головна кнопка, лінії, акценти. Дрібний текст на світлому лише відтінком <code>#B9461A</code>.</p>
+            <dl class="ds__ratios">
+              <div class="ds__ratio"><dt>синій текст на ньому</dt><dd class="ds__ok">4.8:1</dd></div>
+              <div class="ds__ratio"><dt>як текст на темному</dt><dd class="ds__ok">6.2:1</dd></div>
+              <div class="ds__ratio"><dt>білий текст на ньому</dt><dd class="ds__bad">2.9:1</dd></div>
+            </dl>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:3">
+            <button class="ds__chip ds__chip--beige" type="button" data-copy="#CAAE99">
+              <span class="ds__chip-role">04 / додатковий</span>
+              <span class="ds__chip-copy" aria-hidden="true">копіювати</span>
+              <span class="ds__chip-hex">#CAAE99</span>
+            </button>
+            <p class="ds__swatch-name">Теплий беж <code class="t-small t-muted">--brand-beige</code></p>
+            <p class="ds__swatch-use">Мітки й підписи на темному, теплі деталі. Не для тексту на світлому.</p>
+            <dl class="ds__ratios">
+              <div class="ds__ratio"><dt>як текст на темному</dt><dd class="ds__ok">8.7:1</dd></div>
+              <div class="ds__ratio"><dt>як текст на білому</dt><dd class="ds__bad">2.1:1</dd></div>
+            </dl>
+          </li>
+        </ul>
+
+        <h3 class="t-h3 ds__subhead">Похідні відтінки</h3>
+        <p class="ds__head-note">Фони взяті з вашого макета, решта розрахована, щоб другорядний текст проходив контраст. Нових кольорів бренду не додаю.</p>
+        <ul class="ds__swatches ds__swatches--derived" role="list" style="margin-top: var(--sp-5)">
+          <li class="ds__swatch ds__reveal" style="--i:0">
+            <button class="ds__chip ds__chip--ink" type="button" data-copy="#121420"><span class="ds__chip-role">темний фон</span><span class="ds__chip-hex">#121420</span></button>
+            <p class="ds__swatch-use"><code>--ink-900</code> · Hero, CTA, footer</p>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:1">
+            <button class="ds__chip ds__chip--ink800" type="button" data-copy="#1A1D2B"><span class="ds__chip-role">поверхня</span><span class="ds__chip-hex">#1A1D2B</span></button>
+            <p class="ds__swatch-use"><code>--ink-800</code> · картки на темному</p>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:2">
+            <button class="ds__chip ds__chip--paper" type="button" data-copy="#F5F4F0"><span class="ds__chip-role">світлий фон</span><span class="ds__chip-hex">#F5F4F0</span></button>
+            <p class="ds__swatch-use"><code>--paper-100</code> · основні секції</p>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:3">
+            <button class="ds__chip ds__chip--paper200" type="button" data-copy="#EBE8E1"><span class="ds__chip-role">поверхня</span><span class="ds__chip-hex">#EBE8E1</span></button>
+            <p class="ds__swatch-use"><code>--paper-200</code> · заглиблені зони</p>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:4">
+            <button class="ds__chip ds__chip--slate600" type="button" data-copy="#4A5170"><span class="ds__chip-role">текст 2</span><span class="ds__chip-hex">#4A5170</span></button>
+            <p class="ds__swatch-use"><code>--slate-600</code> · 7.1:1 на світлому</p>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:5">
+            <button class="ds__chip ds__chip--slate300" type="button" data-copy="#A8ADC2"><span class="ds__chip-role">текст 2</span><span class="ds__chip-hex">#A8ADC2</span></button>
+            <p class="ds__swatch-use"><code>--slate-300</code> · 8.2:1 на темному</p>
+          </li>
+          <li class="ds__swatch ds__reveal" style="--i:6">
+            <button class="ds__chip ds__chip--orange700" type="button" data-copy="#B9461A"><span class="ds__chip-role">акцент-текст</span><span class="ds__chip-hex">#B9461A</span></button>
+            <p class="ds__swatch-use"><code>--orange-700</code> · 4.8:1 на світлому</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 02 Теми ===== -->
+    <section class="section ds__section" id="ds-themes" aria-labelledby="ds-themes-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">02 / Теми</p>
+          <h2 id="ds-themes-title" class="t-h2">Світла і темна секція</h2>
+          <p class="ds__head-note">Блок не знає конкретних кольорів, він бере <code>--bg</code>, <code>--fg</code>, <code>--accent</code>. Атрибут <code>data-theme="dark"</code> перемикає всю секцію.</p>
+        </div>
+        <div class="ds__themes">
+          <div class="ds__theme ds__reveal" data-theme="light" style="--i:0">
+            <p class="t-label ds__theme-label">01 / Світла</p>
+            <h3 class="t-h3">Бухгалтерія — це ваш спокій</h3>
+            <p class="ds__theme-text">Основні секції сайту: послуги, про нас, процес, FAQ.</p>
+            <div class="ds__glass">
+              <p class="t-small">Glass-поверхня: шапка або одна ключова картка, не більше.</p>
+            </div>
+            <div class="ds__theme-actions">
+              <a class="btn btn--primary" href="#ds-themes">Звʼязатися</a>
+              <a class="btn btn--outline" href="#ds-themes">Послуги</a>
+            </div>
+          </div>
+          <div class="ds__theme ds__reveal" data-theme="dark" style="--i:1">
+            <p class="t-label ds__theme-label">02 / Темна</p>
+            <h3 class="t-h3">Бухгалтерія — це ваш спокій</h3>
+            <p class="ds__theme-text">Hero, фінальний заклик і footer: темний фон тримає фокус.</p>
+            <div class="ds__glass">
+              <p class="t-small">Той самий компонент, інша тема. Жодних змін у коді блоку.</p>
+            </div>
+            <div class="ds__theme-actions">
+              <a class="btn btn--primary" href="#ds-themes">Звʼязатися</a>
+              <a class="btn btn--outline" href="#ds-themes">Послуги</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03 Типографіка ===== -->
+    <section class="section ds__section" id="ds-type" aria-labelledby="ds-type-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">03 / Типографіка</p>
+          <h2 id="ds-type-title" class="t-h2">Два шрифти, чіткі ролі</h2>
+          <p class="ds__head-note">Onest створений українською студією і добре тримає кирилицю. IBM Plex Mono дає мітки й цифри, що асоціюються з точністю обліку. Розміри плавно масштабуються від 360px до 1440px.</p>
+        </div>
+
+        <div class="ds__fonts">
+          <div class="ds__font ds__reveal" style="--i:0">
+            <p class="t-label t-muted">Onest · 400–800 · основний</p>
+            <p class="ds__font-aa" aria-hidden="true">Аа Ґґ</p>
+            <p class="ds__font-chars">АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ абвгґдеєжзиіїйклмнопрстуфхцчшщьюя</p>
+          </div>
+          <div class="ds__font ds__reveal" style="--i:1">
+            <p class="t-label t-muted">IBM Plex Mono · 400–500 · мітки й цифри</p>
+            <p class="ds__font-aa ds__font-aa--mono" aria-hidden="true">01/</p>
+            <p class="ds__font-chars ds__font-chars--mono">0123456789 ₴ % / — № 31.12.2026</p>
+          </div>
+        </div>
+
+        <ul class="ds__type" role="list">
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.t-display</code><br>44 → 100px · 800 · CAPS</p>
+            <p class="t-display ds__type-sample" style="color: var(--fg-strong)">Happy Finance</p>
+          </li>
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.t-h2</code><br>32 → 58px · 700</p>
+            <p class="t-h2 ds__type-sample" style="color: var(--fg-strong)">Бухгалтерський супровід бізнесу</p>
+          </li>
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.t-h3</code><br>22 → 28px · 600</p>
+            <p class="t-h3 ds__type-sample" style="color: var(--fg-strong)">Щомісячний супровід ФОП</p>
+          </li>
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.t-lead</code><br>18 → 22px · 400</p>
+            <p class="t-lead ds__type-sample">Бухгалтерія — це не просто документи, які потрібні податковій. Це ваш спокій та безпека зараз і в майбутньому.</p>
+          </li>
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.t-body</code><br>16 → 17px · 400 · 1.6</p>
+            <p class="t-body ds__type-sample">Спочатку аналізуємо, як зараз працює бізнес. Лише після цього видно вузькі місця і те, що можна автоматизувати, щоб команді було простіше, а власник бачив реальні цифри.</p>
+          </li>
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.t-label</code><br>12px · mono · CAPS</p>
+            <p class="t-label ds__type-sample" style="color: var(--accent-text)">03 / Послуги для ФОП</p>
+          </li>
+          <li class="ds__type-row">
+            <p class="t-small ds__type-meta"><code>.placeholder</code><br>дані, яких ще немає</p>
+            <p class="ds__type-sample">Телефон: <span class="placeholder">[ПЛЕЙСХОЛДЕР: телефон]</span></p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 04 Кнопки ===== -->
+    <section class="section ds__section" id="ds-buttons" aria-labelledby="ds-buttons-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">04 / Кнопки</p>
+          <h2 id="ds-buttons-title" class="t-h2">Одна головна дія на екран</h2>
+          <p class="ds__head-note">Наведіть курсор: кнопка злегка піднімається, шар заливки проходить зліва направо, стрілка зсувається. Анімуються лише transform і opacity. Спробуйте Tab, щоб побачити фокус.</p>
+        </div>
+        <div class="ds__btn-panels">
+          <div class="ds__btn-panel ds__reveal" data-theme="light" style="--i:0">
+            <div class="ds__btn-row">
+              <p class="t-label ds__btn-caption">Основна · контурна · текстова</p>
+              <a class="btn btn--primary" href="#ds-buttons">
+                Обговорити задачу
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a class="btn btn--outline" href="#ds-buttons">Усі послуги</a>
+              <a class="btn btn--ghost" href="#ds-buttons">Детальніше</a>
+            </div>
+            <div class="ds__btn-row">
+              <p class="t-label ds__btn-caption">Розміри · неактивна</p>
+              <a class="btn btn--primary btn--lg" href="#ds-buttons">Велика</a>
+              <a class="btn btn--outline btn--sm" href="#ds-buttons">Мала</a>
+              <button class="btn btn--primary" type="button" disabled>Неактивна</button>
+            </div>
+          </div>
+          <div class="ds__btn-panel ds__reveal" data-theme="dark" style="--i:1">
+            <div class="ds__btn-row">
+              <p class="t-label ds__btn-caption">На темному фоні</p>
+              <a class="btn btn--primary" href="#ds-buttons">
+                Обговорити задачу
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a class="btn btn--outline" href="#ds-buttons">Усі послуги</a>
+              <a class="btn btn--ghost" href="#ds-buttons">Детальніше</a>
+            </div>
+            <div class="ds__btn-row">
+              <p class="t-label ds__btn-caption">На всю ширину (мобільний CTA)</p>
+              <a class="btn btn--primary btn--block" href="#ds-buttons">Написати в месенджер</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 05 Сітка ===== -->
+    <section class="section ds__section" id="ds-grid" aria-labelledby="ds-grid-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">05 / Сітка, відступи, радіуси</p>
+          <h2 id="ds-grid-title" class="t-h2">Порядок, який видно</h2>
+          <p class="ds__head-note">12 колонок, контейнер 1320px, поля від 16px на телефоні до 48px на великому екрані. Відступи кратні 4px. Кути майже гострі: точність замість «мʼякості».</p>
+        </div>
+
+        <div class="grid ds__gridbox" aria-hidden="true">
+          <div class="ds__gridcol t-label">1</div><div class="ds__gridcol t-label">2</div><div class="ds__gridcol t-label">3</div><div class="ds__gridcol t-label">4</div>
+          <div class="ds__gridcol t-label">5</div><div class="ds__gridcol t-label">6</div><div class="ds__gridcol t-label">7</div><div class="ds__gridcol t-label">8</div>
+          <div class="ds__gridcol t-label">9</div><div class="ds__gridcol t-label">10</div><div class="ds__gridcol t-label">11</div><div class="ds__gridcol t-label">12</div>
+        </div>
+
+        <h3 class="t-h3 ds__subhead">Відступи</h3>
+        <ul class="ds__spaces" role="list">
+          <li class="ds__space"><code class="t-label ds__space-name">sp-2 · 8</code><span class="ds__space-bar" style="width: var(--sp-2)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-4 · 16</code><span class="ds__space-bar" style="width: var(--sp-4)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-5 · 24</code><span class="ds__space-bar" style="width: var(--sp-5)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-6 · 32</code><span class="ds__space-bar" style="width: var(--sp-6)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-7 · 48</code><span class="ds__space-bar" style="width: var(--sp-7)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-8 · 64</code><span class="ds__space-bar" style="width: var(--sp-8)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-9 · 96</code><span class="ds__space-bar" style="width: var(--sp-9)"></span></li>
+          <li class="ds__space"><code class="t-label ds__space-name">sp-10 · 128</code><span class="ds__space-bar" style="width: var(--sp-10)"></span></li>
+        </ul>
+
+        <h3 class="t-h3 ds__subhead">Радіуси</h3>
+        <ul class="ds__radii" role="list">
+          <li class="ds__radius"><span class="ds__radius-box" style="border-radius: var(--r-xs)"></span><code class="t-label">r-xs · 2 · кольори, мітки</code></li>
+          <li class="ds__radius"><span class="ds__radius-box" style="border-radius: var(--r-sm)"></span><code class="t-label">r-sm · 4 · кнопки</code></li>
+          <li class="ds__radius"><span class="ds__radius-box" style="border-radius: var(--r-md)"></span><code class="t-label">r-md · 8 · картки</code></li>
+          <li class="ds__radius"><span class="ds__radius-box" style="border-radius: var(--r-lg)"></span><code class="t-label">r-lg · 16 · великі панелі</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 06 Рух ===== -->
+    <section class="section ds__section" id="ds-motion" aria-labelledby="ds-motion-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">06 / Рух</p>
+          <h2 id="ds-motion-title" class="t-h2">Спокійно і точно</h2>
+          <p class="ds__head-note">Три криві на весь сайт. Поява блоків: зсув 24px і прозорість за 1 секунду, з затримкою 80мс між елементами. Якщо в системі ввімкнено «зменшити рух», анімації вимикаються.</p>
+        </div>
+        <ul class="ds__motion" role="list" data-ds-motion>
+          <li class="ds__ease ds__ease--out">
+            <p class="t-small ds__ease-name"><span>Поява, hover</span><code>--ease-out</code></p>
+            <div class="ds__ease-track"><span class="ds__ease-dot"></span></div>
+          </li>
+          <li class="ds__ease ds__ease--inout">
+            <p class="t-small ds__ease-name"><span>Перехід між станами</span><code>--ease-in-out</code></p>
+            <div class="ds__ease-track"><span class="ds__ease-dot"></span></div>
+          </li>
+          <li class="ds__ease ds__ease--spring">
+            <p class="t-small ds__ease-name"><span>Дрібні живі деталі</span><code>--ease-spring</code></p>
+            <div class="ds__ease-track"><span class="ds__ease-dot"></span></div>
+          </li>
+        </ul>
+        <button class="btn btn--outline btn--sm" type="button" data-ds-play aria-pressed="false">Програти</button>
+      </div>
+    </section>
+
+    <!-- ===== 07 Лого ===== -->
+    <section class="section ds__section" id="ds-logo" aria-labelledby="ds-logo-title">
+      <div class="container">
+        <div class="ds__head">
+          <p class="t-label ds__head-label">07 / Логотип</p>
+          <h2 id="ds-logo-title" class="t-h2">Вордмарк Happy Finance</h2>
+          <p class="ds__head-note">Тимчасовий логотип, зібраний з вашого макета: Onest 800 у кривих і помаранчевий квадрат-крапка. Якщо є оригінальний файл, просто замініть SVG у <code>assets/images</code>.</p>
+        </div>
+        <ul class="ds__logos" role="list">
+          <li class="ds__logo-card ds__reveal" data-theme="light" style="--i:0">
+            <img class="ds__logo-img--stacked" src="../assets/images/logo-stacked-navy.svg" width="240" height="82" alt="Happy Finance, вертикальний, на світлому" loading="lazy">
+            <p class="t-label ds__logo-cap">logo-stacked-navy.svg</p>
+          </li>
+          <li class="ds__logo-card ds__reveal" data-theme="dark" style="--i:1">
+            <img class="ds__logo-img--stacked" src="../assets/images/logo-stacked-white.svg" width="240" height="82" alt="Happy Finance, вертикальний, на темному" loading="lazy">
+            <p class="t-label ds__logo-cap">logo-stacked-white.svg</p>
+          </li>
+          <li class="ds__logo-card ds__reveal" data-theme="light" style="--i:2">
+            <img class="ds__logo-img--inline" src="../assets/images/logo-inline-navy.svg" width="320" height="26" alt="Happy Finance, горизонтальний, на світлому" loading="lazy">
+            <p class="t-label ds__logo-cap">logo-inline-navy.svg · для шапки</p>
+          </li>
+          <li class="ds__logo-card ds__reveal" data-theme="dark" style="--i:3">
+            <img class="ds__logo-img--inline" src="../assets/images/logo-inline-white.svg" width="320" height="26" alt="Happy Finance, горизонтальний, на темному" loading="lazy">
+            <p class="t-label ds__logo-cap">logo-inline-white.svg · для футера</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ds__foot">
+    <div class="container ds__foot-inner t-label">
+      <span>Happy Finance / Visual identity</span>
+      <span>2026 / draft</span>
+    </div>
+  </footer>
+
+  <p class="ds__toast" role="status" aria-live="polite" data-ds-toast></p>
+
+  <script>
+    (function initDesignSystem() {
+      var root = document.documentElement;
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* Тиха поява при скролі */
+      var reveals = document.querySelectorAll(".ds__reveal");
+      if (!("IntersectionObserver" in window) || reduceMotion) {
+        root.classList.add("ds--no-js");
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
+        reveals.forEach(function (el) { io.observe(el); });
+      }
+
+      /* Копіювання HEX */
+      var toast = document.querySelector("[data-ds-toast]");
+      var toastTimer;
+      function showToast(text) {
+        toast.textContent = text;
+        toast.classList.add("is-shown");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { toast.classList.remove("is-shown"); }, 1600);
+      }
+      document.querySelectorAll("[data-copy]").forEach(function (btn) {
+        btn.setAttribute("aria-label", "Скопіювати " + btn.dataset.copy);
+        btn.addEventListener("click", function () {
+          var hex = btn.dataset.copy;
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(hex).then(
+              function () { showToast(hex + " скопійовано"); },
+              function () { showToast(hex); }
+            );
+          } else {
+            showToast(hex);
+          }
+        });
+      });
+
+      /* Демо кривих руху */
+      var motion = document.querySelector("[data-ds-motion]");
+      var play = document.querySelector("[data-ds-play]");
+      function setTravel() {
+        var track = motion.querySelector(".ds__ease-track");
+        var dot = motion.querySelector(".ds__ease-dot");
+        motion.style.setProperty("--travel", (track.clientWidth - dot.offsetWidth) + "px");
+      }
+      setTravel();
+      window.addEventListener("resize", setTravel, { passive: true });
+      play.addEventListener("click", function () {
+        var on = motion.classList.toggle("is-played");
+        play.setAttribute("aria-pressed", String(on));
+        play.textContent = on ? "Назад" : "Програти";
+      });
+    })();
+  </script>
+</body>
+</html>
