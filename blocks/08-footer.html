@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>08 Footer — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <!-- Бібліотеки: немає. Поява напису на IntersectionObserver, контакти з одного обʼєкта CONTACTS. -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 08 Footer. Префікс класів: ftr__ ===== */
+
+    .ftr {
+      position: relative;
+      padding-top: var(--section-y);
+      overflow: clip;
+    }
+    .ftr__bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
+        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
+      background-size: 56px 56px;
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+      mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
+      opacity: 0.5;
+    }
+    .ftr .container { position: relative; }
+
+    /* --- Верх: бренд, розділи, контакти --- */
+    .ftr__top {
+      display: grid;
+      gap: var(--sp-8);
+      padding-bottom: var(--sp-8);
+    }
+    .ftr__brand {
+      display: grid;
+      align-content: start;
+      justify-items: start;
+      gap: var(--sp-4);
+    }
+    .ftr__title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-semibold);
+      line-height: 1.2;
+      max-width: 16ch;
+    }
+    .ftr__tagline { color: var(--fg-muted); max-width: 22rem; }
+    .ftr__brand .btn { margin-top: var(--sp-3); }
+
+    .ftr__col { min-width: 0; }
+    .ftr__col-title { color: var(--brand-beige); margin-bottom: var(--sp-4); }
+    .ftr__col .ftr__links {   /* .ftr__col перебиває ul[role="list"] з base.css */
+      display: grid;
+      gap: var(--sp-1);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ftr__link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    /* підкреслення виїжджає зліва — лише scaleX */
+    .ftr__link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 8px;
+      height: var(--hairline);
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    @media (hover: hover) {
+      .ftr__link:hover::after { transform: scaleX(1); }
+    }
+    .ftr__link:focus-visible::after { transform: scaleX(1); }
+
+    .ftr__col .ftr__contacts {
+      display: grid;
+      gap: var(--sp-3);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .ftr__contact {
+      display: grid;
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+      align-items: baseline;
+      gap: var(--sp-3);
+    }
+    .ftr__contact-key { color: var(--fg-muted); }
+    .ftr__contact-val { min-width: 0; overflow-wrap: anywhere; }
+    .ftr__contact-val a { color: var(--fg); text-decoration: none; }
+    @media (hover: hover) {
+      .ftr__contact-val a:hover { color: var(--accent); }
+    }
+
+    /* --- Великий напис --- */
+    .ftr__mark {
+      container-type: inline-size;
+      padding-block: var(--sp-6) var(--sp-5);
+      border-top: var(--hairline) solid var(--line);
+      user-select: none;
+    }
+    .ftr__word {
+      display: flex;
+      align-items: flex-end;
+      margin: 0;
+      color: var(--fg-strong);
+      font-size: 12.3cqw;
+      font-weight: var(--fw-black);
+      line-height: 0.82;
+      letter-spacing: -0.04em;
+      white-space: nowrap;
+    }
+    /* кожна літера в «вікні», з якого вона піднімається */
+    .ftr__char {
+      display: inline-block;
+      overflow: clip;
+      padding-bottom: 0.04em;
+    }
+    .ftr__char > span {
+      display: inline-block;
+      transition: transform var(--dur-reveal) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * 45ms);
+    }
+    .ftr__space { width: 0.28em; }
+    .ftr__dot {
+      flex: none;
+      width: 0.16em;
+      height: 0.16em;
+      margin: 0 0 0.115em 0.06em;
+      background: var(--accent);
+      transition: transform var(--dur-slow) var(--ease-spring) 700ms;
+    }
+
+    /* --- Нижній рядок --- */
+    .ftr__bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-3) var(--sp-5);
+      padding-block: var(--sp-5) calc(var(--sp-6) + env(safe-area-inset-bottom, 0px));
+      border-top: var(--hairline) solid var(--line);
+      color: var(--fg-muted);
+    }
+    .ftr__up {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      min-height: 44px;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .ftr__up-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .ftr__up-icon svg { width: 16px; height: 16px; }
+    @media (hover: hover) {
+      .ftr__up:hover .ftr__up-icon { transform: translateY(-4px); }
+    }
+
+    /* --- Поява --- */
+    .ftr__reveal { transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out); }
+    @media (scripting: enabled) {
+      .ftr__reveal:not(.is-shown) { opacity: 0; transform: translateY(var(--reveal-shift)); }
+      /* телефон: напис зʼявляється цілим, без поштучної анімації */
+      .ftr__mark:not(.is-shown) .ftr__word { opacity: 0; transform: translateY(var(--reveal-shift)); }
+      .ftr__mark:not(.is-shown) .ftr__dot { transform: scale(0); }
+    }
+    .ftr__word { transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out); }
+
+    /* ===== Планшет 768+ ===== */
+    @media (min-width: 768px) {
+      .ftr__top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .ftr__brand { grid-column: 1 / -1; }
+      /* компʼютер і планшет: літери піднімаються по одній */
+      @media (scripting: enabled) {
+        .ftr__mark:not(.is-shown) .ftr__word { opacity: 1; transform: none; }
+        .ftr__mark:not(.is-shown) .ftr__char > span { transform: translateY(105%); }
+      }
+    }
+
+    /* ===== Десктоп 1024+: бренд 5 колонок, розділи 3, контакти 4 ===== */
+    @media (min-width: 1024px) {
+      .ftr__top {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+      }
+      .ftr__brand { grid-column: 1 / span 5; }
+      .ftr__col--nav { grid-column: 7 / span 2; }
+      .ftr__col--contacts { grid-column: 9 / -1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ftr__char > span, .ftr__dot, .ftr__word { transition: none; }
+    }
+
+    /* ===== Лише для перегляду блоку окремо ===== */
+    .ftr-demo { min-height: 120vh; padding-block: var(--section-y); }
+    .ftr-demo__label { color: var(--accent-text); margin-bottom: var(--sp-4); }
+    .ftr-demo__note { color: var(--fg-muted); max-width: 36rem; }
+  </style>
+</head>
+<body>
+<main id="main">
+
+  <!-- Демо: щоб було куди прокрутити. На сайт не йде. -->
+  <section class="ftr-demo" id="top" data-theme="light">
+    <div class="container">
+      <p class="t-label ftr-demo__label">Демо</p>
+      <h1 class="t-h2">Кінець сторінки</h1>
+      <p class="ftr-demo__note">Прокрутіть вниз до підвалу: великий напис зʼявиться, коли ви до нього дійдете.</p>
+    </div>
+  </section>
+
+</main>
+
+  <!-- ================= БЛОК 08 FOOTER ================= -->
+  <footer class="ftr" data-theme="dark" data-ftr>
+    <div class="ftr__bg" aria-hidden="true"></div>
+    <div class="container">
+
+      <div class="ftr__top">
+        <div class="ftr__brand ftr__reveal">
+          <p class="ftr__title">Бухгалтерія — це ваш спокій.</p>
+          <p class="ftr__tagline">Бухгалтерський супровід ФОП і ТОВ</p>
+          <a class="btn btn--primary" href="#match">
+            Підібрати послугу
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <nav class="ftr__col ftr__col--nav ftr__reveal" aria-labelledby="ftr-nav-title">
+          <p class="t-label ftr__col-title" id="ftr-nav-title">Розділи</p>
+          <ul class="ftr__links" role="list">
+            <li><a class="ftr__link" href="#services">Послуги</a></li>
+            <li><a class="ftr__link" href="#about">Про нас</a></li>
+            <li><a class="ftr__link" href="#process">Як ми працюємо</a></li>
+            <li><a class="ftr__link" href="#faq">Питання</a></li>
+            <li><a class="ftr__link" href="#contact">Контакти</a></li>
+          </ul>
+        </nav>
+
+        <div class="ftr__col ftr__col--contacts ftr__reveal">
+          <p class="t-label ftr__col-title">Контакти</p>
+          <ul class="ftr__contacts" role="list">
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Телефон</span><span class="ftr__contact-val" data-contact="phone"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Telegram</span><span class="ftr__contact-val" data-contact="telegram"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Viber</span><span class="ftr__contact-val" data-contact="viber"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">WhatsApp</span><span class="ftr__contact-val" data-contact="whatsapp"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Email</span><span class="ftr__contact-val" data-contact="email"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            <li class="ftr__contact"><span class="t-label ftr__contact-key">Місто</span><span class="ftr__contact-val" data-contact="city"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- декоративний напис: назва вже є в рядку © -->
+      <div class="ftr__mark" aria-hidden="true">
+        <p class="ftr__word" data-ftr-word>HAPPY FINANCE</p>
+      </div>
+
+      <div class="ftr__bottom">
+        <p class="t-small">© <span data-ftr-year>2026</span> Happy Finance</p>
+        <a class="ftr__up" href="#top" data-ftr-up>
+          <span class="t-small">Вгору</span>
+          <span class="ftr__up-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    (function initFooter() {
+      // Контакти: те саме, що в блоці 07. Під час збирання сайту обидва блоки читатимуть один спільний обʼєкт.
+      var CONTACTS = { phone: "", telegram: "", viber: "", whatsapp: "", email: "", city: "" };
+
+      var root = document.querySelector("[data-ftr]");
+      if (!root) return;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ---------- Контакти ---------- */
+      var digits = function (s) { return String(s).replace(/\D/g, ""); };
+      var contactHref = {
+        phone: function (v) { return "tel:+" + digits(v); },
+        telegram: function (v) { return "https://t.me/" + v.replace(/^@/, ""); },
+        viber: function (v) { return "viber://chat?number=%2B" + digits(v); },
+        whatsapp: function (v) { return "https://wa.me/" + digits(v); },
+        email: function (v) { return "mailto:" + v; }
+      };
+      root.querySelectorAll("[data-contact]").forEach(function (el) {
+        var key = el.getAttribute("data-contact");
+        var v = CONTACTS[key];
+        if (!v) return;
+        el.textContent = "";
+        if (contactHref[key]) {
+          var a = document.createElement("a");
+          a.href = contactHref[key](v);
+          a.textContent = key === "telegram" ? "@" + v.replace(/^@/, "") : v;
+          if (/^https/.test(a.href)) { a.target = "_blank"; a.rel = "noopener"; }
+          el.appendChild(a);
+        } else {
+          el.textContent = v;
+        }
+      });
+
+      /* ---------- Рік ---------- */
+      root.querySelector("[data-ftr-year]").textContent = new Date().getFullYear();
+
+      /* ---------- Великий напис: ділимо на літери ---------- */
+      var word = root.querySelector("[data-ftr-word]");
+      var text = word.textContent;
+      word.textContent = "";
+      Array.prototype.forEach.call(text, function (ch, i) {
+        if (ch === " ") {
+          var sp = document.createElement("span");
+          sp.className = "ftr__space";
+          word.appendChild(sp);
+          return;
+        }
+        var box = document.createElement("span");
+        var inner = document.createElement("span");
+        box.className = "ftr__char";
+        inner.textContent = ch;
+        inner.style.setProperty("--i", i);
+        box.appendChild(inner);
+        word.appendChild(box);
+      });
+      var dot = document.createElement("span");
+      dot.className = "ftr__dot";
+      word.appendChild(dot);
+
+      /* ---------- Вгору ---------- */
+      root.querySelector("[data-ftr-up]").addEventListener("click", function (e) {
+        var target = document.getElementById("top");
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+        if (target) {
+          target.setAttribute("tabindex", "-1");
+          target.focus({ preventScroll: true });
+        }
+      });
+
+      /* ---------- Поява ---------- */
+      var mark = root.querySelector(".ftr__mark");
+      var reveals = Array.prototype.slice.call(root.querySelectorAll(".ftr__reveal")).concat(mark);
+      if (reduce || !("IntersectionObserver" in window)) {
+        reveals.forEach(function (el) { el.classList.add("is-shown"); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add("is-shown"); io.unobserve(e.target); }
+        });
+      }, { rootMargin: "0px 0px -10% 0px" });
+      reveals.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+  <!-- ================= /БЛОК 08 FOOTER ================= -->
+
+</body>
+</html>
