@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>02 Hero — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <!--
+    Бібліотеки (під час інтеграції підключаються один раз в index.html):
+    GSAP 3.12.5 — плавні анімації сцени з відкатом при скролі назад.
+    ScrollTrigger 3.12.5 — фіксує перший екран і привʼязує збирання «хаос → порядок» до скролу.
+    Якщо CDN недоступний, блок показує статичний зібраний стан.
+  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <style>
+    /* ===== 02 Hero «Хаос → порядок». Префікс класів: hero__ ===== */
+
+    .hero {
+      position: relative;
+      overflow: clip;              /* уламки в 3D не створюють горизонтального скролу */
+    }
+
+    .hero__pin {
+      position: relative;
+      display: grid;
+      align-items: center;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding-block: calc(var(--header-h) + var(--sp-7)) var(--sp-8);
+    }
+
+    /* --- Фон: сітка бренду і мʼяке світло --- */
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .hero__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
+        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
+      background-size: 56px 56px;
+      background-position: center top;
+      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 20%, transparent 75%);
+      mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 20%, transparent 75%);
+      opacity: 0.7;
+    }
+    .hero__glow {
+      position: absolute;
+      top: 50%;
+      left: 72%;
+      width: min(900px, 120vw);
+      aspect-ratio: 1;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 62%);
+      transform: translate(-50%, -50%);
+    }
+
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: var(--sp-8);
+    }
+
+    /* --- Текст --- */
+    .hero__content { position: relative; z-index: 2; min-width: 0; }
+    .hero__label {
+      color: var(--brand-beige);
+      margin-bottom: var(--sp-5);
+    }
+    .hero__title {
+      margin-bottom: var(--sp-5);
+      font-size: clamp(2.25rem, 0.9rem + 4.4vw, 5rem);
+      font-weight: var(--fw-black);
+      line-height: 1.02;
+      letter-spacing: var(--ls-display);
+      text-transform: uppercase;
+    }
+    .hero__line {
+      display: block;
+      overflow: clip;
+      padding-bottom: 0.06em;       /* щоб маска не різала нижні виносні елементи */
+    }
+    .hero__line-in {
+      display: block;
+      animation: hero-line-in var(--dur-reveal) var(--ease-out) both;
+      animation-delay: calc(120ms + var(--i, 0) * 110ms);
+    }
+    .hero__line-in--accent { color: var(--accent); }
+    @keyframes hero-line-in {
+      from { transform: translateY(105%); }
+      to { transform: translateY(0); }
+    }
+
+    .hero__lead {
+      margin-bottom: var(--sp-7);
+      max-width: 34rem;
+    }
+    .hero__fade {
+      animation: hero-fade-in var(--dur-reveal) var(--ease-out) both;
+      animation-delay: calc(300ms + var(--i, 0) * 120ms);
+    }
+    @keyframes hero-fade-in {
+      from { opacity: 0; transform: translateY(var(--reveal-shift)); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .hero__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+    }
+    .hero__actions .btn { flex: 1 1 auto; }
+
+    .hero__meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--sp-2) var(--sp-3);
+      color: var(--fg-muted);
+    }
+    .hero__meta-strong { color: var(--fg); }
+    .hero__meta-dot {
+      width: 4px;
+      height: 4px;
+      align-self: center;
+      background: var(--accent);
+    }
+
+    /* --- Сцена --- */
+    .hero__stage {
+      --S: min(340px, calc(100vw - var(--gutter) * 2 - var(--sp-6)));   /* сторона дошки-звіту */
+      --g: calc(var(--S) * 0.022);                                         /* проміжок між клітинками */
+      --u: calc((var(--S) - var(--g) * 3) / 4);                            /* розмір клітинки */
+      position: relative;
+      justify-self: center;
+      width: var(--S);
+      height: calc(var(--S) + var(--sp-8));
+      padding-top: var(--sp-8);
+      perspective: 1100px;
+      perspective-origin: 50% 40%;
+    }
+    .hero__scene {
+      position: relative;
+      width: var(--S);
+      height: var(--S);
+      transform-style: preserve-3d;
+    }
+    .hero__board {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+
+    .hero__state {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: var(--sp-6);
+      color: var(--fg-muted);
+    }
+    .hero__state-swap { position: relative; display: block; }
+    .hero__state-word { display: block; white-space: nowrap; }
+    .hero__state-word--order {
+      position: absolute;
+      inset: 0 auto auto 0;
+      color: var(--accent);
+      opacity: 0;
+    }
+
+    /* Рамка дошки — домальовується в стані «порядок» (лише transform) */
+    .hero__frame {
+      position: absolute;
+      inset: calc(var(--g) * -2.5);
+      pointer-events: none;
+    }
+    .hero__frame-line {
+      position: absolute;
+      background: var(--line-strong);
+    }
+    .hero__frame-line--t,
+    .hero__frame-line--b { left: 0; right: 0; height: var(--hairline); transform-origin: left center; }
+    .hero__frame-line--l,
+    .hero__frame-line--r { top: 0; bottom: 0; width: var(--hairline); transform-origin: center top; }
+    .hero__frame-line--t { top: 0; }
+    .hero__frame-line--b { bottom: 0; transform-origin: right center; }
+    .hero__frame-line--l { left: 0; transform-origin: center bottom; }
+    .hero__frame-line--r { right: 0; }
+    .hero__frame-corner {
+      position: absolute;
+      width: calc(var(--u) * 0.22);
+      height: calc(var(--u) * 0.22);
+      border: 0 solid var(--accent);
+    }
+    .hero__frame-corner--tl { top: -1px; left: -1px; border-top-width: 2px; border-left-width: 2px; transform-origin: top left; }
+    .hero__frame-corner--br { right: -1px; bottom: -1px; border-right-width: 2px; border-bottom-width: 2px; transform-origin: bottom right; }
+
+    /* Уламок: розмір і позиція в зібраному стані задаються клітинками */
+    .hero__piece {
+      position: absolute;
+      left: calc(var(--c) * (var(--u) + var(--g)));
+      top: calc(var(--r) * (var(--u) + var(--g)));
+      width: calc(var(--w) * var(--u) + (var(--w) - 1) * var(--g));
+      height: calc(var(--h) * var(--u) + (var(--h) - 1) * var(--g));
+      font-size: calc(var(--u) * 0.095);
+      backface-visibility: hidden;
+      will-change: transform;
+    }
+    .hero__float {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .hero__card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7em;
+      width: 100%;
+      height: 100%;
+      padding: 1.1em;
+      overflow: hidden;
+      border-radius: var(--r-sm);
+      background: var(--bg-raised);
+      color: var(--fg);
+      box-shadow: var(--shadow-lg);
+    }
+    .hero__card[data-theme="light"] { background: var(--bg); }   /* теплий «папір» */
+    .hero__tag {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-label);
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      line-height: 1.2;
+    }
+    .hero__tag--accent { color: var(--accent-text); }
+    .hero__bar {
+      display: block;
+      height: 0.55em;
+      width: var(--bw, 100%);
+      border-radius: var(--r-xs);
+      background: var(--line);
+    }
+    .hero__bar--strong { background: var(--line-strong); }
+    .hero__bar--accent { background: var(--accent); }
+    .hero__bars { display: grid; gap: 0.6em; }
+
+    /* Галочка «перевірено» */
+    .hero__check {
+      position: absolute;
+      top: -0.9em;
+      right: -0.9em;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      width: 2.4em;
+      height: 2.4em;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      color: var(--on-accent);
+      transform: scale(0);
+    }
+    .hero__check svg { width: 58%; height: 58%; }
+
+    /* Типи уламків */
+    .hero__table {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 1fr;
+      flex: 1;
+      border-top: var(--hairline) solid var(--line-strong);
+      border-left: var(--hairline) solid var(--line-strong);
+    }
+    .hero__cell {
+      border-right: var(--hairline) solid var(--line-strong);
+      border-bottom: var(--hairline) solid var(--line-strong);
+    }
+    .hero__cell--accent { background: color-mix(in srgb, var(--accent) 28%, transparent); }
+    .hero__cell--head { background: var(--line); }
+
+    .hero__card--money {
+      align-items: flex-start;
+      justify-content: space-between;
+      background: var(--accent);
+      color: var(--on-accent);
+    }
+    .hero__money-sign {
+      font-size: 4.6em;
+      font-weight: var(--fw-black);
+      line-height: 0.8;
+    }
+    .hero__card--money .hero__tag { color: var(--on-accent); }
+
+    .hero__rows { display: grid; gap: 0.55em; }
+    .hero__row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1em;
+    }
+    .hero__row .hero__bar { flex: none; }
+
+    .hero__card--receipt {
+      padding-bottom: 2em;
+      clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.8em), 92% 100%, 84% calc(100% - 0.8em), 76% 100%, 68% calc(100% - 0.8em), 60% 100%, 52% calc(100% - 0.8em), 44% 100%, 36% calc(100% - 0.8em), 28% 100%, 20% calc(100% - 0.8em), 12% 100%, 4% calc(100% - 0.8em), 0 100%);
+      box-shadow: none;
+    }
+    .hero__dots { border-top: var(--hairline) dashed var(--line-strong); }
+    .hero__total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: auto;
+      font-family: var(--font-mono);
+      font-size: 1.1em;
+      font-weight: var(--fw-medium);
+      color: var(--fg-strong);
+    }
+
+    .hero__chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.8em;
+      flex: 1;
+      border-bottom: var(--hairline) solid var(--line-strong);
+    }
+    .hero__chart-bar {
+      flex: 1;
+      height: var(--bh);
+      border-radius: var(--r-xs) var(--r-xs) 0 0;
+      background: var(--line-strong);
+    }
+    .hero__chart-bar--accent { background: var(--accent); }
+
+    .hero__card--note {
+      justify-content: space-between;
+      background: var(--brand-beige);
+      color: var(--brand-navy);
+      border-radius: var(--r-xs);
+    }
+    .hero__note-text {
+      font-size: 1.5em;
+      font-weight: var(--fw-bold);
+      line-height: 1.05;
+    }
+
+    .hero__card--stamp { align-items: center; justify-content: center; }
+    .hero__stamp {
+      display: grid;
+      place-items: center;
+      width: 82%;
+      aspect-ratio: 1;
+      border: 0.25em double var(--accent-text);
+      border-radius: var(--r-pill);
+      color: var(--accent-text);
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-label);
+      text-transform: uppercase;
+      transform: rotate(-14deg);
+    }
+
+    .hero__card--file { justify-content: space-between; }
+    .hero__file-icon {
+      position: relative;
+      width: 2.6em;
+      height: 3.2em;
+      border: var(--stroke) solid var(--fg-muted);
+      border-radius: var(--r-xs);
+      clip-path: polygon(0 0, 70% 0, 100% 25%, 100% 100%, 0 100%);
+    }
+    .hero__file-ext {
+      font-family: var(--font-mono);
+      font-size: 1.4em;
+      font-weight: var(--fw-medium);
+      color: var(--fg);
+    }
+
+    .hero__checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+    }
+    .hero__box {
+      flex: none;
+      width: 0.9em;
+      height: 0.9em;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-xs);
+    }
+    .hero__box--on { background: var(--accent); border-color: var(--accent); }
+
+    /* Повідомлення — тільки в хаосі, потім зникають */
+    .hero__piece--bubble {
+      left: var(--bx);
+      top: var(--by);
+      width: calc(var(--u) * 1.85);
+      height: auto;
+    }
+    .hero__bubble {
+      padding: 0.9em 1.1em;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: 1.2em 1.2em 1.2em 0.25em;
+      background: var(--bg-raised);
+      color: var(--fg);
+      font-size: 1.15em;
+      font-weight: var(--fw-medium);
+      line-height: 1.3;
+      box-shadow: var(--shadow-lg);
+    }
+    .hero__bubble-meta {
+      display: block;
+      margin-bottom: 0.3em;
+      font-family: var(--font-mono);
+      font-size: 0.75em;
+      color: var(--fg-muted);
+    }
+
+    /* Підказка «гортайте» */
+    .hero__hint {
+      position: absolute;
+      left: 50%;
+      bottom: var(--sp-5);
+      z-index: 2;
+      display: none;
+      align-items: center;
+      gap: var(--sp-3);
+      color: var(--fg-muted);
+      transform: translateX(-50%);
+    }
+    .hero__hint-line {
+      position: relative;
+      width: var(--hairline);
+      height: 32px;
+      overflow: hidden;
+      background: var(--line);
+    }
+    .hero__hint-line::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform-origin: top;
+      animation: hero-hint 2.2s var(--ease-in-out) infinite;
+    }
+    @keyframes hero-hint {
+      0% { transform: scaleY(0); transform-origin: top; }
+      45% { transform: scaleY(1); transform-origin: top; }
+      55% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* До запуску JS уламки приховані, щоб не було «стрибка» з порядку в хаос.
+       Без JS (scripting: none) одразу видно зібраний звіт. */
+    @media (scripting: enabled) {
+      .hero__piece { opacity: 0; }
+    }
+    /* Статичний стан: reduced motion або GSAP не завантажився */
+    .hero--static .hero__piece { opacity: 1; transform: none; }
+    .hero--static .hero__piece--bubble { display: none; }
+    .hero--static .hero__check { transform: scale(1); }
+    .hero--static .hero__state-word--chaos { opacity: 0; }
+    .hero--static .hero__state-word--order { opacity: 1; }
+    @media (scripting: none) {
+      .hero__piece--bubble { display: none; }
+      .hero__check { transform: scale(1); }
+      .hero__state-word--chaos { opacity: 0; }
+      .hero__state-word--order { opacity: 1; }
+    }
+
+    /* ===== Планшет 768+ ===== */
+    @media (min-width: 768px) {
+      .hero__stage { --S: min(440px, 62vw); }
+      .hero__actions .btn { flex: 0 0 auto; }
+    }
+
+    /* ===== Десктоп 1024+: текст зліва, сцена справа ===== */
+    @media (min-width: 1024px) {
+      .hero__pin { padding-block: calc(var(--header-h) + var(--sp-6)) var(--sp-9); }
+      .hero__inner {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        align-items: center;
+      }
+      .hero__content { grid-column: 1 / span 7; }
+      .hero__stage {
+        --S: min(470px, 33vw);
+        grid-column: 8 / -1;
+        justify-self: end;
+        margin-right: calc(var(--S) * 0.06);
+      }
+      .hero__hint { display: flex; }
+    }
+
+    @media (min-width: 1440px) {
+      .hero__stage { --S: min(520px, 33vw); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero__line-in,
+      .hero__fade,
+      .hero__hint-line::after { animation: none; }
+    }
+
+    /* ===== ДЕМО: секція лише для перевірки скролу, у сайт не входить ===== */
+    .hero-demo__next {
+      min-height: 100vh;
+      padding-block: var(--section-y);
+    }
+    .hero-demo__label { color: var(--accent-text); margin-bottom: var(--sp-4); }
+  </style>
+</head>
+<body>
+<main id="main">
+
+  <!-- ================= БЛОК 02 HERO ================= -->
+  <section class="hero" id="top" data-theme="dark" data-hero aria-labelledby="hero-title">
+    <div class="hero__pin">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__grid"></div>
+        <div class="hero__glow"></div>
+      </div>
+
+      <div class="container hero__inner">
+        <div class="hero__content">
+          <p class="t-label hero__label hero__fade" style="--i:0">Бухгалтерський супровід ФОП і ТОВ</p>
+          <h1 class="hero__title" id="hero-title">
+            <span class="hero__line"><span class="hero__line-in" style="--i:0">Бухгалтерія&nbsp;—</span></span>
+            <span class="hero__line"><span class="hero__line-in" style="--i:1">це ваш</span></span>
+            <span class="hero__line"><span class="hero__line-in hero__line-in--accent" style="--i:2">спокій</span></span>
+          </h1>
+          <p class="t-lead hero__lead hero__fade" style="--i:1">Ведемо облік, звітність і кадри, щоб ви бачили цифри свого бізнесу і займалися його розвитком.</p>
+          <div class="hero__actions hero__fade" style="--i:2">
+            <a class="btn btn--primary btn--lg" href="#match">
+              Підібрати послугу
+              <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn--outline btn--lg" href="#services">Послуги</a>
+          </div>
+          <p class="t-label hero__meta hero__fade" style="--i:3">
+            <span class="hero__meta-strong">7 років</span>
+            <span class="hero__meta-dot" aria-hidden="true"></span>
+            <span>клієнти приходять за рекомендаціями</span>
+          </p>
+        </div>
+
+        <!-- Сцена декоративна: для скрінрідерів її немає -->
+        <div class="hero__stage" aria-hidden="true">
+          <p class="t-label hero__state">
+            <span class="hero__state-swap">
+              <span class="hero__state-word hero__state-word--chaos">01 / Хаос</span>
+              <span class="hero__state-word hero__state-word--order">02 / Порядок</span>
+            </span>
+            <span>Звіт</span>
+          </p>
+
+          <div class="hero__scene">
+            <div class="hero__frame">
+              <span class="hero__frame-line hero__frame-line--t"></span>
+              <span class="hero__frame-line hero__frame-line--r"></span>
+              <span class="hero__frame-line hero__frame-line--b"></span>
+              <span class="hero__frame-line hero__frame-line--l"></span>
+              <span class="hero__frame-corner hero__frame-corner--tl"></span>
+              <span class="hero__frame-corner hero__frame-corner--br"></span>
+            </div>
+
+            <div class="hero__board">
+              <!-- A · Акт (1×2) -->
+              <div class="hero__piece" style="--c:0;--r:0;--w:1;--h:2" data-x="-0.10" data-y="-0.03" data-z="120" data-rx="10" data-ry="-18" data-rz="-14">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag hero__tag--accent">Акт</span>
+                  <span class="hero__bar hero__bar--strong" style="--bw:70%"></span>
+                  <div class="hero__bars">
+                    <span class="hero__bar"></span><span class="hero__bar" style="--bw:85%"></span><span class="hero__bar" style="--bw:92%"></span><span class="hero__bar" style="--bw:60%"></span>
+                    <span class="hero__bar"></span><span class="hero__bar" style="--bw:78%"></span><span class="hero__bar" style="--bw:88%"></span>
+                  </div>
+                  <span class="hero__bar hero__bar--strong" style="--bw:40%;margin-top:auto"></span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- B · Таблиця (2×1) -->
+              <div class="hero__piece" style="--c:1;--r:0;--w:2;--h:1" data-x="0.12" data-y="-0.30" data-z="-60" data-rx="-12" data-ry="14" data-rz="8">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag">Облік · таблиця</span>
+                  <div class="hero__table">
+                    <span class="hero__cell hero__cell--head"></span><span class="hero__cell hero__cell--head"></span><span class="hero__cell hero__cell--head"></span><span class="hero__cell hero__cell--head"></span>
+                    <span class="hero__cell"></span><span class="hero__cell hero__cell--accent"></span><span class="hero__cell"></span><span class="hero__cell"></span>
+                    <span class="hero__cell"></span><span class="hero__cell"></span><span class="hero__cell"></span><span class="hero__cell hero__cell--accent"></span>
+                  </div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- C · Гривня (1×1) -->
+              <div class="hero__piece" style="--c:3;--r:0;--w:1;--h:1" data-x="0.10" data-y="-0.08" data-z="180" data-rx="18" data-ry="22" data-rz="18">
+                <div class="hero__float"><div class="hero__card hero__card--money">
+                  <span class="hero__tag">Податки</span>
+                  <span class="hero__money-sign">₴</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- D · Виписка (2×1) -->
+              <div class="hero__piece" style="--c:1;--r:1;--w:2;--h:1" data-x="-0.08" data-y="0.06" data-z="40" data-rx="8" data-ry="-10" data-rz="-6">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag">Виписка банку</span>
+                  <div class="hero__rows">
+                    <div class="hero__row"><span class="hero__bar" style="--bw:45%"></span><span class="hero__bar hero__bar--strong" style="--bw:18%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:55%"></span><span class="hero__bar hero__bar--accent" style="--bw:14%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:38%"></span><span class="hero__bar hero__bar--strong" style="--bw:22%"></span></div>
+                  </div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- E · Чек ПРРО (1×2) -->
+              <div class="hero__piece" style="--c:3;--r:1;--w:1;--h:2" data-x="0.08" data-y="0.16" data-z="90" data-rx="-10" data-ry="24" data-rz="12">
+                <div class="hero__float"><div class="hero__card hero__card--receipt" data-theme="light">
+                  <span class="hero__tag">Чек · ПРРО</span>
+                  <div class="hero__bars">
+                    <span class="hero__bar" style="--bw:80%"></span><span class="hero__bar" style="--bw:60%"></span>
+                  </div>
+                  <div class="hero__dots"></div>
+                  <div class="hero__rows">
+                    <div class="hero__row"><span class="hero__bar" style="--bw:50%"></span><span class="hero__bar" style="--bw:22%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:40%"></span><span class="hero__bar" style="--bw:22%"></span></div>
+                    <div class="hero__row"><span class="hero__bar" style="--bw:58%"></span><span class="hero__bar" style="--bw:22%"></span></div>
+                  </div>
+                  <div class="hero__dots"></div>
+                  <div class="hero__total"><span>Σ</span><span>₴</span></div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- F · Декларація (1×2) -->
+              <div class="hero__piece" style="--c:0;--r:2;--w:1;--h:2" data-x="-0.06" data-y="0.18" data-z="-40" data-rx="14" data-ry="-16" data-rz="9">
+                <div class="hero__float"><div class="hero__card" data-theme="light">
+                  <span class="hero__tag hero__tag--accent">Декларація</span>
+                  <span class="hero__bar hero__bar--strong" style="--bw:80%"></span>
+                  <div class="hero__bars">
+                    <div class="hero__checkbox"><span class="hero__box hero__box--on"></span><span class="hero__bar" style="--bw:70%"></span></div>
+                    <div class="hero__checkbox"><span class="hero__box"></span><span class="hero__bar" style="--bw:55%"></span></div>
+                    <div class="hero__checkbox"><span class="hero__box hero__box--on"></span><span class="hero__bar" style="--bw:80%"></span></div>
+                    <div class="hero__checkbox"><span class="hero__box"></span><span class="hero__bar" style="--bw:62%"></span></div>
+                  </div>
+                  <span class="hero__bar" style="--bw:50%;margin-top:auto"></span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- G · Графік (2×1) -->
+              <div class="hero__piece" style="--c:1;--r:2;--w:2;--h:1" data-x="0.14" data-y="0.22" data-z="140" data-rx="-16" data-ry="-8" data-rz="-10">
+                <div class="hero__float"><div class="hero__card">
+                  <span class="hero__tag">Дохід · місяці</span>
+                  <div class="hero__chart">
+                    <span class="hero__chart-bar" style="--bh:38%"></span><span class="hero__chart-bar" style="--bh:52%"></span><span class="hero__chart-bar" style="--bh:46%"></span>
+                    <span class="hero__chart-bar" style="--bh:64%"></span><span class="hero__chart-bar" style="--bh:58%"></span><span class="hero__chart-bar hero__chart-bar--accent" style="--bh:82%"></span>
+                  </div>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- H · Нотатка (1×1) -->
+              <div class="hero__piece" style="--c:1;--r:3;--w:1;--h:1" data-x="-0.12" data-y="0.10" data-z="200" data-rx="6" data-ry="20" data-rz="-22">
+                <div class="hero__float"><div class="hero__card hero__card--note">
+                  <span class="hero__tag" style="color:inherit">Нагадування</span>
+                  <span class="hero__note-text">до 20&#8209;го!</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- I · Печатка (1×1) -->
+              <div class="hero__piece" style="--c:2;--r:3;--w:1;--h:1" data-x="0.06" data-y="0.10" data-z="-100" data-rx="20" data-ry="-14" data-rz="28">
+                <div class="hero__float"><div class="hero__card hero__card--stamp" data-theme="light">
+                  <span class="hero__stamp">Прийнято</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- J · Файл (1×1) -->
+              <div class="hero__piece" style="--c:3;--r:3;--w:1;--h:1" data-x="0.10" data-y="0.04" data-z="60" data-rx="-14" data-ry="-20" data-rz="-16">
+                <div class="hero__float"><div class="hero__card hero__card--file">
+                  <span class="hero__file-icon"></span>
+                  <span class="hero__file-ext">.xlsx</span>
+                </div><span class="hero__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div>
+              </div>
+
+              <!-- Повідомлення: зникають, коли все впорядковано -->
+              <div class="hero__piece hero__piece--bubble" style="--bx:46%;--by:6%" data-x="0.04" data-y="-0.12" data-z="230" data-rx="0" data-ry="-12" data-rz="-4">
+                <div class="hero__float"><p class="hero__bubble"><span class="hero__bubble-meta">клієнт · 21:47</span>Де виписка за березень?</p></div>
+              </div>
+              <div class="hero__piece hero__piece--bubble" style="--bx:2%;--by:42%" data-x="-0.04" data-y="0.02" data-z="170" data-rx="6" data-ry="14" data-rz="5">
+                <div class="hero__float"><p class="hero__bubble"><span class="hero__bubble-meta">клієнт · 08:12</span>Коли подавати декларацію?</p></div>
+              </div>
+              <div class="hero__piece hero__piece--bubble" style="--bx:50%;--by:66%" data-x="0.06" data-y="0.14" data-z="250" data-rx="-6" data-ry="-16" data-rz="-6">
+                <div class="hero__float"><p class="hero__bubble"><span class="hero__bubble-meta">клієнт · 19:30</span>Прийшов лист з податкової</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="t-label hero__hint" aria-hidden="true"><span class="hero__hint-line"></span>Гортайте</p>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      function initHero() {
+        var root = document.querySelector("[data-hero]");
+        if (!root) return;
+
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (reduce || !window.gsap || !window.ScrollTrigger) {
+          root.classList.add("hero--static");
+          return;
+        }
+        var gsap = window.gsap;
+        gsap.registerPlugin(window.ScrollTrigger);
+
+        var pin = root.querySelector(".hero__pin");
+        var stage = root.querySelector(".hero__stage");
+        var scene = root.querySelector(".hero__scene");
+        var board = root.querySelector(".hero__board");
+        var pieces = gsap.utils.toArray(root.querySelectorAll(".hero__piece"));
+        var bubbles = pieces.filter(function (p) { return p.classList.contains("hero__piece--bubble"); });
+        var tiles = pieces.filter(function (p) { return bubbles.indexOf(p) === -1; });
+        var floats = pieces.map(function (p) { return p.querySelector(".hero__float"); });
+        var checks = root.querySelectorAll(".hero__check");
+        var frameX = root.querySelectorAll(".hero__frame-line--t, .hero__frame-line--b");
+        var frameY = root.querySelectorAll(".hero__frame-line--l, .hero__frame-line--r");
+        var corners = root.querySelectorAll(".hero__frame-corner");
+        var wordChaos = root.querySelector(".hero__state-word--chaos");
+        var wordOrder = root.querySelector(".hero__state-word--order");
+        var hint = root.querySelector(".hero__hint");
+
+        // Стан «хаос» кожного уламка: зсув у частках сторони дошки + 3D-поворот
+        function chaos(spread) {
+          var S = board.offsetWidth;
+          var n = function (el, key) { return parseFloat(el.dataset[key]) || 0; };
+          return {
+            x: function (i, el) { return n(el, "x") * S * spread; },
+            y: function (i, el) { return n(el, "y") * S * spread; },
+            z: function (i, el) { return n(el, "z") * spread; },
+            rotationX: function (i, el) { return n(el, "rx"); },
+            rotationY: function (i, el) { return n(el, "ry"); },
+            rotation: function (i, el) { return n(el, "rz"); }
+          };
+        }
+
+        var mm = gsap.matchMedia();
+        mm.add({
+          desktop: "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
+          compact: "not all and (min-width: 1024px) and (hover: hover) and (pointer: fine)"
+        }, function (ctx) {
+          var desktop = ctx.conditions.desktop;
+          var spread = desktop ? 1 : 0.55;
+
+          gsap.set(pieces, chaos(spread));
+          gsap.set(pieces, { opacity: 0, scale: 0.86 });
+          gsap.set(checks, { scale: 0 });
+          gsap.set(frameX, { scaleX: 0 });
+          gsap.set(frameY, { scaleY: 0 });
+          gsap.set(corners, { scale: 0 });
+          gsap.set(wordOrder, { opacity: 0, y: 8 });
+          gsap.set(wordChaos, { opacity: 1, y: 0 });
+
+          // Поява сцени після заголовка
+          gsap.to(pieces, {
+            opacity: 1, scale: 1, duration: 0.9, ease: "power2.out",
+            stagger: { each: 0.05, from: "random" }, delay: 0.45
+          });
+
+          // Збирання «хаос → порядок»
+          var tl = gsap.timeline({ paused: true, defaults: { ease: "power3.inOut" } });
+          tl.to(bubbles, { opacity: 0, scale: 0.7, z: "+=80", duration: 0.35, stagger: 0.06, ease: "power2.in" }, 0)
+            .to(tiles, {
+              x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotation: 0, scale: 1, opacity: 1,
+              duration: 1, stagger: { each: 0.045, from: "random" }
+            }, 0.05)
+            .to(wordChaos, { opacity: 0, y: -8, duration: 0.2, ease: "power1.in" }, 0.45)
+            .to(wordOrder, { opacity: 1, y: 0, duration: 0.25, ease: "power1.out" }, 0.6)
+            .to(frameX, { scaleX: 1, duration: 0.6, ease: "power2.out" }, 0.7)
+            .to(frameY, { scaleY: 1, duration: 0.6, ease: "power2.out" }, 0.75)
+            .to(corners, { scale: 1, duration: 0.3, ease: "back.out(2)" }, 1.1)
+            .to(checks, { scale: 1, duration: 0.35, stagger: 0.035, ease: "back.out(2.2)" }, 0.95);
+          if (hint) tl.to(hint, { opacity: 0, duration: 0.15 }, 0);
+
+          var trigger;
+          if (desktop) {
+            trigger = window.ScrollTrigger.create({
+              trigger: root,
+              pin: pin,
+              start: "top top",
+              end: "+=110%",
+              scrub: 0.8,
+              animation: tl,
+              invalidateOnRefresh: true
+            });
+          } else {
+            trigger = window.ScrollTrigger.create({
+              trigger: stage,
+              start: "top 75%",
+              once: true,
+              onEnter: function () { gsap.delayedCall(0.5, function () { tl.timeScale(0.75).play(); }); }
+            });
+          }
+
+          // Легке «плавання» уламків; гасне, коли звіт зібрано
+          var phases = floats.map(function (_, i) { return i * 1.7; });
+          var amp = desktop ? 6 : 4;
+          var visible = true;
+          var io = new IntersectionObserver(function (e) { visible = e[0].isIntersecting; });
+          io.observe(root);
+          function drift(time) {
+            if (!visible) return;
+            var k = amp * (1 - tl.progress());
+            for (var i = 0; i < floats.length; i++) {
+              var t = time * 0.9 + phases[i];
+              floats[i].style.transform = "translate3d(0," + (Math.sin(t) * k).toFixed(2) + "px,0) rotate(" + (Math.cos(t * 0.8) * k * 0.25).toFixed(2) + "deg)";
+            }
+          }
+          gsap.ticker.add(drift);
+
+          // Нахил сцени за курсором (лише десктоп)
+          var onMove = null;
+          if (desktop) {
+            var rotY = gsap.quickTo(scene, "rotationY", { duration: 0.9, ease: "power3.out" });
+            var rotX = gsap.quickTo(scene, "rotationX", { duration: 0.9, ease: "power3.out" });
+            onMove = function (e) {
+              var px = e.clientX / window.innerWidth - 0.5;
+              var py = e.clientY / window.innerHeight - 0.5;
+              var k = 1 - tl.progress() * 0.5;
+              rotY(px * 16 * k);
+              rotX(-py * 12 * k);
+            };
+            window.addEventListener("pointermove", onMove, { passive: true });
+          }
+
+          return function cleanup() {
+            gsap.ticker.remove(drift);
+            io.disconnect();
+            if (onMove) window.removeEventListener("pointermove", onMove);
+            if (trigger) trigger.kill();
+            floats.forEach(function (f) { f.style.transform = ""; });
+          };
+        });
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initHero);
+      else initHero();
+    })();
+  </script>
+  <!-- ================= /БЛОК 02 HERO ================= -->
+
+  <!-- ===== ДЕМО: секція лише для перевірки скролу, у сайт не входить ===== -->
+  <section class="hero-demo__next" id="services" data-theme="light">
+    <div class="container">
+      <p class="t-label hero-demo__label">Демо · наступна секція</p>
+      <h2 class="t-h2">Тут почнуться послуги</h2>
+    </div>
+  </section>
+</main>
+</body>
+</html>
