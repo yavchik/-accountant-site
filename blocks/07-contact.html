@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>07 CTA і контакти — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <!--
+    Бібліотеки: немає.
+    Міні-підбір нічого не відправляє і не зберігає: він складає текст повідомлення,
+    який відвідувач сам копіює або надсилає в месенджер. Форма демонстраційна в тому сенсі,
+    що до обробника заявок (бот, CRM) не підключена.
+  -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 07 CTA + Контакти. Префікс класів: cta__ ===== */
+
+    .cta {
+      position: relative;
+      padding-block: var(--section-y);
+      overflow: clip;
+    }
+    .cta__bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
+        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
+      background-size: 56px 56px;
+      -webkit-mask-image: radial-gradient(ellipse 60% 70% at 75% 50%, #000 10%, transparent 70%);
+      mask-image: radial-gradient(ellipse 60% 70% at 75% 50%, #000 10%, transparent 70%);
+      opacity: 0.6;
+    }
+    .cta__glow {
+      position: absolute;
+      top: 50%;
+      left: 75%;
+      width: min(800px, 120vw);
+      aspect-ratio: 1;
+      background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 60%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .cta__layout {
+      position: relative;
+      display: grid;
+      gap: var(--sp-8);
+    }
+
+    /* --- Ліва колонка --- */
+    .cta__intro { display: grid; gap: var(--sp-5); align-content: start; min-width: 0; }
+    .cta__label { color: var(--brand-beige); }
+    .cta__title { font-size: var(--fs-h2); max-width: 15ch; }
+    .cta__lead { color: var(--fg-muted); max-width: 30rem; }
+
+    .cta__contacts-wrap .cta__contacts {   /* перебиває ul[role="list"] з base.css */
+      display: grid;
+      margin: var(--sp-4) 0 0;
+      padding: 0;
+      list-style: none;
+      border-top: var(--hairline) solid var(--line);
+    }
+    .cta__contact {
+      display: grid;
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      align-items: baseline;
+      gap: var(--sp-4);
+      padding-block: var(--sp-4);
+      border-bottom: var(--hairline) solid var(--line);
+    }
+    .cta__contact-key { color: var(--fg-muted); }
+    .cta__contact-val { min-width: 0; overflow-wrap: anywhere; color: var(--fg); font-size: var(--fs-lead); }
+    .cta__contact-val a { text-decoration: none; }
+    .cta__contact-val a:hover { text-decoration: underline; }
+    .cta__price { display: flex; align-items: center; gap: var(--sp-3); color: var(--fg-muted); }
+    .cta__price-sign {
+      display: grid; place-items: center; flex: none;
+      width: 28px; height: 28px;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      font-family: var(--font-mono);
+      font-size: var(--fs-small);
+      color: var(--fg);
+    }
+
+    /* --- Картка підбору --- */
+    .cta__card {
+      position: relative;
+      min-width: 0;
+      padding: clamp(var(--sp-5), 3vw, var(--sp-7));
+      border: var(--hairline) solid var(--glass-border);
+      border-radius: var(--r-lg);
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      backdrop-filter: blur(18px) saturate(140%);
+      box-shadow: var(--shadow-lg);
+      scroll-margin-top: calc(var(--header-h) + var(--sp-4));
+    }
+    .cta__card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-4);
+    }
+    .cta__card-label { color: var(--accent); }
+    .cta__card-step { color: var(--fg-muted); }
+
+    .cta__progress {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      gap: var(--sp-2);
+      margin-bottom: var(--sp-6);
+    }
+    .cta__seg {
+      position: relative;
+      height: 3px;
+      overflow: hidden;
+      border-radius: var(--r-pill);
+      background: var(--line);
+    }
+    .cta__seg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform var(--dur-slow) var(--ease-out);
+    }
+    .cta__seg.is-done::after { transform: scaleX(1); }
+
+    .cta__stage { position: relative; }
+
+    /* Крок */
+    .cta__step { border: 0; margin: 0; padding: 0; min-width: 0; }
+    .cta__step[hidden] { display: none; }
+    .cta__q {
+      display: block;
+      margin-bottom: var(--sp-2);
+      padding: 0;
+      color: var(--fg-strong);
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-semibold);
+      line-height: 1.25;
+    }
+    .cta__hint { color: var(--fg-muted); font-size: var(--fs-small); margin-bottom: var(--sp-5); }
+
+    .cta__options { display: grid; gap: var(--sp-3); }
+    .cta__option { position: relative; display: block; }
+    .cta__input {
+      position: absolute;
+      opacity: 0;
+      width: 1px;
+      height: 1px;
+    }
+    .cta__tile {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      min-height: 56px;
+      padding: var(--sp-3) var(--sp-4);
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .cta__tile::before {          /* заливка вибраного варіанта — лише opacity */
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      border: var(--hairline) solid var(--accent);
+      opacity: 0;
+      transition: opacity var(--dur-base) var(--ease-out);
+    }
+    .cta__mark {
+      position: relative;
+      flex: none;
+      width: 20px;
+      height: 20px;
+      border: var(--stroke) solid var(--line-strong);
+      border-radius: var(--r-pill);
+    }
+    .cta__options--multi .cta__mark { border-radius: var(--r-xs); }
+    .cta__mark::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: inherit;
+      background: var(--accent);
+      transform: scale(0);
+      transition: transform var(--dur-base) var(--ease-spring);
+    }
+    .cta__tile-text { position: relative; color: var(--fg); font-weight: var(--fw-medium); line-height: 1.3; }
+    .cta__tile-sub { display: block; color: var(--fg-muted); font-size: var(--fs-small); font-weight: var(--fw-regular); }
+
+    .cta__input:checked + .cta__tile::before { opacity: 1; }
+    .cta__input:checked + .cta__tile .cta__mark { border-color: var(--accent); }
+    .cta__input:checked + .cta__tile .cta__mark::after { transform: scale(1); }
+    .cta__input:focus-visible + .cta__tile { outline: 2px solid var(--focus); outline-offset: 3px; }
+    @media (hover: hover) {
+      .cta__tile:hover { transform: translateX(4px); }
+    }
+
+    .cta__actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--sp-4);
+      margin-top: var(--sp-6);
+    }
+    .cta__back[hidden],
+    .cta__option[hidden],
+    .cta__actions[hidden] { display: none; }
+    .cta__actions .btn--primary { margin-left: auto; }
+
+    /* Переходи між кроками */
+    .cta__step.is-entering { animation: cta-in var(--dur-slow) var(--ease-out) both; }
+    .cta__step.is-entering-back { animation: cta-in-back var(--dur-slow) var(--ease-out) both; }
+    @keyframes cta-in { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+    @keyframes cta-in-back { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+
+    /* Результат */
+    .cta__result[hidden] { display: none; }
+    .cta__result-title { font-size: var(--fs-h3); font-weight: var(--fw-semibold); margin-bottom: var(--sp-5); }
+    .cta__result .cta__picks {
+      display: grid;
+      gap: var(--sp-2);
+      margin: 0 0 var(--sp-6);
+      padding: 0;
+      list-style: none;
+    }
+    .cta__pick {
+      position: relative;
+      display: grid;
+      gap: var(--sp-1);
+      padding: var(--sp-4) var(--sp-4) var(--sp-4) calc(var(--sp-4) + 28px + var(--sp-3));
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      background: var(--bg-raised);
+      opacity: 0;
+      transform: translate3d(0, 16px, 0) rotate(-1.5deg);
+      animation: cta-pick var(--dur-slow) var(--ease-out) forwards;
+      animation-delay: calc(var(--i, 0) * 140ms + 100ms);
+    }
+    @keyframes cta-pick { to { opacity: 1; transform: none; } }
+    .cta__pick-check {
+      position: absolute;
+      top: var(--sp-4);
+      left: var(--sp-4);
+      display: grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      color: var(--on-accent);
+      transform: scale(0);
+      animation: cta-check var(--dur-base) var(--ease-spring) forwards;
+      animation-delay: calc(var(--i, 0) * 140ms + 420ms);
+    }
+    .cta__pick-check svg { width: 16px; height: 16px; }
+    @keyframes cta-check { to { transform: scale(1); } }
+    .cta__pick-name { color: var(--fg-strong); font-weight: var(--fw-semibold); }
+    .cta__pick-note { color: var(--fg-muted); font-size: var(--fs-small); }
+
+    .cta__msg-label { color: var(--fg-muted); margin-bottom: var(--sp-2); }
+    .cta__msg {
+      display: block;
+      width: 100%;
+      min-height: 7.5rem;
+      padding: var(--sp-4);
+      border: var(--hairline) dashed var(--line-strong);
+      border-radius: var(--r-sm);
+      background: var(--bg-sunken);
+      color: var(--fg);
+      font-size: var(--fs-small);
+      line-height: 1.55;
+      resize: vertical;
+    }
+    .cta__send {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-3);
+      margin-top: var(--sp-4);
+    }
+    .cta__messengers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-2); }
+    .cta__messengers .btn { padding-inline: var(--sp-2); }
+    .cta__messengers .btn[aria-disabled="true"] { opacity: 0.5; pointer-events: auto; cursor: not-allowed; }
+    .cta__status { min-height: 1.5em; color: var(--accent); font-size: var(--fs-small); }
+    .cta__note { margin-top: var(--sp-4); color: var(--fg-muted); font-size: var(--fs-small); }
+    .cta__restart { margin-top: var(--sp-4); }
+
+    /* ===== Планшет 768+ ===== */
+    @media (min-width: 768px) {
+      .cta__options--two { grid-template-columns: 1fr 1fr; }
+      .cta__send { grid-template-columns: auto 1fr; align-items: center; }
+    }
+
+    /* ===== Десктоп 1024+ ===== */
+    @media (min-width: 1024px) {
+      .cta__layout {
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        column-gap: var(--grid-gap);
+        align-items: start;
+      }
+      .cta__intro { grid-column: 1 / span 5; position: sticky; top: calc(var(--header-h) + var(--sp-6)); }
+      .cta__card { grid-column: 7 / -1; }
+      .cta__send { grid-template-columns: 1fr; }
+    }
+    @media (min-width: 1280px) {
+      .cta__send { grid-template-columns: auto 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cta__step.is-entering, .cta__step.is-entering-back { animation: none; }
+      .cta__pick { animation: none; opacity: 1; transform: none; }
+      .cta__pick-check { animation: none; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+<main id="main">
+
+  <!-- ================= БЛОК 07 CTA + КОНТАКТИ ================= -->
+  <section class="cta" id="contact" data-theme="dark" data-cta aria-labelledby="cta-title">
+    <div class="cta__bg" aria-hidden="true"></div>
+    <div class="cta__glow" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="cta__layout">
+
+        <div class="cta__intro">
+          <p class="t-label cta__label">Контакти</p>
+          <h2 class="cta__title" id="cta-title">Розкажіть про свій бізнес, і ми підкажемо, з чого почати</h2>
+          <p class="cta__lead">Дайте відповідь на кілька коротких питань і отримайте готове повідомлення для месенджера. Або напишіть чи зателефонуйте одразу.</p>
+
+          <div class="cta__contacts-wrap">
+            <ul class="cta__contacts" role="list">
+              <li class="cta__contact"><span class="t-label cta__contact-key">Телефон</span><span class="cta__contact-val" data-contact="phone"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Telegram</span><span class="cta__contact-val" data-contact="telegram"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Viber</span><span class="cta__contact-val" data-contact="viber"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">WhatsApp</span><span class="cta__contact-val" data-contact="whatsapp"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Email</span><span class="cta__contact-val" data-contact="email"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+              <li class="cta__contact"><span class="t-label cta__contact-key">Місто</span><span class="cta__contact-val" data-contact="city"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+            </ul>
+          </div>
+          <p class="t-small cta__price"><span class="cta__price-sign" aria-hidden="true">₴</span>Вартість після консультації</p>
+        </div>
+
+        <div class="cta__card" id="match">
+          <div class="cta__card-head">
+            <p class="t-label cta__card-label">Підбір послуги</p>
+            <p class="t-label cta__card-step" data-cta-counter aria-hidden="true">Крок 1 з 4</p>
+          </div>
+          <div class="cta__progress" aria-hidden="true">
+            <span class="cta__seg"></span><span class="cta__seg"></span><span class="cta__seg"></span><span class="cta__seg"></span>
+          </div>
+
+          <form class="cta__form" data-cta-form novalidate>
+            <div class="cta__stage" aria-live="polite">
+
+              <fieldset class="cta__step" data-step="form">
+                <legend class="cta__q">Яка у вас форма бізнесу?</legend>
+                <p class="cta__hint">Оберіть один варіант.</p>
+                <div class="cta__options">
+                  <label class="cta__option"><input class="cta__input" type="radio" name="form" value="fop" id="cta-form-fop"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">ФОП</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="form" value="tov" id="cta-form-tov"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">ТОВ</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="form" value="new" id="cta-form-new"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Ще не зареєстрований<span class="cta__tile-sub">Плануєте відкрити ФОП або ТОВ</span></span></span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="cta__step" data-step="staff" hidden>
+                <legend class="cta__q">Чи є у вас працівники?</legend>
+                <p class="cta__hint">Від цього залежить, чи потрібен кадровий облік.</p>
+                <div class="cta__options cta__options--two">
+                  <label class="cta__option"><input class="cta__input" type="radio" name="staff" value="yes" id="cta-staff-yes"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Так, є</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="staff" value="no" id="cta-staff-no"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Ні, працюю сам(а)</span></span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="cta__step" data-step="vat" hidden>
+                <legend class="cta__q">Ви платник ПДВ?</legend>
+                <p class="cta__hint">Якщо не впевнені, оберіть «Не знаю», розберемось разом.</p>
+                <div class="cta__options">
+                  <label class="cta__option"><input class="cta__input" type="radio" name="vat" value="yes" id="cta-vat-yes"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Так</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="vat" value="no" id="cta-vat-no"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Ні</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="radio" name="vat" value="unknown" id="cta-vat-unknown"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Не знаю</span></span></label>
+                </div>
+              </fieldset>
+
+              <fieldset class="cta__step" data-step="goals" hidden>
+                <legend class="cta__q">Що зараз найважливіше?</legend>
+                <p class="cta__hint">Можна обрати кілька варіантів.</p>
+                <div class="cta__options cta__options--multi">
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="reports" id="cta-goal-reports"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Вчасна звітність і податки</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="docs" id="cta-goal-docs"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Первинні документи й договори</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="bank" id="cta-goal-bank"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Банк і фінансовий моніторинг</span></span></label>
+                  <label class="cta__option"><input class="cta__input" type="checkbox" name="goals" value="numbers" id="cta-goal-numbers"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Цифри для управління бізнесом</span></span></label>
+                  <label class="cta__option" data-only="fop"><input class="cta__input" type="checkbox" name="goals" value="close" id="cta-goal-close"><span class="cta__tile"><span class="cta__mark" aria-hidden="true"></span><span class="cta__tile-text">Закрити ФОП</span></span></label>
+                </div>
+              </fieldset>
+
+              <div class="cta__result" data-cta-result hidden>
+                <h3 class="cta__result-title" tabindex="-1">Вам підійде</h3>
+                <ul class="cta__picks" role="list" data-cta-picks></ul>
+                <p class="t-label cta__msg-label"><label for="cta-msg">Готове повідомлення</label></p>
+                <textarea class="cta__msg" id="cta-msg" name="message" rows="4" data-cta-msg></textarea>
+                <div class="cta__send">
+                  <button class="btn btn--primary" type="button" data-cta-copy>Скопіювати текст</button>
+                  <div class="cta__messengers">
+                    <a class="btn btn--outline btn--sm" data-messenger="telegram" href="#contact" target="_blank" rel="noopener">Telegram</a>
+                    <a class="btn btn--outline btn--sm" data-messenger="viber" href="#contact">Viber</a>
+                    <a class="btn btn--outline btn--sm" data-messenger="whatsapp" href="#contact" target="_blank" rel="noopener">WhatsApp</a>
+                  </div>
+                </div>
+                <p class="cta__status" role="status" data-cta-status></p>
+                <p class="cta__note">Це орієнтир. Формат і вартість уточнимо на консультації. Ми нічого не зберігаємо: повідомлення ви надсилаєте самі.</p>
+                <button class="btn btn--ghost cta__restart" type="button" data-cta-restart>Пройти ще раз</button>
+              </div>
+            </div>
+
+            <div class="cta__actions" data-cta-actions>
+              <button class="btn btn--ghost cta__back" type="button" data-cta-back hidden>Назад</button>
+              <button class="btn btn--primary" type="submit" data-cta-next disabled>
+                Далі
+                <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function initContact() {
+      /* ===== [ПЛЕЙСХОЛДЕР] КОНТАКТИ: заповніть тут, і вони зʼявляться на сайті та в кнопках =====
+         phone:    "+380 XX XXX XX XX"     (як показувати)
+         telegram: "username"              (без @)
+         viber:    "380XXXXXXXXX"          (лише цифри)
+         whatsapp: "380XXXXXXXXX"          (лише цифри)
+         email:    "name@example.com"
+         city:     "Кропивницький"                                                              */
+      var CONTACTS = { phone: "", telegram: "", viber: "", whatsapp: "", email: "", city: "" };
+
+      var root = document.querySelector("[data-cta]");
+      if (!root) return;
+      var form = root.querySelector("[data-cta-form]");
+      var steps = Array.prototype.slice.call(root.querySelectorAll(".cta__step"));
+      var segs = root.querySelectorAll(".cta__seg");
+      var counter = root.querySelector("[data-cta-counter]");
+      var back = root.querySelector("[data-cta-back]");
+      var next = root.querySelector("[data-cta-next]");
+      var actions = root.querySelector("[data-cta-actions]");
+      var result = root.querySelector("[data-cta-result]");
+      var picksEl = root.querySelector("[data-cta-picks]");
+      var msgEl = root.querySelector("[data-cta-msg]");
+      var statusEl = root.querySelector("[data-cta-status]");
+      var closeOption = root.querySelector('[data-only="fop"]');
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ---------- Контакти ---------- */
+      var digits = function (s) { return String(s).replace(/\D/g, ""); };
+      var contactHref = {
+        phone: function (v) { return "tel:+" + digits(v); },
+        telegram: function (v) { return "https://t.me/" + v.replace(/^@/, ""); },
+        viber: function (v) { return "viber://chat?number=%2B" + digits(v); },
+        whatsapp: function (v) { return "https://wa.me/" + digits(v); },
+        email: function (v) { return "mailto:" + v; }
+      };
+      root.querySelectorAll("[data-contact]").forEach(function (el) {
+        var key = el.getAttribute("data-contact");
+        var v = CONTACTS[key];
+        if (!v) return;
+        el.textContent = "";
+        if (contactHref[key]) {
+          var a = document.createElement("a");
+          a.href = contactHref[key](v);
+          a.textContent = key === "telegram" ? "@" + v.replace(/^@/, "") : v;
+          if (/^https/.test(a.href)) { a.target = "_blank"; a.rel = "noopener"; }
+          el.appendChild(a);
+        } else {
+          el.textContent = v;
+        }
+      });
+
+      /* ---------- Підбір ---------- */
+      var order = ["form", "staff", "vat", "goals"];
+      var current = 0;
+
+      function val(name) {
+        var el = form.querySelector('input[name="' + name + '"]:checked');
+        return el ? el.value : null;
+      }
+      function goals() {
+        return Array.prototype.map.call(form.querySelectorAll('input[name="goals"]:checked'), function (i) { return i.value; });
+      }
+      // Для «ще не зареєстрований» питання про працівників і ПДВ пропускаємо
+      function activeSteps() {
+        return val("form") === "new" ? ["form", "goals"] : order;
+      }
+      function stepEl(name) { return steps.filter(function (s) { return s.getAttribute("data-step") === name; })[0]; }
+
+      function canGo() {
+        var name = activeSteps()[current];
+        return name === "goals" ? goals().length > 0 : !!val(name);
+      }
+      function refreshNext() {
+        next.disabled = !canGo();
+        var list = activeSteps();
+        var last = current === list.length - 1;
+        next.firstChild.nodeValue = last ? "Показати результат " : "Далі ";
+        // для «ще не зареєстрований» кроків лише два: зайві сегменти ховаємо
+        segs.forEach(function (s, i) { s.hidden = i >= list.length; });
+        counter.textContent = "Крок " + (current + 1) + " з " + list.length;
+      }
+      function paintProgress(doneCount) {
+        segs.forEach(function (s, i) { s.classList.toggle("is-done", i < doneCount); });
+      }
+
+      function show(index, dir) {
+        var list = activeSteps();
+        steps.forEach(function (s) { s.hidden = true; s.classList.remove("is-entering", "is-entering-back"); });
+        var el = stepEl(list[index]);
+        el.hidden = false;
+        if (!reduce) el.classList.add(dir < 0 ? "is-entering-back" : "is-entering");
+        current = index;
+        paintProgress(index);
+        back.hidden = index === 0;
+        closeOption.hidden = val("form") !== "fop";
+        if (closeOption.hidden) closeOption.querySelector("input").checked = false;
+        refreshNext();
+      }
+
+      function goNext() {
+        if (!canGo()) return;
+        if (current < activeSteps().length - 1) show(current + 1, 1);
+        else showResult();
+      }
+
+      form.addEventListener("change", function (e) {
+        refreshNext();
+        // одиночний вибір мишею чи пальцем — одразу далі; з клавіатури — кнопкою «Далі»
+        if (e.target.type === "radio" && lastPointer && Date.now() - lastPointer < 600) {
+          setTimeout(goNext, reduce ? 0 : 220);
+        }
+      });
+      var lastPointer = 0;
+      form.addEventListener("pointerdown", function (e) {
+        if (e.target.closest(".cta__option")) lastPointer = Date.now();
+      });
+      form.addEventListener("submit", function (e) { e.preventDefault(); goNext(); });
+      back.addEventListener("click", function () { if (current > 0) show(current - 1, -1); });
+
+      /* ---------- Результат ---------- */
+      function recommend() {
+        var f = val("form"), staff = val("staff"), vat = val("vat"), g = goals();
+        var has = function (k) { return g.indexOf(k) !== -1; };
+        var picks = [];
+        if (f === "new") {
+          picks.push({ name: "Відкриття ФОП або ТОВ", note: "Підбір КВЕДів і системи оподаткування, онлайн-реєстрація" });
+          if (has("docs")) picks.push({ name: "Шаблони договорів і первинних документів", note: "Щоб з першого дня все було оформлено правильно" });
+          if (has("bank")) picks.push({ name: "Фінансовий моніторинг у банку", note: "Супровід будь-якої складності" });
+          if (has("numbers") || has("reports")) picks.push({ name: "Щомісячний супровід після реєстрації", note: "Звітність, податки й контроль ліміту доходу" });
+          return picks;
+        }
+        var onlyClose = f === "fop" && g.length === 1 && has("close");
+        if (!onlyClose) {
+          picks.push(f === "fop"
+            ? { name: "Щомісячний бухгалтерський супровід", note: has("docs") ? "Звітність, податки, первинні документи й договори" : "Звітність, податки, виписка й контроль ліміту доходу" }
+            : { name: "Щомісячний повний супровід", note: has("docs") ? "Первинні документи, клієнт-банк, проведення в програмі" : "Облік на вашій системі оподаткування" });
+        }
+        if (f === "tov" && has("reports")) picks.push({ name: "Звітність", note: "Податкова, статистика, ПФУ" });
+        if (vat === "yes") picks.push({ name: "ПДВ", note: "Реєстрація й розблокування податкових накладних, звіти з ПДВ" });
+        if (staff === "yes") picks.push({ name: "Кадровий облік", note: "Договори, зарплата, табель, лікарняні, звіти" });
+        if (has("bank")) picks.push({ name: "Фінансовий моніторинг у банку", note: "Супровід будь-якої складності" });
+        if (has("numbers")) picks.push(f === "fop"
+          ? { name: "Фінансовий супровід", note: "Автоматизація обліку, структура й бізнес-процеси" }
+          : { name: "Управлінський облік для власника", note: "P&L, Cashflow, Balance, аудит бізнес-процесів" });
+        if (has("close")) picks.push({ name: "Закриття ФОП", note: "Супровід закриття" });
+        return picks;
+      }
+
+      function buildMessage(picks) {
+        var f = val("form"), staff = val("staff"), vat = val("vat");
+        var who = f === "fop" ? "Я ФОП" : f === "tov" ? "У мене ТОВ" : "Хочу відкрити бізнес";
+        var parts = [who];
+        if (f !== "new") {
+          parts.push(staff === "yes" ? "маю працівників" : "без працівників");
+          parts.push(vat === "yes" ? "платник ПДВ" : vat === "no" ? "без ПДВ" : "не знаю, чи потрібен ПДВ");
+        }
+        var names = picks.map(function (p) { return p.name.charAt(0).toLowerCase() + p.name.slice(1); });
+        return "Добрий день! " + parts.join(", ") + ". Цікавить: " + names.join(", ").replace("пДВ", "ПДВ").replace("фОП", "ФОП").replace("тОВ", "ТОВ") +
+          ". Підкажіть, будь ласка, формат співпраці та вартість.";
+      }
+
+      function setMessengers(text) {
+        var enc = encodeURIComponent(text);
+        root.querySelectorAll("[data-messenger]").forEach(function (a) {
+          var key = a.getAttribute("data-messenger");
+          var v = CONTACTS[key];
+          if (!v) {
+            a.setAttribute("aria-disabled", "true");
+            a.setAttribute("href", "#contact");
+            a.title = "Контакт ще не додано";
+            return;
+          }
+          a.removeAttribute("aria-disabled");
+          a.removeAttribute("title");
+          // WhatsApp підставляє текст сам; у Telegram і Viber текст треба вставити зі буфера
+          a.href = key === "whatsapp" ? "https://wa.me/" + digits(v) + "?text=" + enc : contactHref[key](v);
+        });
+      }
+
+      function showResult() {
+        var picks = recommend();
+        picksEl.innerHTML = "";
+        picks.forEach(function (p, i) {
+          var li = document.createElement("li");
+          li.className = "cta__pick";
+          li.style.setProperty("--i", i);
+          li.innerHTML = '<span class="cta__pick-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>' +
+            '<span class="cta__pick-name"></span><span class="cta__pick-note"></span>';
+          li.querySelector(".cta__pick-name").textContent = p.name;
+          li.querySelector(".cta__pick-note").textContent = p.note;
+          picksEl.appendChild(li);
+        });
+        var text = buildMessage(picks);
+        msgEl.value = text;
+        setMessengers(text);
+        statusEl.textContent = "";
+        steps.forEach(function (s) { s.hidden = true; });
+        actions.hidden = true;
+        result.hidden = false;
+        paintProgress(4);
+        counter.textContent = "Готово";
+        result.querySelector(".cta__result-title").focus({ preventScroll: true });
+      }
+
+      /* ---------- Копіювання і месенджери ---------- */
+      function copyText() {
+        var text = msgEl.value;
+        function fallback() {
+          msgEl.focus();
+          msgEl.select();
+          statusEl.textContent = "Текст виділено. Скопіюйте його (Ctrl+C або «Копіювати»).";
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text).then(function () {
+            statusEl.textContent = "Скопійовано. Вставте текст у чат.";
+            return true;
+          }, function () { fallback(); return false; });
+        }
+        fallback();
+        return Promise.resolve(false);
+      }
+      root.querySelector("[data-cta-copy]").addEventListener("click", copyText);
+      root.querySelectorAll("[data-messenger]").forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          if (a.getAttribute("aria-disabled") === "true") {
+            e.preventDefault();
+            statusEl.textContent = "Контакти ще не додано. Скопіюйте текст і надішліть його зручним способом.";
+            return;
+          }
+          // для Telegram і Viber спершу копіюємо текст, щоб його можна було вставити
+          if (a.getAttribute("data-messenger") !== "whatsapp") copyText();
+        });
+      });
+
+      root.querySelector("[data-cta-restart]").addEventListener("click", function () {
+        form.reset();
+        result.hidden = true;
+        actions.hidden = false;
+        show(0, -1);
+        stepEl("form").querySelector("input").focus({ preventScroll: true });
+      });
+
+      show(0, 1);
+    })();
+  </script>
+  <!-- ================= /БЛОК 07 CTA + КОНТАКТИ ================= -->
+
+</main>
+</body>
+</html>
