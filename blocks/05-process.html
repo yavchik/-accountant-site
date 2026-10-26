@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05 Як ми працюємо — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <!-- Бібліотеки: немає. Поява на IntersectionObserver, гортання карток на нативному scroll-snap. -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 05 Як ми працюємо. Префікс класів: prc__ ===== */
+
+    .prc {
+      position: relative;
+      padding-block: var(--section-y);
+      overflow: clip;
+    }
+
+    /* --- Шапка --- */
+    .prc__head {
+      display: grid;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-8);
+    }
+    .prc__label { color: var(--accent-text); }
+    .prc__title { font-size: var(--fs-h2); max-width: 18ch; }
+    .prc__lead { color: var(--fg-muted); max-width: 30rem; }
+
+    /* --- Доріжка кроків --- */
+    .prc__track { position: relative; }
+
+    .prc__rail,
+    .prc__rail-fill {
+      display: none;
+      position: absolute;
+      top: 7px;
+      left: 0;
+      right: 0;
+      height: var(--stroke);
+    }
+    .prc__rail { background: var(--line); }
+    .prc__rail-fill {
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 1.6s var(--ease-in-out);
+    }
+
+    /* Мобільний: картки гортаються вбік. .prc__track перебиває ol[role="list"] з base.css */
+    .prc__track .prc__steps {
+      display: flex;
+      gap: var(--sp-4);
+      margin: 0 calc(var(--gutter) * -1);
+      padding: var(--sp-1) var(--gutter) var(--sp-5);
+      list-style: none;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .prc__steps::-webkit-scrollbar { display: none; }
+    .prc__steps:focus-visible { outline-offset: -2px; }
+
+    .prc__step {
+      position: relative;
+      flex: 0 0 min(82%, 340px);
+      display: grid;
+      align-content: start;
+      gap: var(--sp-3);
+      padding: var(--sp-6) var(--sp-5);
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--bg-raised);
+      scroll-snap-align: start;
+    }
+
+    .prc__node {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      margin-bottom: var(--sp-2);
+      border: var(--stroke) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      background: var(--bg);
+    }
+    .prc__node::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      transform: scale(0);
+      transition: transform var(--dur-base) var(--ease-spring);
+      transition-delay: calc(var(--i, 0) * 280ms + 200ms);
+    }
+
+    .prc__num {
+      color: var(--fg-strong);
+      font-size: clamp(2.75rem, 2rem + 2.4vw, 4rem);
+      font-weight: var(--fw-black);
+      line-height: 1;
+      letter-spacing: var(--ls-display);
+      opacity: 0.18;
+      transition: opacity var(--dur-slow) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * 280ms + 200ms);
+    }
+    .prc__step-title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-semibold);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .prc__step-text { color: var(--fg-muted); }
+
+    /* Запуск анімації, коли секція в кадрі */
+    .prc.is-run .prc__rail-fill { transform: scaleX(1); }
+    .prc.is-run .prc__node::after { transform: scale(1); }
+    .prc.is-run .prc__num { opacity: 1; }
+    .prc__step--last .prc__num { color: var(--accent); }
+
+    .prc__reveal {
+      transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * 280ms);
+    }
+    @media (scripting: enabled) {
+      .prc:not(.is-run) .prc__reveal { opacity: 0; transform: translateY(var(--reveal-shift)); }
+    }
+    @media (scripting: none) {
+      .prc__rail-fill { transform: none; }
+      .prc__node::after { transform: scale(1); }
+      .prc__num { opacity: 1; }
+    }
+
+    /* Керування гортанням (мобільний) */
+    .prc__nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-4);
+      margin-top: var(--sp-2);
+    }
+    .prc__count { color: var(--fg-muted); }
+    .prc__count-current { color: var(--fg-strong); }
+    .prc__arrows { display: flex; gap: var(--sp-2); }
+    .prc__arrow {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      color: var(--fg-strong);
+      transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+    }
+    .prc__arrow svg { width: 18px; height: 18px; }
+    .prc__arrow:disabled { opacity: 0.35; cursor: default; }
+    .prc__arrow:active:not(:disabled) { transform: scale(0.94); }
+
+    /* --- Заклик --- */
+    .prc__cta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-4) var(--sp-6);
+      margin-top: var(--sp-8);
+      padding-top: var(--sp-6);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .prc__cta-text {
+      color: var(--fg-strong);
+      font-size: var(--fs-lead);
+      font-weight: var(--fw-medium);
+    }
+
+    /* ===== Планшет 768+ ===== */
+    @media (min-width: 768px) {
+      .prc__head {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: end;
+        column-gap: var(--grid-gap);
+      }
+      .prc__label { grid-column: 1 / -1; }
+      .prc__step { flex-basis: min(46%, 360px); }
+    }
+
+    /* ===== Десктоп 1024+: п’ять кроків в один ряд під лінією ===== */
+    @media (min-width: 1024px) {
+      .prc__rail,
+      .prc__rail-fill {
+        display: block;
+        right: calc((100% - var(--grid-gap) * 4) / 5 - 16px);   /* лінія закінчується на останньому вузлі */
+      }
+      .prc__track .prc__steps {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: var(--grid-gap);
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+      }
+      .prc__step {
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: none;
+      }
+      .prc__node { margin-bottom: var(--sp-6); }
+      .prc__nav { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .prc__rail-fill,
+      .prc__node::after,
+      .prc__num { transition: none; }
+    }
+  </style>
+</head>
+<body>
+<main id="main">
+
+  <!-- ================= БЛОК 05 ЯК МИ ПРАЦЮЄМО ================= -->
+  <section class="prc" id="process" data-theme="light" data-prc aria-labelledby="prc-title">
+    <div class="container">
+
+      <div class="prc__head">
+        <p class="t-label prc__label">Як ми працюємо</p>
+        <h2 class="prc__title" id="prc-title">Пʼять кроків до спокійної бухгалтерії</h2>
+        <p class="prc__lead">Від першого повідомлення до щомісячного супроводу. Ви завжди знаєте, що відбувається і що буде далі.</p>
+      </div>
+
+      <div class="prc__track">
+        <span class="prc__rail" aria-hidden="true"></span>
+        <span class="prc__rail-fill" aria-hidden="true"></span>
+
+        <ol class="prc__steps" role="list" tabindex="0" aria-label="Кроки співпраці" data-prc-steps>
+          <li class="prc__step prc__reveal" style="--i:0">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">01</span>
+            <h3 class="prc__step-title">Знайомство</h3>
+            <p class="prc__step-text">Ви пишете або телефонуєте, ми ставимо кілька питань про ваш бізнес.</p>
+          </li>
+          <li class="prc__step prc__reveal" style="--i:1">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">02</span>
+            <h3 class="prc__step-title">Аналіз</h3>
+            <p class="prc__step-text">Дивимось, як усе працює зараз: документи, звітність, податки. Так видно вузькі місця.</p>
+          </li>
+          <li class="prc__step prc__reveal" style="--i:2">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">03</span>
+            <h3 class="prc__step-title">Пропозиція</h3>
+            <p class="prc__step-text">Пропонуємо формат супроводу під ваші задачі й називаємо вартість.</p>
+          </li>
+          <li class="prc__step prc__reveal" style="--i:3">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">04</span>
+            <h3 class="prc__step-title">Запуск</h3>
+            <p class="prc__step-text">Налаштовуємо зручний документообіг і точки контролю під ваш бізнес.</p>
+          </li>
+          <li class="prc__step prc__step--last prc__reveal" style="--i:4">
+            <span class="prc__node" aria-hidden="true"></span>
+            <span class="prc__num t-num" aria-hidden="true">05</span>
+            <h3 class="prc__step-title">Супровід</h3>
+            <p class="prc__step-text">Щомісяця ведемо облік і звітність, нагадуємо про строки. Ви займаєтесь бізнесом.</p>
+          </li>
+        </ol>
+
+        <div class="prc__nav">
+          <p class="t-label prc__count" aria-hidden="true"><span class="prc__count-current" data-prc-current>1</span> / 5</p>
+          <div class="prc__arrows">
+            <button class="prc__arrow" type="button" data-prc-prev aria-label="Попередній крок" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+            </button>
+            <button class="prc__arrow" type="button" data-prc-next aria-label="Наступний крок">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="prc__cta">
+        <p class="prc__cta-text">Перший крок — просто написати.</p>
+        <a class="btn btn--primary" href="#match">
+          Підібрати послугу
+          <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function initProcess() {
+      var root = document.querySelector("[data-prc]");
+      if (!root) return;
+      var list = root.querySelector("[data-prc-steps]");
+      var steps = Array.prototype.slice.call(list.children);
+      var current = root.querySelector("[data-prc-current]");
+      var prev = root.querySelector("[data-prc-prev]");
+      var next = root.querySelector("[data-prc-next]");
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      /* ---------- Запуск анімації в кадрі ---------- */
+      if (reduce || !("IntersectionObserver" in window)) {
+        root.classList.add("is-run");
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) { root.classList.add("is-run"); io.disconnect(); }
+        }, { rootMargin: "0px 0px -25% 0px" });
+        io.observe(list);
+      }
+
+      /* ---------- Гортання карток (мобільний і планшет) ---------- */
+      function index() {
+        var left = list.scrollLeft;
+        var base = steps[0].offsetLeft;
+        var best = 0;
+        steps.forEach(function (s, i) {
+          if (Math.abs(s.offsetLeft - base - left) < Math.abs(steps[best].offsetLeft - base - left)) best = i;
+        });
+        // біля правого краю показуємо останній крок
+        if (left + list.clientWidth >= list.scrollWidth - 4) best = steps.length - 1;
+        return best;
+      }
+      var ticking = false;
+      function update() {
+        ticking = false;
+        var i = index();
+        current.textContent = String(i + 1);
+        prev.disabled = list.scrollLeft <= 4;
+        next.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 4;
+      }
+      list.addEventListener("scroll", function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }, { passive: true });
+      function go(dir) {
+        var i = Math.max(0, Math.min(steps.length - 1, index() + dir));
+        list.scrollTo({ left: steps[i].offsetLeft - steps[0].offsetLeft, behavior: reduce ? "auto" : "smooth" });
+      }
+      prev.addEventListener("click", function () { go(-1); });
+      next.addEventListener("click", function () { go(1); });
+      window.addEventListener("resize", update, { passive: true });
+      update();
+    })();
+  </script>
+  <!-- ================= /БЛОК 05 ЯК МИ ПРАЦЮЄМО ================= -->
+
+</main>
+</body>
+</html>
