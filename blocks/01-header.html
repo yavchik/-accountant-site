@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>01 Header — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <!-- Бібліотеки: немає. Логіка шапки на vanilla JS (IntersectionObserver + один пасивний scroll-слухач). -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <style>
+    /* ===== 01 Header. Префікс класів: hdr__ ===== */
+
+    .hdr {
+      --hdr-shift: 8px;            /* на скільки «стискається» шапка після першого екрана */
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: var(--z-header);
+      height: var(--header-h);
+      background: transparent;     /* перекриває фон від [data-theme] з base.css */
+      transition: transform var(--dur-slow) var(--ease-out);
+    }
+
+    /* Glass-фон: зʼявляється через opacity, тема бере кольори з токенів */
+    .hdr__bg {
+      position: absolute;
+      inset: 0;
+      background: var(--glass-bg);
+      border-bottom: var(--hairline) solid var(--glass-border);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(16px) saturate(140%);
+      opacity: 0;
+      transition: opacity var(--dur-base) var(--ease-out);
+      pointer-events: none;
+    }
+
+    .hdr__inner {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-5);
+      height: var(--header-h);
+      transition: transform var(--dur-slow) var(--ease-out);
+    }
+
+    /* Стан «після першого екрана»: фон видно, смуга візуально 72 → 64px */
+    .hdr.is-scrolled { transform: translateY(calc(var(--hdr-shift) * -1)); }
+    .hdr.is-scrolled .hdr__inner { transform: translateY(calc(var(--hdr-shift) / 2)); }
+    .hdr.is-scrolled .hdr__bg { opacity: 1; }
+
+    /* Ховається при скролі вниз */
+    .hdr.is-hidden { transform: translateY(-100%); }
+
+    /* --- Лого: дві версії, перехід через opacity --- */
+    .hdr__logo {
+      position: relative;
+      flex: none;
+      display: block;
+      width: 156px;
+      margin-right: auto;
+      line-height: 0;
+    }
+    .hdr__logo-img {
+      width: 100%;
+      height: auto;
+      transition: opacity var(--dur-base) var(--ease-out);
+    }
+    .hdr__logo-img--dark {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
+    .hdr[data-theme="light"] .hdr__logo-img--light { opacity: 0; }
+    .hdr[data-theme="light"] .hdr__logo-img--dark { opacity: 1; }
+
+    /* --- Навігація (десктоп) --- */
+    .hdr__nav {
+      position: relative;
+      display: none;
+    }
+    .hdr__list {
+      display: flex;
+      gap: clamp(var(--sp-4), 2.2vw, var(--sp-6));
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .hdr__link {
+      position: relative;
+      display: block;
+      padding-block: var(--sp-2);
+      color: var(--fg);
+      font-size: var(--fs-small);
+      font-weight: var(--fw-medium);
+      text-decoration: none;
+      opacity: 0.78;
+      transition: opacity var(--dur-fast) var(--ease-out);
+    }
+    .hdr__link:hover,
+    .hdr__link[aria-current="true"] { opacity: 1; }
+
+    /* Лінія активного розділу: рухається і масштабується лише через transform */
+    .hdr__indicator {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 1px;
+      height: var(--stroke);
+      background: var(--accent);
+      transform-origin: left center;
+      transform: translateX(0) scaleX(0);
+      opacity: 0;
+      transition: transform var(--dur-slow) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+      pointer-events: none;
+    }
+
+    .hdr__cta { display: none; flex: none; }
+
+    /* --- Бургер --- */
+    .hdr__burger {
+      position: relative;
+      flex: none;
+      width: 44px;
+      height: 44px;
+      margin-right: calc(var(--sp-2) * -1);
+      color: var(--fg-strong);
+      border-radius: var(--r-sm);
+    }
+    .hdr__burger-line {
+      position: absolute;
+      left: 11px;
+      width: 22px;
+      height: var(--stroke);
+      background: currentColor;
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .hdr__burger-line:nth-child(1) { top: 17px; }
+    .hdr__burger-line:nth-child(2) { top: 25px; }
+    .hdr__burger[aria-expanded="true"] .hdr__burger-line:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+    .hdr__burger[aria-expanded="true"] .hdr__burger-line:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+
+    /* --- Мобільне меню --- */
+    .hdr__menu {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding-top: calc(var(--header-h) + var(--sp-6));
+      background: var(--bg);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base);
+    }
+    .hdr__menu-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
+        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
+      background-size: 48px 48px;
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent);
+      mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    .hdr__menu-inner {
+      position: relative;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: var(--sp-7);
+      padding-bottom: var(--sp-6);
+    }
+    .hdr__menu-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      border-top: var(--hairline) solid var(--line);
+    }
+    .hdr__menu-item {
+      border-bottom: var(--hairline) solid var(--line);
+      opacity: 0;
+      transform: translateY(var(--reveal-shift));
+      transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+    }
+    .hdr__menu-link {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-4);
+      padding-block: var(--sp-4);
+      color: var(--fg);
+      font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.5rem);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-heading);
+      line-height: 1.1;
+      text-decoration: none;
+    }
+    .hdr__menu-num { position: relative; min-width: 2ch; color: var(--accent-text); }
+    .hdr__menu-num::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      width: 5px;
+      height: 5px;
+      margin-top: -2px;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      transform: scale(0);
+      transition: transform var(--dur-base) var(--ease-spring);
+    }
+    .hdr__menu-link[aria-current="true"] .hdr__menu-num::after { transform: scale(1); }
+
+    .hdr__menu-foot {
+      display: grid;
+      gap: var(--sp-5);
+      margin-top: auto;
+      opacity: 0;
+      transform: translateY(var(--reveal-shift));
+      transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+    }
+    .hdr__contacts {
+      display: grid;
+      gap: var(--sp-2);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--fg-muted);
+      font-size: var(--fs-small);
+    }
+
+    /* Відкрите меню */
+    .hdr.is-open { transform: none; }
+    .hdr.is-open .hdr__inner { transform: none; }
+    .hdr.is-open .hdr__bg { opacity: 0; }
+    .hdr.is-open .hdr__menu {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity var(--dur-base) var(--ease-out), visibility 0s;
+    }
+    .hdr.is-open .hdr__menu-item,
+    .hdr.is-open .hdr__menu-foot {
+      opacity: 1;
+      transform: none;
+      transition-delay: calc(var(--dur-fast) + var(--i, 0) * var(--stagger));
+    }
+
+    /* ===== Планшет 768+ : зʼявляється кнопка ===== */
+    @media (min-width: 768px) {
+      .hdr__logo { width: 180px; }
+      .hdr__cta { display: inline-flex; }
+    }
+
+    /* ===== Десктоп 1024+ : повна навігація, без бургера ===== */
+    @media (min-width: 1024px) {
+      .hdr__logo { width: 196px; margin-right: 0; }
+      .hdr__nav { display: block; margin-inline: auto; }
+      .hdr__burger,
+      .hdr__menu { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hdr,
+      .hdr__inner { transition: none; }
+    }
+
+    /* ===== ДЕМО: секції лише для перевірки шапки, у сайт не входять ===== */
+    .hdr-demo__hero {
+      display: grid;
+      align-content: end;
+      min-height: 100vh;
+      padding-block: var(--sp-10) var(--sp-8);
+    }
+    .hdr-demo__section {
+      min-height: 90vh;
+      padding-block: var(--section-y);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .hdr-demo__label { color: var(--accent-text); margin-bottom: var(--sp-4); }
+    .hdr-demo__note { color: var(--fg-muted); margin-top: var(--sp-4); max-width: var(--measure); }
+  </style>
+</head>
+<body>
+
+  <!-- ================= БЛОК 01 HEADER ================= -->
+  <a class="skip-link" href="#main">Перейти до змісту</a>
+
+  <header class="hdr" data-hdr data-theme="dark">
+    <div class="hdr__bg" aria-hidden="true"></div>
+
+    <div class="container hdr__inner">
+      <a class="hdr__logo" href="#top" aria-label="Happy Finance, на початок сторінки">
+        <img class="hdr__logo-img hdr__logo-img--light" src="../assets/images/logo-inline-white.svg" width="196" height="16" alt="">
+        <img class="hdr__logo-img hdr__logo-img--dark" src="../assets/images/logo-inline-navy.svg" width="196" height="16" alt="">
+      </a>
+
+      <nav class="hdr__nav" aria-label="Основна навігація">
+        <ul class="hdr__list" role="list">
+          <li><a class="hdr__link" href="#services">Послуги</a></li>
+          <li><a class="hdr__link" href="#about">Про нас</a></li>
+          <li><a class="hdr__link" href="#process">Як працюємо</a></li>
+          <li><a class="hdr__link" href="#faq">FAQ</a></li>
+          <li><a class="hdr__link" href="#contact">Контакти</a></li>
+        </ul>
+        <span class="hdr__indicator" aria-hidden="true"></span>
+      </nav>
+
+      <a class="btn btn--primary btn--sm hdr__cta" href="#match">Підібрати послугу</a>
+
+      <button class="hdr__burger" type="button" aria-expanded="false" aria-controls="hdr-menu" aria-label="Відкрити меню">
+        <span class="hdr__burger-line"></span>
+        <span class="hdr__burger-line"></span>
+      </button>
+    </div>
+
+    <div class="hdr__menu" id="hdr-menu" data-theme="dark" aria-label="Меню">
+      <div class="hdr__menu-grid" aria-hidden="true"></div>
+      <div class="container hdr__menu-inner">
+        <ul class="hdr__menu-list" role="list">
+          <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>
+          <li class="hdr__menu-item" style="--i:1"><a class="hdr__menu-link" href="#about"><span class="t-label hdr__menu-num">02</span>Про нас</a></li>
+          <li class="hdr__menu-item" style="--i:2"><a class="hdr__menu-link" href="#process"><span class="t-label hdr__menu-num">03</span>Як працюємо</a></li>
+          <li class="hdr__menu-item" style="--i:3"><a class="hdr__menu-link" href="#faq"><span class="t-label hdr__menu-num">04</span>FAQ</a></li>
+          <li class="hdr__menu-item" style="--i:4"><a class="hdr__menu-link" href="#contact"><span class="t-label hdr__menu-num">05</span>Контакти</a></li>
+        </ul>
+        <div class="hdr__menu-foot" style="--i:5">
+          <a class="btn btn--primary btn--block" href="#match">Підібрати послугу</a>
+          <ul class="hdr__contacts" role="list">
+            <li>Телефон: <span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></li>
+            <li>Telegram / Viber: <span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></li>
+            <li>Email: <span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <script>
+    (function () {
+    function initHeader() {
+      var hdr = document.querySelector("[data-hdr]");
+      if (!hdr) return;
+
+      var burger = hdr.querySelector(".hdr__burger");
+      var menu = hdr.querySelector(".hdr__menu");
+      var nav = hdr.querySelector(".hdr__nav");
+      var indicator = hdr.querySelector(".hdr__indicator");
+      var navLinks = Array.prototype.slice.call(hdr.querySelectorAll(".hdr__link"));
+      var menuLinks = Array.prototype.slice.call(hdr.querySelectorAll(".hdr__menu-link"));
+      var desktop = window.matchMedia("(min-width: 1024px)");
+      var headerH = function () { return hdr.offsetHeight; };
+
+      /* ---------- 1. Тема і стан при скролі ---------- */
+      var lastY = window.scrollY;
+      var ticking = false;
+      var isOpen = false;
+
+      function updateOnScroll() {
+        var y = window.scrollY;
+        hdr.classList.toggle("is-scrolled", y > 8);
+        // ховаємо при скролі вниз, показуємо при скролі вгору; не ховаємо, якщо фокус у шапці
+        var goingDown = y > lastY;
+        var hide = goingDown && y > headerH() * 3 && !isOpen && !hdr.contains(document.activeElement);
+        if (Math.abs(y - lastY) > 4) hdr.classList.toggle("is-hidden", hide);
+        lastY = y;
+        updateTheme();
+        ticking = false;
+      }
+      window.addEventListener("scroll", function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(updateOnScroll); }
+      }, { passive: true });
+      hdr.addEventListener("focusin", function () { hdr.classList.remove("is-hidden"); });
+
+      // Тема шапки = тема секції верхнього рівня, що зараз під нею
+      var themed = Array.prototype.slice.call(document.querySelectorAll("main > [data-theme], body > footer[data-theme]"));
+      function updateTheme() {
+        if (isOpen || !themed || !themed.length) return;
+        var probe = headerH() / 2;
+        for (var i = 0; i < themed.length; i++) {
+          var r = themed[i].getBoundingClientRect();
+          if (r.top <= probe && r.bottom > probe) {
+            hdr.setAttribute("data-theme", themed[i].getAttribute("data-theme"));
+            return;
+          }
+        }
+      }
+      updateOnScroll();
+
+      /* ---------- 2. Активний розділ і лінія під пунктом ---------- */
+      function moveIndicator(link) {
+        if (!link || !desktop.matches) { indicator.style.opacity = "0"; return; }
+        var navBox = nav.getBoundingClientRect();
+        var box = link.getBoundingClientRect();
+        indicator.style.transform = "translateX(" + (box.left - navBox.left) + "px) scaleX(" + box.width + ")";
+        indicator.style.opacity = "1";
+      }
+
+      function setActive(id) {
+        var active = null;
+        navLinks.concat(menuLinks).forEach(function (a) {
+          var on = a.getAttribute("href") === "#" + id;
+          if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+          if (on && a.classList.contains("hdr__link")) active = a;
+        });
+        moveIndicator(active);
+      }
+
+      var sections = navLinks
+        .map(function (a) { return document.querySelector(a.getAttribute("href")); })
+        .filter(Boolean);
+      if ("IntersectionObserver" in window && sections.length) {
+        var visible = {};
+        var spyIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) { visible[entry.target.id] = entry.isIntersecting; });
+          var current = sections.filter(function (s) { return visible[s.id]; }).pop();
+          setActive(current ? current.id : null);
+        }, { rootMargin: "-45% 0px -50% 0px" });
+        sections.forEach(function (s) { spyIO.observe(s); });
+      }
+      window.addEventListener("resize", function () {
+        moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]'));
+      }, { passive: true });
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+          moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]'));
+        });
+      }
+
+      /* ---------- 3. Мобільне меню ---------- */
+      var themeBeforeOpen = hdr.getAttribute("data-theme");
+
+      function focusables() {
+        return [burger].concat(Array.prototype.slice.call(menu.querySelectorAll("a[href], button:not([disabled])")));
+      }
+
+      function openMenu() {
+        isOpen = true;
+        themeBeforeOpen = hdr.getAttribute("data-theme");
+        hdr.setAttribute("data-theme", "dark");
+        hdr.classList.add("is-open");
+        hdr.classList.remove("is-hidden");
+        burger.setAttribute("aria-expanded", "true");
+        burger.setAttribute("aria-label", "Закрити меню");
+        document.documentElement.style.overflow = "hidden";
+        var first = menu.querySelector(".hdr__menu-link");
+        if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 50);
+      }
+
+      function closeMenu(returnFocus) {
+        if (!isOpen) return;
+        isOpen = false;
+        hdr.classList.remove("is-open");
+        hdr.setAttribute("data-theme", themeBeforeOpen);
+        burger.setAttribute("aria-expanded", "false");
+        burger.setAttribute("aria-label", "Відкрити меню");
+        document.documentElement.style.overflow = "";
+        if (returnFocus) burger.focus({ preventScroll: true });
+      }
+
+      burger.addEventListener("click", function () { isOpen ? closeMenu(true) : openMenu(); });
+
+      menuLinks.concat(Array.prototype.slice.call(menu.querySelectorAll(".btn"))).forEach(function (a) {
+        a.addEventListener("click", function () { closeMenu(false); });
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (!isOpen) return;
+        if (e.key === "Escape") { e.preventDefault(); closeMenu(true); return; }
+        if (e.key === "Tab") {
+          var items = focusables();
+          var first = items[0];
+          var last = items[items.length - 1];
+          if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      });
+
+      // Перехід на десктоп при відкритому меню
+      var onBp = function (e) { if (e.matches) closeMenu(false); };
+      if (desktop.addEventListener) desktop.addEventListener("change", onBp);
+      else desktop.addListener(onBp);
+    }
+    // Секції сторінки ще не в DOM, поки виконується цей скрипт, тож чекаємо на розбір документа
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initHeader);
+    else initHeader();
+    })();
+  </script>
+  <!-- ================= /БЛОК 01 HEADER ================= -->
+
+
+  <!-- ===== ДЕМО-СЕКЦІЇ: тільки для перевірки шапки, у фінальний сайт не входять ===== -->
+  <main id="main">
+    <section class="hdr-demo__hero" id="top" data-theme="dark">
+      <div class="container">
+        <p class="t-label hdr-demo__label">Демо · місце для Hero</p>
+        <h1 class="t-display">Шапка над темним екраном</h1>
+        <p class="hdr-demo__note">Прокрутіть вниз: шапка стане світлою, сховається при скролі вниз і повернеться при скролі вгору. Лінія під пунктом меню показує поточний розділ.</p>
+      </div>
+    </section>
+    <section class="hdr-demo__section" id="services" data-theme="light">
+      <div class="container"><p class="t-label hdr-demo__label">Демо · 03</p><h2 class="t-h2">Послуги</h2></div>
+    </section>
+    <section class="hdr-demo__section" id="about" data-theme="light">
+      <div class="container"><p class="t-label hdr-demo__label">Демо · 04</p><h2 class="t-h2">Про нас</h2></div>
+    </section>
+    <section class="hdr-demo__section" id="process" data-theme="light">
+      <div class="container"><p class="t-label hdr-demo__label">Демо · 05</p><h2 class="t-h2">Як працюємо</h2></div>
+    </section>
+    <section class="hdr-demo__section" id="faq" data-theme="light">
+      <div class="container"><p class="t-label hdr-demo__label">Демо · 06</p><h2 class="t-h2">FAQ</h2></div>
+    </section>
+    <section class="hdr-demo__section" id="contact" data-theme="dark">
+      <div class="container">
+        <p class="t-label hdr-demo__label">Демо · 07</p>
+        <h2 class="t-h2">Контакти</h2>
+        <p class="hdr-demo__note" id="match">Тут буде міні-підбір послуги. Темна секція: шапка знову перемикається на темну тему.</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
