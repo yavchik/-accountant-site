@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>03 Послуги — Happy Finance</title>
   <meta name="robots" content="noindex">
-  <!-- Бібліотеки: немає. Перемикач і розкриття на vanilla JS, поява на IntersectionObserver. -->
+  <!-- Бібліотеки: немає. Карта, перемикач і поява на vanilla JS, SVG та IntersectionObserver. -->
   <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="../css/tokens.css">
   <link rel="stylesheet" href="../css/base.css">
   <style>
-    /* ===== 03 Послуги. Префікс класів: svc__ ===== */
+    /* ===== 03 Послуги: карта бухгалтерії. Префікс класів: svc__ =====
+       Два режими однієї розмітки:
+       — «лінія метро» (телефон і без JS): вертикальний список, вміст розкривається під вузлом;
+       — «карта» (від 768px, клас .is-map від JS): вузли по колу навколо центру, вміст у панелі поруч. */
 
     .svc {
       position: relative;
@@ -26,6 +29,9 @@
     .svc__label { color: var(--accent-text); }
     .svc__title { font-size: var(--fs-h2); }
     .svc__lead { color: var(--fg-muted); max-width: 30rem; }
+    .svc__lead-map { display: none; }
+    .svc.is-map .svc__lead-map { display: inline; }
+    .svc.is-map .svc__lead-list { display: none; }
 
     /* --- Перемикач ФОП / ТОВ --- */
     .svc__tabs {
@@ -72,76 +78,84 @@
       opacity: 0.7;
     }
 
-    /* --- Макет: реєстр + картка --- */
+    /* --- Макет --- */
     .svc__layout {
       display: grid;
       gap: var(--sp-7);
     }
-    .svc__panel { min-width: 0; }
-    .svc__panel[hidden] { display: none; }
+    .svc__panels { min-width: 0; }
+    .svc__map { min-width: 0; }
+    .svc__map + .svc__map { margin-top: var(--sp-8); }
+    .svc__map[hidden] { display: none; }
 
-    /* --- Реєстр послуг --- */
-    .svc__list {
+    /* ===================== Режим «лінія метро» ===================== */
+    .svc__lines,
+    .svc__core,
+    .svc__detail { display: none; }
+
+    /* .svc__stage підвищує специфічність над ol[role="list"] з base.css */
+    .svc__stage .svc__nodes {
+      position: relative;
       margin: 0;
       padding: 0;
       list-style: none;
-      border-bottom: var(--hairline) solid var(--line);
     }
-    .svc__row {
-      position: relative;
-      border-top: var(--hairline) solid var(--line);
-    }
-    .svc__row-title { font-size: inherit; font-weight: inherit; line-height: inherit; letter-spacing: 0; }
-
-    .svc__trigger {
-      position: relative;
-      isolation: isolate;
-      display: grid;
-      grid-template-columns: 2.25rem minmax(0, 1fr) auto;
-      align-items: start;
-      gap: var(--sp-3);
-      width: 100%;
-      padding: var(--sp-5) var(--sp-2) var(--sp-5) 0;
-      text-align: left;
-      color: var(--fg);
-    }
-    /* Заливка рядка при наведенні — лише transform */
-    .svc__trigger::before {
+    /* сама лінія, що зʼєднує вузли */
+    .svc__stage .svc__nodes::before {
       content: "";
       position: absolute;
-      inset: 0 calc(var(--sp-3) * -1);
-      z-index: -1;
-      background: var(--bg-raised);
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform var(--dur-slow) var(--ease-out);
+      top: 32px;
+      bottom: 32px;
+      left: 19.5px;
+      width: var(--hairline);
+      background: var(--line-strong);
     }
-    .svc__num {
-      padding-top: 0.35em;
-      color: var(--fg-muted);
-      transition: color var(--dur-fast) var(--ease-out);
-    }
-    .svc__name {
-      display: block;
-      color: var(--fg-strong);
-      font-size: var(--fs-h3);
-      font-weight: var(--fw-semibold);
-      line-height: 1.25;
-      letter-spacing: -0.01em;
-    }
-    .svc__for {
-      display: block;
-      margin-top: var(--sp-1);
-      color: var(--fg-muted);
-      font-size: var(--fs-small);
-    }
-    .svc__side {
-      display: flex;
+    .svc__station { position: relative; }
+
+    .svc__node {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
       align-items: center;
       gap: var(--sp-4);
-      padding-top: 0.3em;
+      width: 100%;
+      min-height: 64px;
+      padding: var(--sp-3) 0;
+      text-align: left;
+      color: var(--fg-strong);
     }
-    .svc__qty { display: none; color: var(--fg-muted); white-space: nowrap; }
+    .svc__dot {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      background: var(--bg);
+      color: var(--fg-muted);
+      transition: transform var(--dur-base) var(--ease-spring);
+    }
+    /* помаранчева заливка вузла — лише scale */
+    .svc__dot::before {
+      content: "";
+      position: absolute;
+      inset: calc(var(--hairline) * -1);
+      border-radius: inherit;
+      background: var(--accent);
+      transform: scale(0);
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .svc__dot-num { position: relative; color: inherit; }
+    .svc__station.is-open .svc__dot { color: var(--on-accent); }
+    .svc__station.is-open .svc__dot::before { transform: scale(1); }
+
+    .svc__node-name {
+      font-size: 1.0625rem;
+      font-weight: var(--fw-semibold);
+      line-height: 1.3;
+    }
+    .svc__node-short { display: none; }
+
     .svc__icon {
       position: relative;
       flex: none;
@@ -165,40 +179,55 @@
       transition: transform var(--dur-base) var(--ease-out);
     }
     .svc__icon::after { transform: rotate(90deg); }
-    .svc__trigger[aria-expanded="true"] .svc__icon { transform: rotate(180deg); }
-    .svc__trigger[aria-expanded="true"] .svc__icon::after { transform: rotate(0deg); }
-    .svc__trigger[aria-expanded="true"] .svc__num { color: var(--accent-text); }
+    .svc__station.is-open .svc__icon { transform: rotate(180deg); }
+    .svc__station.is-open .svc__icon::after { transform: rotate(0deg); }
 
     @media (hover: hover) {
-      .svc__trigger:hover::before { transform: scaleX(1); }
-      .svc__trigger:hover .svc__num { color: var(--accent-text); }
+      .svc__node:hover .svc__dot { transform: scale(1.08); }
     }
+    .svc__node:focus-visible { outline: none; }
+    .svc__node:focus-visible .svc__dot { outline: 2px solid var(--focus); outline-offset: 3px; }
 
-    /* Розкриття: висота через grid 0fr → 1fr (єдиний виняток з transform/opacity) */
-    .svc__body {
+    /* Розкриття під вузлом: висота через grid 0fr → 1fr (єдиний виняток з transform/opacity) */
+    .svc__info {
       display: grid;
       grid-template-rows: 0fr;
       transition: grid-template-rows var(--dur-slow) var(--ease-out);
     }
-    .svc__body-inner { min-height: 0; overflow: hidden; }
-    .svc__row.is-open .svc__body { grid-template-rows: 1fr; }
-
-    /* .svc__body підвищує специфічність над ul[role="list"] з base.css */
-    .svc__body .svc__items {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: var(--sp-3) var(--sp-6);
-      margin: 0;
-      padding: 0 0 var(--sp-6) calc(2.25rem + var(--sp-3));
-      list-style: none;
+    .svc__info-inner {
+      min-height: 0;
+      overflow: hidden;
+      padding-left: calc(40px + var(--sp-4));
+    }
+    .svc__info.is-open { grid-template-rows: 1fr; }
+    .svc__info-inner > * {
       opacity: 0;
       transform: translateY(-8px);
       transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
     }
-    .svc__row.is-open .svc__items {
+    .svc__info.is-open .svc__info-inner > * {
       opacity: 1;
       transform: none;
       transition-delay: 120ms;
+    }
+    /* номер і назва в метро-режимі дублюють кнопку — лишаємо лише для скрінрідера */
+    .svc__nodes .svc__info-num,
+    .svc__nodes .svc__info-title {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .svc__for { color: var(--fg-muted); font-size: var(--fs-small); }
+    .svc__info-label { margin: var(--sp-4) 0 var(--sp-3); color: var(--fg-muted); }
+    .svc__info-inner .svc__items {
+      display: grid;
+      gap: var(--sp-3) var(--sp-6);
+      margin: 0;
+      padding: 0 0 var(--sp-6);
+      list-style: none;
     }
     .svc__item {
       position: relative;
@@ -218,7 +247,152 @@
       transform: rotate(-45deg);
     }
 
-    /* --- Липка картка --- */
+    /* ===================== Режим «карта» ===================== */
+    .svc.is-map .svc__stage {
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      margin-inline: auto;
+      aspect-ratio: 10 / 7;
+    }
+    .svc.is-map .svc__lines {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .svc__orbit {
+      fill: none;
+      stroke: var(--line-strong);
+      stroke-width: 1;
+      stroke-dasharray: 2 6;
+      vector-effect: non-scaling-stroke;
+    }
+    .svc__spoke {
+      stroke: var(--line-strong);
+      stroke-width: 1;
+      vector-effect: non-scaling-stroke;
+    }
+    .svc__spoke--on {
+      stroke: var(--accent);
+      stroke-width: 2;
+      opacity: 0;
+      transition: opacity var(--dur-base) var(--ease-out);
+    }
+    .svc__spoke--on.is-on { opacity: 1; }
+    /* промені виростають з центру */
+    .svc__spokes {
+      transform-box: view-box;
+      transform-origin: 50px 35px;
+    }
+
+    .svc.is-map .svc__core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      place-content: center;
+      width: clamp(104px, 17%, 136px);
+      aspect-ratio: 1;
+      margin: 0;
+      border-radius: var(--r-pill);
+      background: var(--brand-navy);
+      color: var(--brand-white);
+      text-align: center;
+      transform: translate(-50%, -50%);
+      box-shadow: var(--shadow-md);
+    }
+    .svc__core::before {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: inherit;
+    }
+    .svc__core-small {
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brand-beige);
+    }
+    .svc__core-big {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-bold);
+      line-height: 1.1;
+    }
+
+    .svc.is-map .svc__stage .svc__nodes {
+      position: absolute;
+      inset: 0;
+    }
+    .svc.is-map .svc__stage .svc__nodes::before { display: none; }
+    .svc.is-map .svc__station {
+      position: absolute;
+      top: calc(var(--py) * 1%);
+      left: calc(var(--px) * 1%);
+      width: 148px;
+      transform: translate(-50%, -26px);
+    }
+    .svc.is-map .svc__node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-2);
+      min-height: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .svc.is-map .svc__dot { width: 52px; height: 52px; }
+    .svc.is-map .svc__station.is-open .svc__dot { transform: scale(1.12); }
+    .svc.is-map .svc__node-short { display: block; }
+    .svc.is-map .svc__node-full,
+    .svc.is-map .svc__icon { display: none; }
+    .svc.is-map .svc__node-name {
+      padding: 0 var(--sp-1);
+      background: var(--bg);
+      font-size: var(--fs-small);
+      line-height: 1.3;
+      text-wrap: balance;
+    }
+
+    /* Панель з описом вузла */
+    .svc.is-map .svc__detail {
+      display: block;
+      min-width: 0;
+      padding: var(--sp-6);
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--bg-raised);
+    }
+    .svc__detail .svc__info { display: none; }
+    .svc__detail .svc__info.is-open {
+      display: block;
+      animation: svc-info-in var(--dur-slow) var(--ease-out) both;
+    }
+    .svc__detail .svc__info-inner { padding-left: 0; overflow: visible; }
+    .svc__detail .svc__info-inner > * { opacity: 1; transform: none; transition: none; }
+    .svc__info-num { color: var(--accent-text); margin-bottom: var(--sp-3); }
+    .svc__info-title {
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-semibold);
+      line-height: 1.25;
+      margin-bottom: var(--sp-2);
+    }
+    .svc__detail .svc__info-label {
+      padding-top: var(--sp-4);
+      margin-top: var(--sp-5);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .svc__detail .svc__info-inner .svc__items { padding-bottom: 0; }
+    @keyframes svc-info-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* --- Картка «Не знаєте, що обрати?» --- */
     .svc__aside { min-width: 0; }
     .svc__card {
       position: relative;
@@ -241,7 +415,6 @@
       width: 48px;
       height: 48px;
       background: var(--accent);
-      transform-origin: top right;
     }
     .svc__card-label { color: var(--accent-text); }
     .svc__card-title { font-size: var(--fs-h3); max-width: 14ch; }
@@ -272,24 +445,55 @@
       from { opacity: 0; transform: translateY(var(--reveal-shift)); }
       to { opacity: 1; transform: none; }
     }
+    @keyframes svc-node-in {
+      from { opacity: 0; transform: translate(-50%, -26px) scale(0.6); }
+      to { opacity: 1; transform: translate(-50%, -26px) scale(1); }
+    }
+    @keyframes svc-core-in {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes svc-grow {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+    @keyframes svc-fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
     @media (scripting: enabled) {
-      .svc__panel:not(.is-shown) .svc__row,
+      .svc__map:not(.is-shown) .svc__station,
+      .svc__map:not(.is-shown) .svc__core,
+      .svc__map:not(.is-shown) .svc__lines,
       .svc__reveal:not(.is-shown) { opacity: 0; }
     }
-    .svc__panel.is-shown .svc__row {
+    .svc__map.is-shown .svc__station {
       animation: svc-row-in var(--dur-slow) var(--ease-out) both;
       animation-delay: calc(var(--i, 0) * 60ms);
     }
+    .svc.is-map .svc__map.is-shown .svc__station {
+      animation: svc-node-in var(--dur-slow) var(--ease-spring) both;
+      animation-delay: calc(240ms + var(--i, 0) * 70ms);
+    }
+    .svc.is-map .svc__map.is-shown .svc__core { animation: svc-core-in var(--dur-slow) var(--ease-out) both; }
+    .svc.is-map .svc__map.is-shown .svc__lines { animation: svc-fade var(--dur-base) var(--ease-out) both; }
+    .svc.is-map .svc__map.is-shown .svc__spokes { animation: svc-grow var(--dur-reveal) var(--ease-out) 120ms both; }
     .svc__reveal { transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out); }
     @media (scripting: enabled) {
       .svc__reveal:not(.is-shown) { transform: translateY(var(--reveal-shift)); }
     }
     @media (scripting: none) {
-      .svc__body { grid-template-rows: 1fr; }
-      .svc__body .svc__items { opacity: 1; transform: none; }
+      .svc__info { grid-template-rows: 1fr; }
+      .svc__info-inner > * { opacity: 1; transform: none; }
+      .svc__icon { display: none; }
     }
 
-    /* ===== Планшет 768+ ===== */
+    /* ===== Телефон 480+ ===== */
+    @media (min-width: 480px) {
+      .svc__nodes .svc__info-inner .svc__items { grid-template-columns: 1fr; }
+    }
+
+    /* ===== Планшет 768+: карта, під нею панель ===== */
     @media (min-width: 768px) {
       .svc__head {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -297,30 +501,43 @@
         column-gap: var(--grid-gap);
       }
       .svc__label { grid-column: 1 / -1; }
-      .svc__body .svc__items { grid-template-columns: 1fr 1fr; }
-      .svc__qty { display: inline; }
-      .svc__trigger { grid-template-columns: 3rem minmax(0, 1fr) auto; gap: var(--sp-4); }
-      .svc__body .svc__items { padding-left: calc(3rem + var(--sp-4)); }
+      .svc__detail .svc__info-inner .svc__items { grid-template-columns: 1fr 1fr; }
+      .svc__card {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto;
+        align-items: center;
+        column-gap: var(--sp-6);
+      }
+      .svc__card-label { grid-column: 1 / -1; }
+      .svc__card .btn { width: auto; }
+      .svc__price {
+        grid-column: 1 / -1;
+      }
     }
 
-    /* ===== Десктоп 1024+: реєстр 8 колонок, картка 4 ===== */
-    @media (min-width: 1024px) {
+    /* ===== Десктоп 1200+: карта 7 колонок, панель 5 ===== */
+    @media (min-width: 1200px) {
       .svc__layout {
         grid-template-columns: repeat(12, minmax(0, 1fr));
         column-gap: var(--grid-gap);
         align-items: start;
       }
-      .svc__panels { grid-column: 1 / span 8; min-width: 0; }
-      .svc__aside {
-        grid-column: 9 / -1;
-        position: sticky;
-        top: calc(var(--header-h) + var(--sp-5));
+      .svc__panels { grid-column: 1 / span 7; }
+      .svc__detail {
+        grid-column: 8 / -1;
+        align-self: center;
       }
+      .svc__detail .svc__info-inner .svc__items { grid-template-columns: 1fr; }
+      .svc__aside { grid-column: 1 / -1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .svc__panel.is-shown .svc__row { animation: none; }
-      .svc__body { transition: none; }
+      .svc__map.is-shown .svc__station,
+      .svc.is-map .svc__map.is-shown .svc__station,
+      .svc.is-map .svc__map.is-shown .svc__core,
+      .svc.is-map .svc__map.is-shown .svc__lines,
+      .svc.is-map .svc__map.is-shown .svc__spokes,
+      .svc__detail .svc__info.is-open { animation: none; }
+      .svc__info { transition: none; }
     }
   </style>
 </head>
@@ -334,7 +551,10 @@
       <div class="svc__head svc__reveal">
         <p class="t-label svc__label">Послуги</p>
         <h2 class="svc__title" id="svc-title">Що беремо на себе</h2>
-        <p class="svc__lead">Оберіть форму бізнесу, і побачите, що входить у супровід. Натисніть на послугу, щоб розгорнути повний перелік.</p>
+        <p class="svc__lead">Оберіть форму бізнесу.
+          <span class="svc__lead-map">Наведіть мишку або натисніть на вузол карти, і побачите, що входить у послугу.</span>
+          <span class="svc__lead-list">Натисніть на послугу, щоб побачити, що в неї входить.</span>
+        </p>
       </div>
 
       <div class="svc__layout">
@@ -346,269 +566,314 @@
           </div>
 
           <!-- ===== ФОП ===== -->
-          <div class="svc__panel" id="svc-panel-fop" role="tabpanel" aria-labelledby="svc-tab-fop">
-            <ol class="svc__list" role="list">
-              <li class="svc__row" style="--i:0">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-fop-1" id="svc-fop-1-btn">
-                    <span class="t-label svc__num">01</span>
-                    <span><span class="svc__name">Відкриття ФОП</span><span class="svc__for">Для тих, хто тільки починає власну справу</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">3 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-fop-1" role="region" aria-labelledby="svc-fop-1-btn"><div class="svc__body-inner">
+          <div class="svc__map" id="svc-panel-fop" role="tabpanel" aria-labelledby="svc-tab-fop">
+            <div class="svc__stage">
+              <svg class="svc__lines" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <ellipse class="svc__orbit" cx="50" cy="35" rx="34" ry="24"/>
+                <g class="svc__spokes"></g>
+              </svg>
+              <p class="svc__core" aria-hidden="true"><span class="svc__core-small">Ваш</span><span class="svc__core-big">ФОП</span></p>
+              <ol class="svc__nodes" role="list">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-1" id="svc-fop-1-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">01</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Відкриття</span><span class="svc__node-full">Відкриття ФОП</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-1" role="region" aria-labelledby="svc-fop-1-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 01 з 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-1-title">Відкриття ФОП</h3>
+                  <p class="svc__for">Для тих, хто тільки починає власну справу</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Підбір КВЕДів</li>
-                    <li class="svc__item">Підбір оптимальної системи оподаткування</li>
-                    <li class="svc__item">Онлайн-реєстрація ФОП без вашої участі</li>
+                      <li class="svc__item">Підбір КВЕДів</li>
+                      <li class="svc__item">Підбір оптимальної системи оподаткування</li>
+                      <li class="svc__item">Онлайн-реєстрація ФОП без вашої участі</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:1">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-fop-2" id="svc-fop-2-btn">
-                    <span class="t-label svc__num">02</span>
-                    <span><span class="svc__name">Щомісячний бухгалтерський супровід</span><span class="svc__for">Для ФОП, які хочуть забути про рутину й дедлайни</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">12 пунктів</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-fop-2" role="region" aria-labelledby="svc-fop-2-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-2" id="svc-fop-2-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">02</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Щомісячний супровід</span><span class="svc__node-full">Щомісячний бухгалтерський супровід</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-2" role="region" aria-labelledby="svc-fop-2-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 02 з 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-2-title">Щомісячний бухгалтерський супровід</h3>
+                  <p class="svc__for">Для ФОП, які хочуть забути про рутину й дедлайни</p>
+                  <p class="t-label svc__info-label">Що входить · 12 пунктів</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Аудит особистого кабінету в податковій</li>
-                    <li class="svc__item">Реквізити для оплати податків</li>
-                    <li class="svc__item">Контроль своєчасності та правильності сплати податків</li>
-                    <li class="svc__item">Щомісячна перевірка банківської виписки</li>
-                    <li class="svc__item">Контроль ліміту доходу за обраною системою оподаткування</li>
-                    <li class="svc__item">Заповнення книги обліку доходів</li>
-                    <li class="svc__item">Онлайн-зміна КВЕДів за потреби</li>
-                    <li class="svc__item">Реєстрація ПРРО і віддалена робота в ньому</li>
-                    <li class="svc__item">Первинні документи: рахунки, акти, видаткові накладні</li>
-                    <li class="svc__item">Шаблони договорів надання послуг і реалізації продукції</li>
-                    <li class="svc__item">Звіти в податкову</li>
-                    <li class="svc__item">Акти звірки з постачальниками та покупцями</li>
+                      <li class="svc__item">Аудит особистого кабінету в податковій</li>
+                      <li class="svc__item">Реквізити для оплати податків</li>
+                      <li class="svc__item">Контроль своєчасності та правильності сплати податків</li>
+                      <li class="svc__item">Щомісячна перевірка банківської виписки</li>
+                      <li class="svc__item">Контроль ліміту доходу за обраною системою оподаткування</li>
+                      <li class="svc__item">Заповнення книги обліку доходів</li>
+                      <li class="svc__item">Онлайн-зміна КВЕДів за потреби</li>
+                      <li class="svc__item">Реєстрація ПРРО і віддалена робота в ньому</li>
+                      <li class="svc__item">Первинні документи: рахунки, акти, видаткові накладні</li>
+                      <li class="svc__item">Шаблони договорів надання послуг і реалізації продукції</li>
+                      <li class="svc__item">Звіти в податкову</li>
+                      <li class="svc__item">Акти звірки з постачальниками та покупцями</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:2">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-fop-3" id="svc-fop-3-btn">
-                    <span class="t-label svc__num">03</span>
-                    <span><span class="svc__name">Фінансовий супровід</span><span class="svc__for">Для тих, хто росте і хоче керувати бізнесом через цифри</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">3 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-fop-3" role="region" aria-labelledby="svc-fop-3-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-3" id="svc-fop-3-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">03</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Фінансовий облік</span><span class="svc__node-full">Фінансовий супровід</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-3" role="region" aria-labelledby="svc-fop-3-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 03 з 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-3-title">Фінансовий супровід</h3>
+                  <p class="svc__for">Для тих, хто росте і хоче керувати бізнесом через цифри</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Автоматизація обліку в CRM-системах</li>
-                    <li class="svc__item">Розроблення структури компанії та бізнес-процесів</li>
-                    <li class="svc__item">Фінансові документи під ваш запит: первинні документи обліку або фінансові звіти</li>
+                      <li class="svc__item">Автоматизація обліку в CRM-системах</li>
+                      <li class="svc__item">Розроблення структури компанії та бізнес-процесів</li>
+                      <li class="svc__item">Фінансові документи під ваш запит: первинні документи обліку або фінансові звіти</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:3">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-fop-4" id="svc-fop-4-btn">
-                    <span class="t-label svc__num">04</span>
-                    <span><span class="svc__name">Кадровий облік</span><span class="svc__for">Для ФОП з працівниками</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">7 пунктів</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-fop-4" role="region" aria-labelledby="svc-fop-4-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-4" id="svc-fop-4-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">04</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Кадри</span><span class="svc__node-full">Кадровий облік</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-4" role="region" aria-labelledby="svc-fop-4-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 04 з 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-4-title">Кадровий облік</h3>
+                  <p class="svc__for">Для ФОП з працівниками</p>
+                  <p class="t-label svc__info-label">Що входить · 7 пунктів</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Прийняття на роботу, зокрема під гранти</li>
-                    <li class="svc__item">Трудові договори</li>
-                    <li class="svc__item">Нарахування зарплати</li>
-                    <li class="svc__item">Табель обліку робочого часу</li>
-                    <li class="svc__item">Лікарняні та декретні</li>
-                    <li class="svc__item">Звільнення</li>
-                    <li class="svc__item">Звіти</li>
+                      <li class="svc__item">Прийняття на роботу, зокрема під гранти</li>
+                      <li class="svc__item">Трудові договори</li>
+                      <li class="svc__item">Нарахування зарплати</li>
+                      <li class="svc__item">Табель обліку робочого часу</li>
+                      <li class="svc__item">Лікарняні та декретні</li>
+                      <li class="svc__item">Звільнення</li>
+                      <li class="svc__item">Звіти</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:4">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-fop-5" id="svc-fop-5-btn">
-                    <span class="t-label svc__num">05</span>
-                    <span><span class="svc__name">Фінансовий моніторинг у банку</span><span class="svc__for">Коли банк просить пояснити операції або надати документи</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">1 пункт</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-fop-5" role="region" aria-labelledby="svc-fop-5-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-5" id="svc-fop-5-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">05</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Фінмоніторинг</span><span class="svc__node-full">Фінансовий моніторинг у банку</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-5" role="region" aria-labelledby="svc-fop-5-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 05 з 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-5-title">Фінансовий моніторинг у банку</h3>
+                  <p class="svc__for">Коли банк просить пояснити операції або надати документи</p>
+                  <p class="t-label svc__info-label">Що входить · 1 пункт</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Супровід фінансового моніторингу в банку будь-якої складності</li>
+                      <li class="svc__item">Супровід фінансового моніторингу в банку будь-якої складності</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:5">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-fop-6" id="svc-fop-6-btn">
-                    <span class="t-label svc__num">06</span>
-                    <span><span class="svc__name">Закриття ФОП</span><span class="svc__for">Коли справу завершено або ви змінюєте формат роботи</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">1 пункт</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-fop-6" role="region" aria-labelledby="svc-fop-6-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-fop-6" id="svc-fop-6-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">06</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Закриття</span><span class="svc__node-full">Закриття ФОП</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-fop-6" role="region" aria-labelledby="svc-fop-6-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 06 з 06</p>
+                  <h3 class="svc__info-title" id="svc-fop-6-title">Закриття ФОП</h3>
+                  <p class="svc__for">Коли справу завершено або ви змінюєте формат роботи</p>
+                  <p class="t-label svc__info-label">Що входить · 1 пункт</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Супровід закриття ФОП</li>
+                      <li class="svc__item">Супровід закриття ФОП</li>
                   </ul>
                 </div></div>
               </li>
-            </ol>
+              </ol>
+            </div>
           </div>
 
           <!-- ===== ТОВ ===== -->
-          <div class="svc__panel" id="svc-panel-tov" role="tabpanel" aria-labelledby="svc-tab-tov" hidden>
-            <ol class="svc__list" role="list">
-              <li class="svc__row" style="--i:0">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-1" id="svc-tov-1-btn">
-                    <span class="t-label svc__num">01</span>
-                    <span><span class="svc__name">Відкриття ТОВ</span><span class="svc__for">Для тих, хто запускає компанію</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">3 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-1" role="region" aria-labelledby="svc-tov-1-btn"><div class="svc__body-inner">
+          <div class="svc__map" id="svc-panel-tov" role="tabpanel" aria-labelledby="svc-tab-tov">
+            <div class="svc__stage">
+              <svg class="svc__lines" viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+                <ellipse class="svc__orbit" cx="50" cy="35" rx="34" ry="24"/>
+                <g class="svc__spokes"></g>
+              </svg>
+              <p class="svc__core" aria-hidden="true"><span class="svc__core-small">Ваше</span><span class="svc__core-big">ТОВ</span></p>
+              <ol class="svc__nodes" role="list">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-1" id="svc-tov-1-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">01</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Відкриття</span><span class="svc__node-full">Відкриття ТОВ</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-1" role="region" aria-labelledby="svc-tov-1-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 01 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-1-title">Відкриття ТОВ</h3>
+                  <p class="svc__for">Для тих, хто запускає компанію</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Підбір КВЕДів</li>
-                    <li class="svc__item">Підбір оптимальної системи оподаткування</li>
-                    <li class="svc__item">Онлайн-реєстрація за модельним статутом</li>
+                      <li class="svc__item">Підбір КВЕДів</li>
+                      <li class="svc__item">Підбір оптимальної системи оподаткування</li>
+                      <li class="svc__item">Онлайн-реєстрація за модельним статутом</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:1">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-2" id="svc-tov-2-btn">
-                    <span class="t-label svc__num">02</span>
-                    <span><span class="svc__name">Щомісячний повний супровід</span><span class="svc__for">Для компаній на будь-якій системі оподаткування</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">7 пунктів</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-2" role="region" aria-labelledby="svc-tov-2-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-2" id="svc-tov-2-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">02</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Щомісячний супровід</span><span class="svc__node-full">Щомісячний повний супровід</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-2" role="region" aria-labelledby="svc-tov-2-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 02 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-2-title">Щомісячний повний супровід</h3>
+                  <p class="svc__for">Для компаній на будь-якій системі оподаткування</p>
+                  <p class="t-label svc__info-label">Що входить · 7 пунктів</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Єдиний податок або загальна система оподаткування</li>
-                    <li class="svc__item">З ПДВ і без ПДВ, експорт та імпорт</li>
-                    <li class="svc__item">Первинні документи: рахунки, видаткові накладні, акти надання послуг, договори, ТТН, ПРРО, акти звірки</li>
-                    <li class="svc__item">Клієнт-банк: оформлення платежів і проведення в програмі</li>
-                    <li class="svc__item">Проведення первинних документів усіх господарських операцій у програмі</li>
-                    <li class="svc__item">Контроль взаєморозрахунків</li>
-                    <li class="svc__item">Контроль роботи працівників з документами</li>
+                      <li class="svc__item">Єдиний податок або загальна система оподаткування</li>
+                      <li class="svc__item">З ПДВ і без ПДВ, експорт та імпорт</li>
+                      <li class="svc__item">Первинні документи: рахунки, видаткові накладні, акти надання послуг, договори, ТТН, ПРРО, акти звірки</li>
+                      <li class="svc__item">Клієнт-банк: оформлення платежів і проведення в програмі</li>
+                      <li class="svc__item">Проведення первинних документів усіх господарських операцій у програмі</li>
+                      <li class="svc__item">Контроль взаєморозрахунків</li>
+                      <li class="svc__item">Контроль роботи працівників з документами</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:2">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-3" id="svc-tov-3-btn">
-                    <span class="t-label svc__num">03</span>
-                    <span><span class="svc__name">ПДВ</span><span class="svc__for">Для платників ПДВ</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">3 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-3" role="region" aria-labelledby="svc-tov-3-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-3" id="svc-tov-3-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">03</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">ПДВ</span><span class="svc__node-full">ПДВ</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-3" role="region" aria-labelledby="svc-tov-3-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 03 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-3-title">ПДВ</h3>
+                  <p class="svc__for">Для платників ПДВ</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Реєстрація податкових накладних</li>
-                    <li class="svc__item">Розблокування податкових накладних</li>
-                    <li class="svc__item">Звіти з ПДВ</li>
+                      <li class="svc__item">Реєстрація податкових накладних</li>
+                      <li class="svc__item">Розблокування податкових накладних</li>
+                      <li class="svc__item">Звіти з ПДВ</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:3">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-4" id="svc-tov-4-btn">
-                    <span class="t-label svc__num">04</span>
-                    <span><span class="svc__name">Кадровий облік</span><span class="svc__for">Для компаній з командою</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">7 пунктів</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-4" role="region" aria-labelledby="svc-tov-4-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-4" id="svc-tov-4-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">04</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Кадри</span><span class="svc__node-full">Кадровий облік</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-4" role="region" aria-labelledby="svc-tov-4-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 04 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-4-title">Кадровий облік</h3>
+                  <p class="svc__for">Для компаній з командою</p>
+                  <p class="t-label svc__info-label">Що входить · 7 пунктів</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Прийняття на роботу, зокрема під гранти</li>
-                    <li class="svc__item">Трудові договори</li>
-                    <li class="svc__item">Нарахування зарплати</li>
-                    <li class="svc__item">Табель обліку робочого часу</li>
-                    <li class="svc__item">Лікарняні та декретні</li>
-                    <li class="svc__item">Звільнення</li>
-                    <li class="svc__item">Звіти</li>
+                      <li class="svc__item">Прийняття на роботу, зокрема під гранти</li>
+                      <li class="svc__item">Трудові договори</li>
+                      <li class="svc__item">Нарахування зарплати</li>
+                      <li class="svc__item">Табель обліку робочого часу</li>
+                      <li class="svc__item">Лікарняні та декретні</li>
+                      <li class="svc__item">Звільнення</li>
+                      <li class="svc__item">Звіти</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:4">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-5" id="svc-tov-5-btn">
-                    <span class="t-label svc__num">05</span>
-                    <span><span class="svc__name">Звітність</span><span class="svc__for">Щоб усі звіти подавались вчасно</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">3 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-5" role="region" aria-labelledby="svc-tov-5-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-5" id="svc-tov-5-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">05</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Звітність</span><span class="svc__node-full">Звітність</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-5" role="region" aria-labelledby="svc-tov-5-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 05 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-5-title">Звітність</h3>
+                  <p class="svc__for">Щоб усі звіти подавались вчасно</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Щомісячні, щоквартальні та щорічні звіти в податкову</li>
-                    <li class="svc__item">Звіти до статистики</li>
-                    <li class="svc__item">Звіти до ПФУ</li>
+                      <li class="svc__item">Щомісячні, щоквартальні та щорічні звіти в податкову</li>
+                      <li class="svc__item">Звіти до статистики</li>
+                      <li class="svc__item">Звіти до ПФУ</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:5">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-6" id="svc-tov-6-btn">
-                    <span class="t-label svc__num">06</span>
-                    <span><span class="svc__name">Управлінський облік для власника</span><span class="svc__for">Для власників, яким потрібні цифри для рішень</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">4 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-6" role="region" aria-labelledby="svc-tov-6-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-6" id="svc-tov-6-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">06</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Управлінський облік</span><span class="svc__node-full">Управлінський облік для власника</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-6" role="region" aria-labelledby="svc-tov-6-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 06 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-6-title">Управлінський облік для власника</h3>
+                  <p class="svc__for">Для власників, яким потрібні цифри для рішень</p>
+                  <p class="t-label svc__info-label">Що входить · 4 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Звіти P&amp;L, Cashflow, Balance</li>
-                    <li class="svc__item">Бланки звітів для контролю й управління підрозділами</li>
-                    <li class="svc__item">Аудит бізнес-процесів у команді</li>
-                    <li class="svc__item">Пошук проблемних точок, виправлення та оптимізація процесів</li>
+                      <li class="svc__item">Звіти P&amp;L, Cashflow, Balance</li>
+                      <li class="svc__item">Бланки звітів для контролю й управління підрозділами</li>
+                      <li class="svc__item">Аудит бізнес-процесів у команді</li>
+                      <li class="svc__item">Пошук проблемних точок, виправлення та оптимізація процесів</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:6">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-7" id="svc-tov-7-btn">
-                    <span class="t-label svc__num">07</span>
-                    <span><span class="svc__name">Ревізія і побудова фінансової системи</span><span class="svc__for">Коли потрібна прозорість у фінвідділі та документах</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">3 пункти</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-7" role="region" aria-labelledby="svc-tov-7-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-7" id="svc-tov-7-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">07</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Фінансова система</span><span class="svc__node-full">Ревізія і побудова фінансової системи</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-7" role="region" aria-labelledby="svc-tov-7-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 07 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-7-title">Ревізія і побудова фінансової системи</h3>
+                  <p class="svc__for">Коли потрібна прозорість у фінвідділі та документах</p>
+                  <p class="t-label svc__info-label">Що входить · 3 пункти</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Ревізія роботи фінансового відділу та бухгалтерського обліку</li>
-                    <li class="svc__item">Побудова організаційної структури компанії</li>
-                    <li class="svc__item">Документообіг і точки контролю для власника під реалії вашої компанії</li>
+                      <li class="svc__item">Ревізія роботи фінансового відділу та бухгалтерського обліку</li>
+                      <li class="svc__item">Побудова організаційної структури компанії</li>
+                      <li class="svc__item">Документообіг і точки контролю для власника під реалії вашої компанії</li>
                   </ul>
                 </div></div>
               </li>
 
-              <li class="svc__row" style="--i:7">
-                <h3 class="svc__row-title">
-                  <button class="svc__trigger" type="button" aria-expanded="false" aria-controls="svc-tov-8" id="svc-tov-8-btn">
-                    <span class="t-label svc__num">08</span>
-                    <span><span class="svc__name">Навчання бухгалтерів і фінансистів</span><span class="svc__for">Для вашої команди</span></span>
-                    <span class="svc__side"><span class="t-label svc__qty">1 пункт</span><span class="svc__icon" aria-hidden="true"></span></span>
-                  </button>
-                </h3>
-                <div class="svc__body" id="svc-tov-8" role="region" aria-labelledby="svc-tov-8-btn"><div class="svc__body-inner">
+              <li class="svc__station">
+                <button class="svc__node" type="button" aria-expanded="false" aria-controls="svc-tov-8" id="svc-tov-8-btn">
+                  <span class="svc__dot"><span class="t-label svc__dot-num">08</span></span>
+                  <span class="svc__node-name"><span class="svc__node-short">Навчання</span><span class="svc__node-full">Навчання бухгалтерів і фінансистів</span></span>
+                  <span class="svc__icon" aria-hidden="true"></span>
+                </button>
+                <div class="svc__info" id="svc-tov-8" role="region" aria-labelledby="svc-tov-8-title"><div class="svc__info-inner">
+                  <p class="t-label svc__info-num">Послуга 08 з 08</p>
+                  <h3 class="svc__info-title" id="svc-tov-8-title">Навчання бухгалтерів і фінансистів</h3>
+                  <p class="svc__for">Для вашої команди</p>
+                  <p class="t-label svc__info-label">Що входить · 1 пункт</p>
                   <ul class="svc__items" role="list">
-                    <li class="svc__item">Підвищення кваліфікації бухгалтерів і фінансистів</li>
+                      <li class="svc__item">Підвищення кваліфікації бухгалтерів і фінансистів</li>
                   </ul>
                 </div></div>
               </li>
-            </ol>
+              </ol>
+            </div>
           </div>
         </div>
+
+        <!-- Панель опису: у режимі карти JS переносить сюди вміст вузлів -->
+        <div class="svc__detail" data-svc-detail></div>
 
         <aside class="svc__aside svc__reveal" aria-labelledby="svc-card-title">
           <div class="svc__card">
@@ -631,39 +896,106 @@
       var root = document.querySelector("[data-svc]");
       if (!root) return;
 
+      var SVG = "http://www.w3.org/2000/svg";
       var tablist = root.querySelector(".svc__tabs");
       var tabs = Array.prototype.slice.call(root.querySelectorAll(".svc__tab"));
-      var panels = tabs.map(function (t) { return document.getElementById(t.getAttribute("aria-controls")); });
+      var maps = tabs.map(function (t) { return document.getElementById(t.getAttribute("aria-controls")); });
+      var detail = root.querySelector("[data-svc-detail]");
       var reveals = root.querySelectorAll(".svc__reveal");
       var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var mapMQ = window.matchMedia("(min-width: 768px)");
+      var hoverMQ = window.matchMedia("(hover: hover) and (pointer: fine)");
+      var isMap = false;
+      var active = 0;
 
-      /* ---------- Розкриття рядків ---------- */
-      function setRow(row, open) {
-        var btn = row.querySelector(".svc__trigger");
-        var body = row.querySelector(".svc__body");
-        row.classList.toggle("is-open", open);
-        btn.setAttribute("aria-expanded", String(open));
-        // закритий вміст не читається скрінрідером і не потрапляє в пошук фокуса
-        if (open) body.removeAttribute("inert"); else body.setAttribute("inert", "");
-      }
-      panels.forEach(function (panel) {
-        var rows = Array.prototype.slice.call(panel.querySelectorAll(".svc__row"));
-        rows.forEach(function (row, i) {
-          setRow(row, i === 0 && panel === panels[0]);
-          row.querySelector(".svc__trigger").addEventListener("click", function () {
-            var open = !row.classList.contains("is-open");
-            rows.forEach(function (r) { if (r !== row) setRow(r, false); });  // відкритий лише один
-            setRow(row, open);
+      /* ---------- Вузли: позиції на колі, промені, стан ---------- */
+      var sets = maps.map(function (map) {
+        var stations = Array.prototype.slice.call(map.querySelectorAll(".svc__station"));
+        var spokes = map.querySelector(".svc__spokes");
+        var n = stations.length;
+        stations.forEach(function (st, i) {
+          // перший вузол угорі, далі за годинниковою стрілкою; координати в одиницях viewBox 100×70
+          var a = (-90 + i * 360 / n) * Math.PI / 180;
+          var x = 50 + 34 * Math.cos(a);
+          var y = 35 + 24 * Math.sin(a);
+          st.style.setProperty("--px", x.toFixed(2));
+          st.style.setProperty("--py", (y / 70 * 100).toFixed(2));
+          st.style.setProperty("--i", i);
+
+          var base = document.createElementNS(SVG, "line");
+          var on = document.createElementNS(SVG, "line");
+          [base, on].forEach(function (l) {
+            l.setAttribute("x1", "50"); l.setAttribute("y1", "35");
+            l.setAttribute("x2", x.toFixed(2)); l.setAttribute("y2", y.toFixed(2));
           });
+          base.setAttribute("class", "svc__spoke");
+          on.setAttribute("class", "svc__spoke svc__spoke--on");
+          spokes.appendChild(base);
+          spokes.appendChild(on);
+
+          st._btn = st.querySelector(".svc__node");
+          st._info = st.querySelector(".svc__info");
+          st._spoke = on;
+        });
+        return stations;
+      });
+
+      function setOpen(st, open) {
+        st.classList.toggle("is-open", open);
+        st._info.classList.toggle("is-open", open);
+        st._btn.setAttribute("aria-expanded", String(open));
+        st._spoke.classList.toggle("is-on", open);
+        // закритий вміст не читається скрінрідером і не потрапляє в пошук фокуса
+        if (open) st._info.removeAttribute("inert"); else st._info.setAttribute("inert", "");
+      }
+      function openOnly(stations, st) {
+        stations.forEach(function (s) { if (s !== st) setOpen(s, false); });
+        setOpen(st, true);
+      }
+
+      sets.forEach(function (stations, si) {
+        stations.forEach(function (st, i) {
+          setOpen(st, si === 0 && i === 0);
+          st._btn.addEventListener("click", function () {
+            // на карті завжди відкритий один вузол; у списку його можна згорнути
+            if (isMap) openOnly(stations, st);
+            else if (st.classList.contains("is-open")) setOpen(st, false);
+            else openOnly(stations, st);
+          });
+          var timer;
+          st._btn.addEventListener("mouseenter", function () {
+            if (!isMap || !hoverMQ.matches) return;
+            timer = setTimeout(function () { openOnly(stations, st); }, 70);
+          });
+          st._btn.addEventListener("mouseleave", function () { clearTimeout(timer); });
         });
       });
 
+      /* ---------- Режим: карта чи «лінія метро» ---------- */
+      function layout() {
+        isMap = mapMQ.matches;
+        root.classList.toggle("is-map", isMap);
+        sets.forEach(function (stations) {
+          stations.forEach(function (st) {
+            if (isMap) detail.appendChild(st._info);
+            else st.appendChild(st._info);
+          });
+        });
+        // на карті панель ніколи не порожня
+        var current = sets[active];
+        if (isMap && !current.some(function (s) { return s.classList.contains("is-open"); })) openOnly(current, current[0]);
+      }
+      layout();
+      if (mapMQ.addEventListener) mapMQ.addEventListener("change", layout);
+
       /* ---------- Перемикач ФОП / ТОВ ---------- */
-      var active = 0;
+      // без JS видно обидва списки; з JS — лише активний
+      maps.forEach(function (m, i) { m.hidden = i !== active; });
+
       function select(index, focus) {
         if (index === active) return;
-        var prev = panels[active];
-        var next = panels[index];
+        var prev = maps[active];
+        var next = maps[index];
         tabs.forEach(function (t, i) {
           var on = i === index;
           t.setAttribute("aria-selected", String(on));
@@ -672,13 +1004,12 @@
         tablist.setAttribute("data-active", String(index));
         if (focus) tabs[index].focus();
 
+        sets[active].forEach(function (s) { setOpen(s, false); });
+        openOnly(sets[index], sets[index][0]);
         prev.classList.remove("is-shown");
         prev.hidden = true;
-        // у новій вкладці відкриваємо перший рядок
-        var rows = next.querySelectorAll(".svc__row");
-        rows.forEach(function (r, i) { setRow(r, i === 0); });
         next.hidden = false;
-        // перезапуск появи рядків
+        // перезапуск появи вузлів
         next.classList.remove("is-shown");
         void next.offsetWidth;
         next.classList.add("is-shown");
@@ -700,7 +1031,7 @@
 
       /* ---------- Поява при скролі ---------- */
       function show() {
-        panels[active].classList.add("is-shown");
+        maps[active].classList.add("is-shown");
         Array.prototype.forEach.call(reveals, function (el) { el.classList.add("is-shown"); });
       }
       if (reduce || !("IntersectionObserver" in window)) { show(); return; }

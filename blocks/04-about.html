@@ -224,6 +224,185 @@
     .abt__step--now .abt__dot { border-color: var(--accent); }
     .abt__step--now .abt__step-title { color: var(--accent); }
 
+    /* --- Живий дашборд (приклад цифр) --- */
+    .abt__dash { margin-top: var(--sp-9); }
+    .abt__dash-head {
+      display: grid;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-6);
+    }
+    .abt__dash-label { color: var(--brand-beige); }
+    .abt__dash-title { font-size: var(--fs-h3); font-weight: var(--fw-semibold); max-width: 28ch; }
+    .abt__dash-text { color: var(--fg-muted); max-width: 36rem; }
+
+    .abt__panel {
+      margin: 0;
+      padding: var(--sp-4);
+      border: var(--hairline) solid var(--glass-border);
+      border-radius: var(--r-md);
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      backdrop-filter: blur(16px) saturate(140%);
+      box-shadow: var(--shadow-lg);
+    }
+    .abt__panel-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2) var(--sp-4);
+      padding: var(--sp-1) var(--sp-1) var(--sp-4);
+    }
+    .abt__panel-title { color: var(--fg-muted); }
+    .abt__panel-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: 0.35em 0.8em;
+      border: var(--hairline) solid var(--accent);
+      border-radius: var(--r-pill);
+      color: var(--accent);
+    }
+    .abt__panel-chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: var(--r-pill);
+      background: currentColor;
+    }
+    .abt__panel .abt__cards {   /* .abt__panel перебиває ul[role="list"] з base.css */
+      display: grid;
+      gap: var(--sp-3);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .abt__card {
+      display: grid;
+      align-content: start;
+      gap: var(--sp-3);
+      min-width: 0;
+      padding: var(--sp-5);
+      border: var(--hairline) solid var(--line);
+      border-radius: var(--r-sm);
+      background: var(--bg-raised);
+    }
+    .abt__card-label { color: var(--fg-muted); }
+    .abt__card-value {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-2);
+      color: var(--fg-strong);
+      font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+      font-weight: var(--fw-semibold);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .abt__card-unit { color: var(--fg-muted); font-size: var(--fs-small); font-weight: var(--fw-regular); letter-spacing: 0; }
+    .abt__card-note { color: var(--fg-muted); font-size: var(--fs-small); }
+
+    /* Дохід: стовпчики ростуть через scaleY */
+    .abt__bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 64px;
+      margin-top: var(--sp-2);
+    }
+    .abt__bar {
+      flex: 1;
+      height: 100%;
+      border-radius: 3px 3px 0 0;
+      background: var(--line-strong);
+      transform: scaleY(var(--h));
+      transform-origin: bottom;
+      transition: transform var(--dur-slow) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * 60ms);
+    }
+    .abt__bar:last-child { background: var(--accent); }
+
+    /* Податки */
+    .abt__card .abt__rows {
+      display: grid;
+      gap: var(--sp-2);
+      margin: var(--sp-2) 0 0;
+      padding: var(--sp-3) 0 0;
+      border-top: var(--hairline) solid var(--line);
+      list-style: none;
+    }
+    .abt__row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--sp-3);
+      font-size: var(--fs-small);
+      color: var(--fg-muted);
+    }
+    .abt__row-num { color: var(--fg); white-space: nowrap; }
+
+    /* Ліміт ФОП: заповнення через scaleX */
+    .abt__meter {
+      position: relative;
+      height: 10px;
+      margin-top: var(--sp-2);
+      overflow: hidden;
+      border-radius: var(--r-pill);
+      background: var(--line);
+    }
+    .abt__meter-fill {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--accent);
+      transform: scaleX(var(--v));
+      transform-origin: left;
+      transition: transform var(--dur-reveal) var(--ease-out) 200ms;
+    }
+    .abt__meter-scale {
+      display: flex;
+      justify-content: space-between;
+      color: var(--fg-muted);
+    }
+
+    /* Звіти: галочки зʼявляються по черзі */
+    .abt__card .abt__checks {
+      display: grid;
+      gap: var(--sp-3);
+      margin: var(--sp-1) 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .abt__check {
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: var(--sp-3);
+      font-size: var(--fs-small);
+      color: var(--fg);
+    }
+    .abt__check-mark {
+      display: grid;
+      place-items: center;
+      width: 20px;
+      height: 20px;
+      border-radius: var(--r-pill);
+      background: var(--accent);
+      color: var(--on-accent);
+      transform: scale(1);
+      transition: transform var(--dur-base) var(--ease-spring);
+      transition-delay: calc(300ms + var(--i, 0) * 220ms);
+    }
+    .abt__check-mark svg { width: 12px; height: 12px; }
+    .abt__check--wait .abt__check-mark {
+      border: var(--stroke) solid var(--accent);
+      background: transparent;
+    }
+    .abt__check-status { color: var(--fg-muted); }
+
+    /* Початковий стан анімації — лише коли JS готовий її запустити */
+    .abt__panel.is-armed:not(.is-run) .abt__bar { transform: scaleY(0); }
+    .abt__panel.is-armed:not(.is-run) .abt__meter-fill { transform: scaleX(0); }
+    .abt__panel.is-armed:not(.is-run) .abt__check-mark { transform: scale(0); }
+
     /* --- Підхід --- */
     .abt__approach {
       margin-top: var(--sp-9);
@@ -280,6 +459,8 @@
     /* ===== Планшет 768+ ===== */
     @media (min-width: 768px) {
       .abt__principles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); }
+      .abt__panel { padding: var(--sp-5); }
+      .abt__panel .abt__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .abt__person { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); column-gap: var(--grid-gap); align-items: end; }
       .abt__label { grid-column: 1 / -1; }
       .abt__portrait { grid-row: span 3; }
@@ -311,6 +492,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .abt__progress { transform: none; }
+      .abt__bar, .abt__meter-fill, .abt__check-mark { transition: none; }
     }
   </style>
 </head>
@@ -405,6 +587,62 @@
           </ol>
           </div>
 
+          <div class="abt__dash">
+            <div class="abt__dash-head abt__reveal">
+              <p class="t-label abt__dash-label">Цифри бізнесу</p>
+              <h3 class="abt__dash-title">Облік дає змогу бачити цифри, а цифри показують стан бізнесу</h3>
+              <p class="abt__dash-text">Саме за такими показниками власник ухвалює рішення. Ось як це може виглядати для ФОП.</p>
+            </div>
+
+            <figure class="abt__panel abt__reveal" data-abt-dash aria-labelledby="abt-dash-cap">
+              <div class="abt__panel-bar">
+                <p class="t-label abt__panel-title" id="abt-dash-cap">Огляд · ФОП, 3 група</p>
+                <p class="t-label abt__panel-chip">Приклад · цифри умовні</p>
+              </div>
+              <ul class="abt__cards" role="list">
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Дохід за місяць</p>
+                  <p class="abt__card-value"><span class="t-num" data-count="486200">486&nbsp;200</span><span class="abt__card-unit">грн</span></p>
+                  <div class="abt__bars" aria-hidden="true">
+                      <span class="abt__bar" style="--h:0.42;--i:0"></span>
+                      <span class="abt__bar" style="--h:0.55;--i:1"></span>
+                      <span class="abt__bar" style="--h:0.48;--i:2"></span>
+                      <span class="abt__bar" style="--h:0.63;--i:3"></span>
+                      <span class="abt__bar" style="--h:0.58;--i:4"></span>
+                      <span class="abt__bar" style="--h:0.71;--i:5"></span>
+                      <span class="abt__bar" style="--h:0.66;--i:6"></span>
+                      <span class="abt__bar" style="--h:0.84;--i:7"></span>
+                      <span class="abt__bar" style="--h:1;--i:8"></span>
+                  </div>
+                </li>
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Податки за місяць</p>
+                  <p class="abt__card-value"><span class="t-num" data-count="29172">29&nbsp;172</span><span class="abt__card-unit">грн</span></p>
+                  <ul class="abt__rows" role="list">
+                    <li class="abt__row"><span>Єдиний податок, 5%</span><span class="abt__row-num t-num">24&nbsp;310 грн</span></li>
+                    <li class="abt__row"><span>Військовий збір, 1%</span><span class="abt__row-num t-num">4&nbsp;862 грн</span></li>
+                  </ul>
+                </li>
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Ліміт доходу ФОП</p>
+                  <p class="abt__card-value"><span class="t-num" data-count="46">46</span><span class="abt__card-unit">% використано</span></p>
+                  <div class="abt__meter" aria-hidden="true"><span class="abt__meter-fill" style="--v:0.46"></span></div>
+                  <p class="t-label abt__meter-scale" aria-hidden="true"><span>0%</span><span>100%</span></p>
+                  <p class="abt__card-note">Від річного ліміту для 3 групи</p>
+                </li>
+                <li class="abt__card">
+                  <p class="t-label abt__card-label">Звіти й контроль</p>
+                  <ul class="abt__checks" role="list">
+                    <li class="abt__check" style="--i:0"><span class="abt__check-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Декларація платника єдиного податку</span><span class="t-label abt__check-status">Подано</span></li>
+                    <li class="abt__check" style="--i:1"><span class="abt__check-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Книга обліку доходів</span><span class="t-label abt__check-status">Заповнено</span></li>
+                    <li class="abt__check" style="--i:2"><span class="abt__check-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span>Банківська виписка</span><span class="t-label abt__check-status">Перевірено</span></li>
+                    <li class="abt__check abt__check--wait" style="--i:3"><span class="abt__check-mark" aria-hidden="true"></span><span>Сплата податків</span><span class="t-label abt__check-status">У плані</span></li>
+                  </ul>
+                </li>
+              </ul>
+            </figure>
+          </div>
+
           <div class="abt__approach">
             <div class="abt__approach-head abt__reveal">
               <p class="t-label abt__approach-label">Наш підхід</p>
@@ -454,6 +692,29 @@
           });
         }, { rootMargin: "0px 0px -10% 0px" });
         Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
+      }
+
+      /* ---------- Дашборд: картки оживають, коли панель видно ---------- */
+      var dash = root.querySelector("[data-abt-dash]");
+      if (dash && !reduce && "IntersectionObserver" in window) {
+        var counters = Array.prototype.slice.call(dash.querySelectorAll("[data-count]"));
+        var fmt = function (n) { return Math.round(n).toLocaleString("uk-UA"); };
+        dash.classList.add("is-armed");
+        counters.forEach(function (el) { el.textContent = "0"; });
+        var dio = new IntersectionObserver(function (entries) {
+          if (!entries[0].isIntersecting) return;
+          dio.disconnect();
+          dash.classList.add("is-run");
+          var start = performance.now();
+          var dur = 1400;
+          (function tick(now) {
+            var t = Math.min(1, (now - start) / dur);
+            var k = 1 - Math.pow(1 - t, 3);   // плавне сповільнення в кінці
+            counters.forEach(function (el) { el.textContent = fmt(+el.getAttribute("data-count") * k); });
+            if (t < 1) requestAnimationFrame(tick);
+          })(start);
+        }, { threshold: 0.35 });
+        dio.observe(dash);
       }
 
       /* ---------- Лінія таймлайну: доходить до точки на 60% висоти екрана ---------- */
