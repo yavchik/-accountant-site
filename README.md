@@ -40,12 +40,18 @@ python3 -m http.server 8000
 # окремий блок: http://localhost:8000/blocks/03-services.html
 ```
 
-## Публікація на GitHub Pages
+## Публікація
+
+Сайт опублікований у двох місцях, обидва оновлюються самі після кожного push у гілку `claude/project-thread-6hfbbp`:
+
+- **Vercel (основна адреса):** https://happy-finance-beta.vercel.app/ — проєкт `happy-finance`, Application Preset «Other», без команди збирання.
+- **GitHub Pages:** https://yavchik.github.io/-accountant-site/
+
+### Як увімкнути GitHub Pages з нуля
 
 1. На GitHub відкрийте репозиторій → **Settings** → **Pages**.
 2. **Source**: Deploy from a branch.
 3. **Branch**: гілка з сайтом (зараз `claude/project-thread-6hfbbp`), папка `/ (root)` → **Save**.
-4. Через 1–2 хвилини сайт буде за адресою `https://yavchik.github.io/-accountant-site/`.
 
 Якщо зʼявиться власний домен, змініть `SITE_URL` у `tools/build.py` (для картинки в соцмережах і canonical) і запустіть збирання.
 

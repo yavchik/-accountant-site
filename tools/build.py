@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BLOCKS = ["01-header", "02-hero", "03-services", "04-about", "05-process", "06-faq", "07-contact", "08-footer"]
-SITE_URL = "https://yavchik.github.io/-accountant-site/"   # змініть, коли буде свій домен
+SITE_URL = "https://happy-finance-beta.vercel.app/"   # основна адреса; змініть, коли буде свій домен
 
 TITLE = "Happy Finance — бухгалтерський супровід ФОП і ТОВ"
 DESCRIPTION = ("Бухгалтерський супровід ФОП і ТОВ: облік, звітність, податки, кадри "
