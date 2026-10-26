@@ -359,7 +359,7 @@
         <div class="cta__card" id="match">
           <div class="cta__card-head">
             <p class="t-label cta__card-label">Підбір послуги</p>
-            <p class="t-label cta__card-step" data-cta-counter aria-hidden="true">Крок 1 з 4</p>
+            <p class="t-label cta__card-step" data-cta-counter aria-hidden="true">Крок 1 / 4</p>
           </div>
           <div class="cta__progress" aria-hidden="true">
             <span class="cta__seg"></span><span class="cta__seg"></span><span class="cta__seg"></span><span class="cta__seg"></span>
@@ -522,7 +522,7 @@
         next.firstChild.nodeValue = last ? "Показати результат " : "Далі ";
         // для «ще не зареєстрований» кроків лише два: зайві сегменти ховаємо
         segs.forEach(function (s, i) { s.hidden = i >= list.length; });
-        counter.textContent = "Крок " + (current + 1) + " з " + list.length;
+        counter.textContent = "Крок " + (current + 1) + " / " + list.length;
       }
       function paintProgress(doneCount) {
         segs.forEach(function (s, i) { s.classList.toggle("is-done", i < doneCount); });

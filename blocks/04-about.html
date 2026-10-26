@@ -236,6 +236,7 @@
     .abt__dash-text { color: var(--fg-muted); max-width: 36rem; }
 
     .abt__panel {
+      container-type: inline-size;
       margin: 0;
       padding: var(--sp-4);
       border: var(--hairline) solid var(--glass-border);
@@ -398,6 +399,11 @@
     }
     .abt__check-status { color: var(--fg-muted); }
 
+    /* Дві колонки карток — лише коли панель достатньо широка (а не екран) */
+    @container (min-width: 600px) {
+      .abt__panel .abt__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     /* Початковий стан анімації — лише коли JS готовий її запустити */
     .abt__panel.is-armed:not(.is-run) .abt__bar { transform: scaleY(0); }
     .abt__panel.is-armed:not(.is-run) .abt__meter-fill { transform: scaleX(0); }
@@ -460,7 +466,6 @@
     @media (min-width: 768px) {
       .abt__principles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); }
       .abt__panel { padding: var(--sp-5); }
-      .abt__panel .abt__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .abt__person { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); column-gap: var(--grid-gap); align-items: end; }
       .abt__label { grid-column: 1 / -1; }
       .abt__portrait { grid-row: span 3; }
@@ -480,12 +485,7 @@
         position: sticky;
         top: calc(var(--header-h) + var(--sp-6));
       }
-      /* портрет зменшується на невисоких екранах, щоб імʼя і цитата завжди влазили в липку колонку */
-      .abt__portrait {
-        grid-row: auto;
-        width: min(100%, calc((100svh - var(--header-h) - 340px) * 0.8));
-        min-width: 200px;
-      }
+      .abt__portrait { grid-row: auto; }
       .abt__story { grid-column: 6 / -1; }
       .abt__approach-head {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -493,11 +493,6 @@
         column-gap: var(--grid-gap);
       }
       .abt__approach-label { grid-column: 1 / -1; }
-    }
-
-    /* дуже низький екран: колонка не липне, щоб нічого не обрізалось */
-    @media (min-width: 1024px) and (max-height: 700px) {
-      .abt__person { position: static; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -703,6 +698,22 @@
         }, { rootMargin: "0px 0px -10% 0px" });
         Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
       }
+
+      /* ---------- Липка колонка з фото ----------
+         Якщо фото, імʼя і цитата не влазять у висоту екрана, колонка спершу прокручується
+         разом зі сторінкою і «прилипає», лише коли видно її низ: так нічого не обрізається. */
+      var person = root.querySelector(".abt__person");
+      var deskMQ = window.matchMedia("(min-width: 1024px)");
+      function fitPerson() {
+        person.style.top = "";
+        if (!deskMQ.matches) return;
+        var normalTop = parseFloat(getComputedStyle(person).top) || 0;
+        var room = window.innerHeight - person.offsetHeight - 24;
+        if (room < normalTop) person.style.top = room + "px";
+      }
+      fitPerson();
+      window.addEventListener("resize", fitPerson, { passive: true });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitPerson);
 
       /* ---------- Дашборд: картки оживають, коли панель видно ---------- */
       var dash = root.querySelector("[data-abt-dash]");
