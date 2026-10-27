@@ -236,31 +236,6 @@ function initTeam() {
     }
   }
 
-  /* ---------- Журнал: рядки «записуються» по черзі ---------- */
-  var rows = $$(".tm-ledger__row");
-  if (reduce || !hasIO) {
-    rows.forEach(function (r) { r.classList.add("is-written"); });
-  } else {
-    var queue = [];
-    var busy = false;
-    var pump = function () {
-      if (!queue.length) { busy = false; return; }
-      busy = true;
-      queue.shift().classList.add("is-written");
-      setTimeout(pump, 140);
-    };
-    var lio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        queue.push(e.target);
-        lio.unobserve(e.target);
-      });
-      queue.sort(function (a, b) { return rows.indexOf(a) - rows.indexOf(b); });
-      if (!busy) pump();
-    }, { rootMargin: "0px 0px -12% 0px" });
-    rows.forEach(function (r) { lio.observe(r); });
-  }
-
   /* ---------- Картки: перевертання ---------- */
   $$("[data-tm-card]").forEach(function (card) {
     var front = card.querySelector(".tm-card__front");
