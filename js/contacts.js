@@ -3,15 +3,21 @@
 (function () {
   var data = window.HF_CONTACTS || {};
   var digits = function (s) { return String(s).replace(/\D/g, ""); };
+  var handle = function (v) { return String(v).replace(/^@/, ""); };
   var builders = {
     phone: function (v) { return "tel:+" + digits(v); },
-    telegram: function (v) { return "https://t.me/" + v.replace(/^@/, ""); },
-    viber: function (v) { return "viber://chat?number=%2B" + digits(v); },
-    whatsapp: function (v) { return "https://wa.me/" + digits(v); },
-    email: function (v) { return "mailto:" + v; }
+    telegram: function (v) { return "https://t.me/" + handle(v); },
+    instagram: function (v) { return "https://instagram.com/" + handle(v); }
   };
 
   function href(key, v) { return builders[key] ? builders[key](v) : ""; }
+
+  // Посилання «написати повідомлення»: Telegram підставляє текст сам, Instagram відкриває діалог
+  function message(key, v, text) {
+    if (key === "telegram") return "https://t.me/" + handle(v) + "?text=" + encodeURIComponent(text);
+    if (key === "instagram") return "https://ig.me/m/" + handle(v);
+    return href(key, v);
+  }
 
   // Замінює плейсхолдери в елементах [data-contact] на справжні контакти
   function fill(root) {
@@ -20,17 +26,13 @@
       var v = data[key];
       if (!v) return;
       el.textContent = "";
-      if (builders[key]) {
-        var a = document.createElement("a");
-        a.href = href(key, v);
-        a.textContent = key === "telegram" ? "@" + v.replace(/^@/, "") : v;
-        if (/^https/.test(a.href)) { a.target = "_blank"; a.rel = "noopener"; }
-        el.appendChild(a);
-      } else {
-        el.textContent = v;
-      }
+      var a = document.createElement("a");
+      a.href = href(key, v);
+      a.textContent = key === "phone" ? v : "@" + handle(v);
+      if (/^https/.test(a.href)) { a.target = "_blank"; a.rel = "noopener"; }
+      el.appendChild(a);
     });
   }
 
-  window.HFContacts = { data: data, digits: digits, href: href, fill: fill };
+  window.HFContacts = { data: data, digits: digits, href: href, message: message, fill: fill };
 })();

@@ -4,6 +4,7 @@
 function initHeader() {
   var hdr = document.querySelector("[data-hdr]");
   if (!hdr) return;
+  if (window.HFContacts) window.HFContacts.fill(hdr);
 
   var burger = hdr.querySelector(".hdr__burger");
   var menu = hdr.querySelector(".hdr__menu");
@@ -621,7 +622,6 @@ else initHeader();
 (function initContact() {
   // Контакти заповнюються в одному місці: js/config.js
   var CONTACTS = window.HFContacts.data;
-  var digits = window.HFContacts.digits;
 
   var root = document.querySelector("[data-cta]");
   if (!root) return;
@@ -753,7 +753,6 @@ else initHeader();
   }
 
   function setMessengers(text) {
-    var enc = encodeURIComponent(text);
     root.querySelectorAll("[data-messenger]").forEach(function (a) {
       var key = a.getAttribute("data-messenger");
       var v = CONTACTS[key];
@@ -765,8 +764,7 @@ else initHeader();
       }
       a.removeAttribute("aria-disabled");
       a.removeAttribute("title");
-      // WhatsApp підставляє текст сам; у Telegram і Viber текст треба вставити зі буфера
-      a.href = key === "whatsapp" ? "https://wa.me/" + digits(v) + "?text=" + enc : window.HFContacts.href(key, v);
+      a.href = window.HFContacts.message(key, v, text);
     });
   }
 
@@ -820,8 +818,8 @@ else initHeader();
         statusEl.textContent = "Контакти ще не додано. Скопіюйте текст і надішліть його зручним способом.";
         return;
       }
-      // для Telegram і Viber спершу копіюємо текст, щоб його можна було вставити
-      if (a.getAttribute("data-messenger") !== "whatsapp") copyText();
+      // текст копіюємо завжди: Instagram не вміє підставляти його сам, а в Telegram це запасний варіант
+      copyText();
     });
   });
 
