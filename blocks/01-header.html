@@ -156,18 +156,6 @@
       visibility: hidden;
       transition: opacity var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base);
     }
-    .hdr__menu-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-      background-size: 48px 48px;
-      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent);
-      mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent);
-      opacity: 0.6;
-      pointer-events: none;
-    }
     .hdr__menu-inner {
       position: relative;
       display: flex;
@@ -319,7 +307,6 @@
     </div>
 
     <div class="hdr__menu" id="hdr-menu" data-theme="dark" aria-label="Меню">
-      <div class="hdr__menu-grid" aria-hidden="true"></div>
       <div class="container hdr__menu-inner">
         <ul class="hdr__menu-list" role="list">
           <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>

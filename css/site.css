@@ -146,18 +146,6 @@
   visibility: hidden;
   transition: opacity var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base);
 }
-.hdr__menu-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-    linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-  background-size: 48px 48px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 40%, transparent);
-  opacity: 0.6;
-  pointer-events: none;
-}
 .hdr__menu-inner {
   position: relative;
   display: flex;
@@ -264,6 +252,7 @@
 
 .hero {
   position: relative;
+  background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
   overflow: clip;              /* уламки в 3D не створюють горизонтального скролу */
 }
 
@@ -282,17 +271,23 @@
   inset: 0;
   pointer-events: none;
 }
-.hero__grid {
+.hero__guilloche {
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-    linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-  background-size: 56px 56px;
-  background-position: center top;
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 20%, transparent 75%);
-  mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 20%, transparent 75%);
-  opacity: 0.7;
+  top: 50%;
+  left: 74%;
+  width: min(980px, 150vw);
+  aspect-ratio: 1;
+  background: url("../assets/images/guilloche.svg") center / contain no-repeat;
+  opacity: 0.13;
+  transform: translate(-50%, -50%);
+  animation: hero-spin 240s linear infinite;
+}
+@keyframes hero-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@media (max-width: 760px) {
+  .hero__guilloche { left: 85%; top: 30%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__guilloche { animation: none; }
 }
 .hero__glow {
   position: absolute;
@@ -302,6 +297,7 @@
   aspect-ratio: 1;
   background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 62%);
   transform: translate(-50%, -50%);
+  opacity: 0.7;
 }
 
 .hero__inner {
@@ -766,6 +762,7 @@
 
 .svc {
   position: relative;
+  --edge-color: var(--navy-900);   /* зубці «чека» від Hero */
   padding-block: var(--section-y);
 }
 
@@ -1294,6 +1291,8 @@
 
 .abt {
   position: relative;
+  --edge-color: var(--paper-100);  /* зубці «чека» від Послуг */
+  background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
   padding-block: var(--section-y);
   overflow: clip;
 }
@@ -1325,14 +1324,6 @@
   background-color: var(--bg-raised);
 }
 /* Плейсхолдер замість фото: сітка бренду, ініціали, позначка */
-.abt__portrait-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-    linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-  background-size: 32px 32px;
-}
 .abt__portrait-corner {
   position: absolute;
   top: 0;
@@ -1791,6 +1782,7 @@
 
 .prc {
   position: relative;
+  --edge-color: var(--navy-900);   /* зубці «чека» від Про нас */
   padding-block: var(--section-y);
   overflow: clip;
 }
@@ -2147,20 +2139,24 @@
 
 .cta {
   position: relative;
+  --edge-color: var(--paper-200);  /* зубці «чека» від FAQ */
+  background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
   padding-block: var(--section-y);
   overflow: clip;
 }
-.cta__bg {
+.cta__stamp {
   position: absolute;
-  inset: 0;
+  top: 40px;
+  right: -60px;
+  width: min(520px, 90vw);
+  aspect-ratio: 1;
+  color: var(--accent);
+  opacity: 0.16;
+  transform: rotate(12deg);
   pointer-events: none;
-  background-image:
-    linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-    linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-  background-size: 56px 56px;
-  -webkit-mask-image: radial-gradient(ellipse 60% 70% at 75% 50%, #000 10%, transparent 70%);
-  mask-image: radial-gradient(ellipse 60% 70% at 75% 50%, #000 10%, transparent 70%);
-  opacity: 0.6;
+}
+@media (max-width: 760px) {
+  .cta__stamp { width: 300px; top: 10px; right: -110px; }
 }
 .cta__glow {
   position: absolute;
@@ -2170,6 +2166,7 @@
   aspect-ratio: 1;
   background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 60%);
   transform: translate(-50%, -50%);
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -2459,21 +2456,10 @@
 
 .ftr {
   position: relative;
+  background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
   padding-top: var(--sp-9);
   overflow: clip;
   border-top: var(--hairline) solid var(--line);
-}
-.ftr__bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-    linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-  background-size: 56px 56px;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
-  opacity: 0.5;
 }
 .ftr .container { position: relative; }
 

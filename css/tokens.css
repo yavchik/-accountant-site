@@ -17,6 +17,9 @@
   --ink-900: #121420;        /* темний фон з макета */
   --ink-800: #1a1d2b;        /* піднята поверхня на темному */
   --ink-700: #242632;        /* лінії сітки на темному (з макета) */
+  --navy-700: #132c70;       /* верх переходу темних секцій */
+  --navy-800: #17306f;       /* піднята поверхня на синьому */
+  --navy-900: #0b1c4c;       /* низ переходу темних секцій */
   --paper-100: #f5f4f0;      /* теплий світлий фон з макета */
   --paper-200: #ebe8e1;      /* піднята поверхня на світлому */
   --slate-600: #4a5170;      /* другорядний текст на світлому, 7.1:1 */
@@ -129,19 +132,19 @@
 
 /* ---------- Темна тема секції ---------- */
 [data-theme="dark"] {
-  --bg: var(--ink-900);
-  --bg-raised: var(--ink-800);
-  --bg-sunken: #0d0f18;
+  --bg: var(--brand-navy);
+  --bg-raised: var(--navy-800);
+  --bg-sunken: var(--navy-900);
   --fg: var(--brand-white);        /* 18.3:1 */
   --fg-strong: var(--brand-white);
   --fg-muted: var(--slate-300);
   --accent: var(--brand-orange);   /* 6.2:1 на темному — можна й для тексту */
   --accent-text: var(--brand-orange);
   --on-accent: var(--brand-navy);
-  --line: rgb(255 255 255 / 0.10);
-  --line-strong: rgb(255 255 255 / 0.24);
+  --line: rgb(255 255 255 / 0.12);
+  --line-strong: rgb(255 255 255 / 0.26);
   --focus: var(--brand-orange);
-  --glass-bg: rgb(26 29 43 / 0.55);
+  --glass-bg: rgb(16 38 98 / 0.62);
   --glass-border: rgb(255 255 255 / 0.10);
   --shadow-md: 0 8px 24px -8px rgb(0 0 0 / 0.5);
   --shadow-lg: 0 32px 64px -24px rgb(0 0 0 / 0.6);

@@ -21,20 +21,24 @@
 
     .cta {
       position: relative;
+      --edge-color: var(--paper-200);  /* зубці «чека» від FAQ */
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
       padding-block: var(--section-y);
       overflow: clip;
     }
-    .cta__bg {
+    .cta__stamp {
       position: absolute;
-      inset: 0;
+      top: 40px;
+      right: -60px;
+      width: min(520px, 90vw);
+      aspect-ratio: 1;
+      color: var(--accent);
+      opacity: 0.16;
+      transform: rotate(12deg);
       pointer-events: none;
-      background-image:
-        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-      background-size: 56px 56px;
-      -webkit-mask-image: radial-gradient(ellipse 60% 70% at 75% 50%, #000 10%, transparent 70%);
-      mask-image: radial-gradient(ellipse 60% 70% at 75% 50%, #000 10%, transparent 70%);
-      opacity: 0.6;
+    }
+    @media (max-width: 760px) {
+      .cta__stamp { width: 300px; top: 10px; right: -110px; }
     }
     .cta__glow {
       position: absolute;
@@ -44,6 +48,7 @@
       aspect-ratio: 1;
       background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 60%);
       transform: translate(-50%, -50%);
+      opacity: 0.6;
       pointer-events: none;
     }
 
@@ -333,8 +338,16 @@
 <main id="main">
 
   <!-- ================= БЛОК 07 CTA + КОНТАКТИ ================= -->
-  <section class="cta" id="contact" data-theme="dark" data-cta aria-labelledby="cta-title">
-    <div class="cta__bg" aria-hidden="true"></div>
+  <section class="cta" id="contact" data-theme="dark" data-edge data-cta aria-labelledby="cta-title">
+    <svg class="cta__stamp" viewBox="0 0 400 400" aria-hidden="true">
+      <defs><path id="cta-stamp-ring" d="M200 200 m-150 0 a150 150 0 1 1 300 0 a150 150 0 1 1 -300 0"/></defs>
+      <circle cx="200" cy="200" r="188" fill="none" stroke="currentColor" stroke-width="3"/>
+      <circle cx="200" cy="200" r="176" fill="none" stroke="currentColor" stroke-width="1"/>
+      <circle cx="200" cy="200" r="118" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <text font-family="IBM Plex Mono, monospace" font-size="21" letter-spacing="5" fill="currentColor"><textPath href="#cta-stamp-ring">HAPPY FINANCE · БУХГАЛТЕРСЬКИЙ СУПРОВІД · ФОП · ТОВ ·</textPath></text>
+      <text x="200" y="192" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="40" letter-spacing="2" fill="currentColor">ПЕРЕВІРЕНО</text>
+      <text x="200" y="236" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="20" letter-spacing="4" fill="currentColor">★ 7 РОКІВ ★</text>
+    </svg>
     <div class="cta__glow" aria-hidden="true"></div>
 
     <div class="container">

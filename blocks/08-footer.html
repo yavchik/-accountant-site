@@ -16,21 +16,10 @@
 
     .ftr {
       position: relative;
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
       padding-top: var(--sp-9);
       overflow: clip;
       border-top: var(--hairline) solid var(--line);
-    }
-    .ftr__bg {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-      background-size: 56px 56px;
-      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
-      mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 70%, transparent);
-      opacity: 0.5;
     }
     .ftr .container { position: relative; }
 
@@ -240,7 +229,6 @@
 
   <!-- ================= БЛОК 08 FOOTER ================= -->
   <footer class="ftr" data-theme="dark" data-ftr>
-    <div class="ftr__bg" aria-hidden="true"></div>
     <div class="container">
 
       <div class="ftr__top">

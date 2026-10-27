@@ -21,6 +21,7 @@
 
     .hero {
       position: relative;
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
       overflow: clip;              /* уламки в 3D не створюють горизонтального скролу */
     }
 
@@ -39,17 +40,23 @@
       inset: 0;
       pointer-events: none;
     }
-    .hero__grid {
+    .hero__guilloche {
       position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-      background-size: 56px 56px;
-      background-position: center top;
-      -webkit-mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 20%, transparent 75%);
-      mask-image: radial-gradient(ellipse 70% 70% at 70% 45%, #000 20%, transparent 75%);
-      opacity: 0.7;
+      top: 50%;
+      left: 74%;
+      width: min(980px, 150vw);
+      aspect-ratio: 1;
+      background: url("../assets/images/guilloche.svg") center / contain no-repeat;
+      opacity: 0.13;
+      transform: translate(-50%, -50%);
+      animation: hero-spin 240s linear infinite;
+    }
+    @keyframes hero-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    @media (max-width: 760px) {
+      .hero__guilloche { left: 85%; top: 30%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__guilloche { animation: none; }
     }
     .hero__glow {
       position: absolute;
@@ -59,6 +66,7 @@
       aspect-ratio: 1;
       background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 62%);
       transform: translate(-50%, -50%);
+      opacity: 0.7;
     }
 
     .hero__inner {
@@ -530,7 +538,7 @@
   <section class="hero" id="top" data-theme="dark" data-hero aria-labelledby="hero-title">
     <div class="hero__pin">
       <div class="hero__bg" aria-hidden="true">
-        <div class="hero__grid"></div>
+        <div class="hero__guilloche"></div>
         <div class="hero__glow"></div>
       </div>
 

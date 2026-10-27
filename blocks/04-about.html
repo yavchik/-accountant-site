@@ -14,6 +14,8 @@
 
     .abt {
       position: relative;
+      --edge-color: var(--paper-100);  /* зубці «чека» від Послуг */
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
       padding-block: var(--section-y);
       overflow: clip;
     }
@@ -45,14 +47,6 @@
       background-color: var(--bg-raised);
     }
     /* Плейсхолдер замість фото: сітка бренду, ініціали, позначка */
-    .abt__portrait-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, var(--line) var(--hairline), transparent var(--hairline)),
-        linear-gradient(to bottom, var(--line) var(--hairline), transparent var(--hairline));
-      background-size: 32px 32px;
-    }
     .abt__portrait-corner {
       position: absolute;
       top: 0;
@@ -511,7 +505,7 @@
 <main id="main">
 
   <!-- ================= БЛОК 04 ПРО МАРІЮ ================= -->
-  <section class="abt" id="about" data-theme="dark" data-abt aria-labelledby="abt-title">
+  <section class="abt" id="about" data-theme="dark" data-edge data-abt aria-labelledby="abt-title">
     <div class="container">
       <div class="abt__layout">
 
@@ -520,7 +514,6 @@
           <!-- [ПЛЕЙСХОЛДЕР] Коли буде фото: замінити блок на
                <img class="abt__portrait" src="../assets/images/maria.webp" width="840" height="1050" alt="Марія Панченко" loading="lazy"> -->
           <div class="abt__portrait" role="img" aria-label="Місце для фото Марії Панченко">
-            <span class="abt__portrait-grid" aria-hidden="true"></span>
             <span class="abt__portrait-corner" aria-hidden="true"></span>
             <span class="abt__initials" aria-hidden="true">МП</span>
             <span class="placeholder abt__portrait-note" aria-hidden="true">[ПЛЕЙСХОЛДЕР: фото]</span>

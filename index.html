@@ -87,7 +87,6 @@
     </div>
 
     <div class="hdr__menu" id="hdr-menu" data-theme="dark" aria-label="Меню">
-      <div class="hdr__menu-grid" aria-hidden="true"></div>
       <div class="container hdr__menu-inner">
         <ul class="hdr__menu-list" role="list">
           <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>
@@ -114,7 +113,7 @@
   <section class="hero" id="top" data-theme="dark" data-hero aria-labelledby="hero-title">
     <div class="hero__pin">
       <div class="hero__bg" aria-hidden="true">
-        <div class="hero__grid"></div>
+        <div class="hero__guilloche"></div>
         <div class="hero__glow"></div>
       </div>
 
@@ -294,7 +293,7 @@
   </section>
   
 
-  <section class="svc" id="services" data-theme="light" data-svc aria-labelledby="svc-title">
+  <section class="svc" id="services" data-theme="light" data-edge data-svc aria-labelledby="svc-title">
     <div class="container">
 
       <div class="svc__head svc__reveal">
@@ -641,7 +640,7 @@
   </section>
   
 
-  <section class="abt" id="about" data-theme="dark" data-abt aria-labelledby="abt-title">
+  <section class="abt" id="about" data-theme="dark" data-edge data-abt aria-labelledby="abt-title">
     <div class="container">
       <div class="abt__layout">
 
@@ -650,7 +649,6 @@
           <!-- [ПЛЕЙСХОЛДЕР] Коли буде фото: замінити блок на
                <img class="abt__portrait" src="assets/images/maria.webp" width="840" height="1050" alt="Марія Панченко" loading="lazy"> -->
           <div class="abt__portrait" role="img" aria-label="Місце для фото Марії Панченко">
-            <span class="abt__portrait-grid" aria-hidden="true"></span>
             <span class="abt__portrait-corner" aria-hidden="true"></span>
             <span class="abt__initials" aria-hidden="true">МП</span>
             <span class="placeholder abt__portrait-note" aria-hidden="true">[ПЛЕЙСХОЛДЕР: фото]</span>
@@ -814,7 +812,7 @@
   </section>
   
 
-  <section class="prc" id="process" data-theme="light" data-prc aria-labelledby="prc-title">
+  <section class="prc" id="process" data-theme="light" data-edge data-prc aria-labelledby="prc-title">
     <div class="container">
 
       <div class="prc__head">
@@ -959,8 +957,16 @@
   <!-- Розмітка FAQ для пошуковиків. Під час інтеграції перенести в <head> index.html; тексти мають збігатися з видимими. -->
   
 
-  <section class="cta" id="contact" data-theme="dark" data-cta aria-labelledby="cta-title">
-    <div class="cta__bg" aria-hidden="true"></div>
+  <section class="cta" id="contact" data-theme="dark" data-edge data-cta aria-labelledby="cta-title">
+    <svg class="cta__stamp" viewBox="0 0 400 400" aria-hidden="true">
+      <defs><path id="cta-stamp-ring" d="M200 200 m-150 0 a150 150 0 1 1 300 0 a150 150 0 1 1 -300 0"/></defs>
+      <circle cx="200" cy="200" r="188" fill="none" stroke="currentColor" stroke-width="3"/>
+      <circle cx="200" cy="200" r="176" fill="none" stroke="currentColor" stroke-width="1"/>
+      <circle cx="200" cy="200" r="118" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <text font-family="IBM Plex Mono, monospace" font-size="21" letter-spacing="5" fill="currentColor"><textPath href="#cta-stamp-ring">HAPPY FINANCE · БУХГАЛТЕРСЬКИЙ СУПРОВІД · ФОП · ТОВ ·</textPath></text>
+      <text x="200" y="192" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="40" letter-spacing="2" fill="currentColor">ПЕРЕВІРЕНО</text>
+      <text x="200" y="236" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="20" letter-spacing="4" fill="currentColor">★ 7 РОКІВ ★</text>
+    </svg>
     <div class="cta__glow" aria-hidden="true"></div>
 
     <div class="container">
@@ -1074,7 +1080,6 @@
 </main>
 
   <footer class="ftr" data-theme="dark" data-ftr>
-    <div class="ftr__bg" aria-hidden="true"></div>
     <div class="container">
 
       <div class="ftr__top">
