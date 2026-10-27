@@ -213,9 +213,80 @@
     .tm-deck__card::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 0; }
     .tm-deck__card:hover::after { height: 24px; }
     .tm-deck__media { aspect-ratio: 4 / 5; border-radius: var(--r-xs) var(--r-xs) 0 0; }
-    .tm-deck__media .tm-stamp { width: 74%; }
-    .tm-deck__media .tm-nophoto__note,
-    .tm-deck__media .tm-nophoto__no { display: none; }
+    /* Картка у віялі: «документ» ділянки з печаткою; однаковий для всіх, без фото */
+    .tm-deck__card { container-type: inline-size; }
+    .tm-sheet {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 3.5cqi;
+      padding: 9cqi 9cqi 0;
+      overflow: hidden;
+      color: var(--brand-navy);
+      background-color: var(--paper-100);
+      background-image:
+        url("../assets/images/guilloche.svg"),
+        repeating-linear-gradient(180deg, transparent 0 13cqi, rgb(16 38 98 / 0.07) 13cqi calc(13cqi + 1px));
+      background-size: 190% auto, auto;
+      background-position: 40% 70%, 0 0;
+      background-repeat: no-repeat, repeat;
+    }
+    .tm-sheet__no {
+      font-family: var(--font-mono);
+      font-size: max(8px, 5.2cqi);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--slate-600);
+    }
+    .tm-sheet__title {
+      padding-bottom: 4cqi;
+      border-bottom: 3px double rgb(16 38 98 / 0.28);
+      font-size: max(12px, 10cqi);
+      font-weight: var(--fw-bold);
+      line-height: 1.1;
+      color: var(--brand-navy);
+      text-wrap: balance;
+    }
+    .tm-sheet__lines { display: grid; gap: 4cqi; margin-top: 2cqi; }
+    .tm-sheet__lines i { display: block; height: max(4px, 2.6cqi); border-radius: 2px; background: rgb(16 38 98 / 0.1); }
+    .tm-sheet__lines i:nth-child(2) { width: 84%; }
+    .tm-sheet__lines i:nth-child(3) { width: 62%; }
+    .tm-sheet__lines i:nth-child(4) { width: 74%; }
+    .tm-sheet__stamp {
+      position: absolute;
+      left: calc(50% + var(--sx, 0%));
+      top: 66%;
+      padding: 2.4cqi 4cqi;
+      border: max(2px, 1.4cqi) solid currentColor;
+      border-radius: 3px;
+      font-family: var(--font-mono);
+      font-size: max(8px, 6cqi);
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+      opacity: 0.9;
+      transform: translate(-50%, -50%) rotate(var(--r));
+      transition: transform 420ms var(--ease-spring), opacity 180ms var(--ease-out);
+    }
+    .tm-sheet--orange .tm-sheet__stamp { color: var(--orange-700); }
+    @media (scripting: enabled) {
+      .tm-sheet:not(.is-stamped) .tm-sheet__stamp { opacity: 0; transform: translate(-50%, -50%) rotate(var(--r)) scale(1.8); }
+    }
+    .tm-deck__card:hover .tm-sheet__stamp,
+    .tm-deck__card:focus-visible .tm-sheet__stamp { transform: translate(-50%, -50%) rotate(var(--r)) scale(1.08); }
+    .tm-sheet__foot {
+      position: absolute;
+      left: 9cqi;
+      right: 9cqi;
+      bottom: 6cqi;
+      padding-top: 2.5cqi;
+      border-top: 1px solid rgb(16 38 98 / 0.22);
+      font-family: var(--font-mono);
+      font-size: max(7px, 4.4cqi);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slate-600);
+    }
     .tm-deck__cap { display: grid; gap: 2px; padding: var(--sp-2) var(--sp-3) var(--sp-3); min-width: 0; }
     .tm-deck__name { font-weight: var(--fw-semibold); font-size: clamp(0.8125rem, 0.7rem + 0.4vw, 1rem); color: var(--fg-strong); line-height: 1.2; }
     .tm-deck__role {
@@ -593,41 +664,53 @@
 
       <div class="tm-deck" data-tm-deck>
         <div class="tm-deck__fan">
-          <a class="tm-deck__card tm-alive-hover" href="#person-evgenia" style="--i:1;--o:-2;--a:2">
-            <span class="tm-photo tm-deck__media"><img src="../assets/images/team-evgenia-480.webp" width="480" height="600" alt="" decoding="async"></span>
+          <a class="tm-deck__card" href="#person-evgenia" style="--i:1;--o:-2;--a:2">
+            <span class="tm-sheet tm-deck__media" data-tm-stamp aria-hidden="true">
+              <span class="tm-sheet__no">Ділянка № 04</span>
+              <span class="tm-sheet__title">Звітність</span>
+              <span class="tm-sheet__lines"><i></i><i></i><i></i><i></i></span>
+              <span class="tm-sheet__stamp" style="--sx:-13%;--r:-8deg">ПОДАНО</span>
+              <span class="tm-sheet__foot">Happy Finance</span>
+            </span>
             <span class="tm-deck__cap"><span class="tm-deck__name">Євгенія</span><span class="tm-deck__role">Головний бухгалтер</span></span>
           </a>
           <a class="tm-deck__card" href="#person-yulia" style="--i:3;--o:-1;--a:1">
-            <span class="tm-nophoto tm-deck__media" data-tm-stamp>
-              <svg class="tm-stamp" viewBox="0 0 200 200" aria-hidden="true">
-                <defs><path id="tm-ring-d1" d="M100 100 m-73 0 a73 73 0 1 1 146 0 a73 73 0 1 1 -146 0"/></defs>
-                <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
-                <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
-                <circle cx="100" cy="100" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                <text font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="currentColor"><textPath href="#tm-ring-d1" textLength="452">HAPPY FINANCE · КОМАНДА · HAPPY FINANCE · КОМАНДА ·</textPath></text>
-                <text x="100" y="117" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="46" fill="currentColor">ЮА</text>
-              </svg>
+            <span class="tm-sheet tm-deck__media tm-sheet--orange" data-tm-stamp aria-hidden="true">
+              <span class="tm-sheet__no">Ділянка № 03</span>
+              <span class="tm-sheet__title">Зарплата</span>
+              <span class="tm-sheet__lines"><i></i><i></i><i></i><i></i></span>
+              <span class="tm-sheet__stamp" style="--sx:-13%;--r:5deg">НАРАХОВАНО</span>
+              <span class="tm-sheet__foot">Happy Finance</span>
             </span>
             <span class="tm-deck__cap"><span class="tm-deck__name">Юлія</span><span class="tm-deck__role">Зарплата</span></span>
           </a>
-          <a class="tm-deck__card tm-alive-hover" href="#founder" style="--i:0;--o:0;--a:0">
-            <span class="tm-photo tm-deck__media"><img src="../assets/images/team-maria-480.webp" width="480" height="600" alt="" decoding="async"></span>
+          <a class="tm-deck__card" href="#founder" style="--i:0;--o:0;--a:0">
+            <span class="tm-sheet tm-deck__media" data-tm-stamp aria-hidden="true">
+              <span class="tm-sheet__no">Ділянка № 05</span>
+              <span class="tm-sheet__title">Фінанси</span>
+              <span class="tm-sheet__lines"><i></i><i></i><i></i><i></i></span>
+              <span class="tm-sheet__stamp" style="--r:-6deg">ПРОАНАЛІЗОВАНО</span>
+              <span class="tm-sheet__foot">Happy Finance</span>
+            </span>
             <span class="tm-deck__cap"><span class="tm-deck__name">Марія</span><span class="tm-deck__role">Засновниця</span></span>
           </a>
-          <a class="tm-deck__card tm-alive-hover" href="#person-karyna" style="--i:2;--o:1;--a:1">
-            <span class="tm-photo tm-deck__media"><img src="../assets/images/team-karyna-480.webp" width="480" height="600" alt="" decoding="async"></span>
+          <a class="tm-deck__card" href="#person-karyna" style="--i:2;--o:1;--a:1">
+            <span class="tm-sheet tm-deck__media tm-sheet--orange" data-tm-stamp aria-hidden="true">
+              <span class="tm-sheet__no">Ділянка № 01</span>
+              <span class="tm-sheet__title">Первинка і ПРРО</span>
+              <span class="tm-sheet__lines"><i></i><i></i><i></i><i></i></span>
+              <span class="tm-sheet__stamp" style="--sx:13%;--r:7deg">ПРИЙНЯТО</span>
+              <span class="tm-sheet__foot">Happy Finance</span>
+            </span>
             <span class="tm-deck__cap"><span class="tm-deck__name">Карина</span><span class="tm-deck__role">Первинка і ПРРО</span></span>
           </a>
           <a class="tm-deck__card" href="#person-nadiia" style="--i:4;--o:2;--a:2">
-            <span class="tm-nophoto tm-deck__media" data-tm-stamp>
-              <svg class="tm-stamp tm-stamp--orange" viewBox="0 0 200 200" aria-hidden="true">
-                <defs><path id="tm-ring-d2" d="M100 100 m-73 0 a73 73 0 1 1 146 0 a73 73 0 1 1 -146 0"/></defs>
-                <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
-                <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
-                <circle cx="100" cy="100" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                <text font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="currentColor"><textPath href="#tm-ring-d2" textLength="452">HAPPY FINANCE · КОМАНДА · HAPPY FINANCE · КОМАНДА ·</textPath></text>
-                <text x="100" y="117" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="46" fill="currentColor">НГ</text>
-              </svg>
+            <span class="tm-sheet tm-deck__media" data-tm-stamp aria-hidden="true">
+              <span class="tm-sheet__no">Ділянка № 02</span>
+              <span class="tm-sheet__title">Закупівлі</span>
+              <span class="tm-sheet__lines"><i></i><i></i><i></i><i></i></span>
+              <span class="tm-sheet__stamp" style="--sx:13%;--r:-5deg">ЗВІРЕНО</span>
+              <span class="tm-sheet__foot">Happy Finance</span>
             </span>
             <span class="tm-deck__cap"><span class="tm-deck__name">Надія</span><span class="tm-deck__role">Закупівлі</span></span>
           </a>
