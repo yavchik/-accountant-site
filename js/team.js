@@ -259,16 +259,6 @@ function initTeam() {
     });
   });
 
-  /* ---------- Фото оживають у кольорі, коли картка в центрі екрана (на телефоні) ---------- */
-  var alive = $$(".tm-card");
-  var touch = window.matchMedia("(hover: none)");
-  if (hasIO && touch.matches) {
-    var aio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { e.target.classList.toggle("is-alive", e.isIntersecting); });
-    }, { rootMargin: "-30% 0px -30% 0px" });
-    alive.forEach(function (el) { aio.observe(el); });
-  }
-
   /* ---------- Шлях документа: печатки за кроками ---------- */
   var stepsWrap = document.querySelector("[data-tm-steps]");
   if (stepsWrap) {

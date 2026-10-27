@@ -29,7 +29,7 @@
       .tm-reveal:not(.is-shown) { opacity: 0; transform: translateY(var(--reveal-shift)); }
     }
 
-    /* Фото в синьому тоні: оживає в кольорі при наведенні, фокусі або коли картка в центрі екрана */
+    /* Фото команди в кольорі; при наведенні трохи наближається */
     .tm-photo {
       position: relative;
       overflow: hidden;
@@ -44,21 +44,7 @@
       transform: scale(1.04);
       transition: transform var(--dur-slow) var(--ease-out);
     }
-    .tm-photo::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: var(--brand-navy);
-      mix-blend-mode: color;
-      opacity: 0.9;
-      transition: opacity var(--dur-slow) var(--ease-out);
-      pointer-events: none;
-    }
-    .is-alive .tm-photo::after { opacity: 0; }
-    .is-alive .tm-photo img { transform: scale(1); }
     @media (hover: hover) {
-      .tm-alive-hover:hover .tm-photo::after,
-      .tm-alive-hover:focus-within .tm-photo::after { opacity: 0; }
       .tm-alive-hover:hover .tm-photo img { transform: scale(1); }
     }
 
@@ -312,7 +298,6 @@
       clip-path: inset(0 0 0 0);
       transition: clip-path 1200ms var(--ease-in-out);
     }
-    .tm-founder__photo::after { display: none; }
     .tm-founder__photo img { transform: scale(1.12); transition: transform 1600ms var(--ease-out); }
     .tm-founder__media.is-shown .tm-founder__photo img { transform: scale(1); }
     @media (scripting: enabled) {
@@ -627,7 +612,7 @@
       .tm-hero__guilloche { animation: none; }
       .tm-deck__fan, .tm-deck__card, .tm-reveal, .tm-founder__photo, .tm-founder__photo img,
       .tm-stamp, .tm-card__inner, .tm-doc__stamp, .tm-step__stamp, .tm-steps__fill,
-      .tm-photo img, .tm-photo::after { transition: none !important; }
+      .tm-photo img { transition: none !important; }
       .tm-card__inner { transform: none !important; }
       .tm-card .tm-card__face { transition: opacity var(--dur-base) linear; }
       .tm-card__back { transform: none; opacity: 0; }
@@ -1130,16 +1115,6 @@
           if (e.key === "Escape" && card.classList.contains("is-flipped")) setFace(false);
         });
       });
-
-      /* ---------- Фото оживають у кольорі, коли картка в центрі екрана (на телефоні) ---------- */
-      var alive = $$(".tm-card");
-      var touch = window.matchMedia("(hover: none)");
-      if (hasIO && touch.matches) {
-        var aio = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) { e.target.classList.toggle("is-alive", e.isIntersecting); });
-        }, { rootMargin: "-30% 0px -30% 0px" });
-        alive.forEach(function (el) { aio.observe(el); });
-      }
 
       /* ---------- Шлях документа: печатки за кроками ---------- */
       var stepsWrap = document.querySelector("[data-tm-steps]");
