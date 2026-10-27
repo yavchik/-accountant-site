@@ -35,8 +35,9 @@
     .abt__label { color: var(--brand-beige); }
 
     .abt__portrait {
-      position: relative;
+      display: block;
       width: 100%;
+      height: auto;
       max-width: 420px;
       aspect-ratio: 4 / 5;
       object-fit: cover;          /* для справжнього фото: обрізається, а не стискається */
@@ -46,31 +47,6 @@
       border-radius: var(--r-sm);
       background-color: var(--bg-raised);
     }
-    /* Плейсхолдер замість фото: сітка бренду, ініціали, позначка */
-    .abt__portrait-corner {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 22%;
-      aspect-ratio: 1;
-      background: var(--accent);
-    }
-    .abt__initials {
-      position: absolute;
-      left: var(--sp-5);
-      bottom: var(--sp-7);
-      color: var(--fg);
-      font-size: clamp(5rem, 3rem + 8vw, 8.5rem);
-      font-weight: var(--fw-black);
-      line-height: 0.8;
-      letter-spacing: var(--ls-display);
-    }
-    .abt__portrait-note {
-      position: absolute;
-      left: var(--sp-5);
-      bottom: var(--sp-4);
-    }
-
     .abt__name {
       font-size: var(--fs-h3);
       font-weight: var(--fw-semibold);
@@ -511,13 +487,10 @@
 
         <div class="abt__person abt__reveal">
           <p class="t-label abt__label">Про нас</p>
-          <!-- [ПЛЕЙСХОЛДЕР] Коли буде фото: замінити блок на
-               <img class="abt__portrait" src="../assets/images/maria.webp" width="840" height="1050" alt="Марія Панченко" loading="lazy"> -->
-          <div class="abt__portrait" role="img" aria-label="Місце для фото Марії Панченко">
-            <span class="abt__portrait-corner" aria-hidden="true"></span>
-            <span class="abt__initials" aria-hidden="true">МП</span>
-            <span class="placeholder abt__portrait-note" aria-hidden="true">[ПЛЕЙСХОЛДЕР: фото]</span>
-          </div>
+          <img class="abt__portrait" src="../assets/images/maria-840.webp"
+               srcset="../assets/images/maria-840.webp 840w, ../assets/images/maria-1260.webp 1260w"
+               sizes="(min-width: 1024px) 30vw, 420px"
+               width="840" height="1050" alt="Марія Панченко" loading="lazy" decoding="async">
           <div>
             <p class="abt__name">Марія Панченко</p>
             <p class="t-label abt__role">Засновниця Happy Finance</p>
