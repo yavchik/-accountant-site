@@ -69,6 +69,20 @@
     }
     .abt__quote footer { margin-top: var(--sp-3); color: var(--fg-muted); }
 
+    .abt__team {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      justify-self: start;
+      padding-block: var(--sp-2);
+      color: var(--fg-strong);
+      font-weight: var(--fw-medium);
+      text-decoration: none;
+      border-bottom: var(--hairline) solid var(--accent);
+    }
+    .abt__team svg { width: 18px; height: 18px; transition: transform var(--dur-base) var(--ease-out); }
+    .abt__team:hover svg { transform: translateX(4px); }
+
     /* --- Історія --- */
     .abt__story { min-width: 0; }
     .abt__title {
@@ -499,6 +513,10 @@
             <p>Без цифр управління бізнесом неможливе. Тоді це не управління, а ілюзія.</p>
             <footer class="t-label">Марія Панченко</footer>
           </blockquote>
+          <a class="abt__team" href="../team.html">
+            Познайомитися з командою
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>
 
         <div class="abt__story">

@@ -60,17 +60,21 @@ function initHeader() {
     indicator.style.opacity = "1";
   }
 
+  // Посилання на поточну сторінку (aria-current="page") лишається активним, коли розділ не вибрано
+  var pageLink = hdr.querySelector('.hdr__link[aria-current="page"]');
   function setActive(id) {
     var active = null;
     navLinks.concat(menuLinks).forEach(function (a) {
+      if (a.getAttribute("aria-current") === "page") return;
       var on = a.getAttribute("href") === "#" + id;
       if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
       if (on && a.classList.contains("hdr__link")) active = a;
     });
-    moveIndicator(active);
+    moveIndicator(active || pageLink);
   }
 
   var sections = navLinks
+    .filter(function (a) { return a.getAttribute("href").charAt(0) === "#"; })
     .map(function (a) { return document.querySelector(a.getAttribute("href")); })
     .filter(Boolean);
   if ("IntersectionObserver" in window && sections.length) {
@@ -83,11 +87,11 @@ function initHeader() {
     sections.forEach(function (s) { spyIO.observe(s); });
   }
   window.addEventListener("resize", function () {
-    moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]'));
+    moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]') || pageLink);
   }, { passive: true });
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () {
-      moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]'));
+      moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]') || pageLink);
     });
   }
 

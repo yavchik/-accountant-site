@@ -101,7 +101,8 @@
       transition: opacity var(--dur-fast) var(--ease-out);
     }
     .hdr__link:hover,
-    .hdr__link[aria-current="true"] { opacity: 1; }
+    .hdr__link[aria-current="true"],
+    .hdr__link[aria-current="page"] { opacity: 1; }
 
     /* Лінія активного розділу: рухається і масштабується лише через transform */
     .hdr__indicator {
@@ -204,7 +205,8 @@
       transform: scale(0);
       transition: transform var(--dur-base) var(--ease-spring);
     }
-    .hdr__menu-link[aria-current="true"] .hdr__menu-num::after { transform: scale(1); }
+    .hdr__menu-link[aria-current="true"] .hdr__menu-num::after,
+    .hdr__menu-link[aria-current="page"] .hdr__menu-num::after { transform: scale(1); }
 
     .hdr__menu-foot {
       display: grid;
@@ -293,6 +295,7 @@
         <ul class="hdr__list" role="list">
           <li><a class="hdr__link" href="#services">Послуги</a></li>
           <li><a class="hdr__link" href="#about">Про нас</a></li>
+          <li><a class="hdr__link" href="../team.html">Команда</a></li>
           <li><a class="hdr__link" href="#process">Як працюємо</a></li>
           <li><a class="hdr__link" href="#faq">FAQ</a></li>
           <li><a class="hdr__link" href="#contact">Контакти</a></li>
@@ -313,11 +316,12 @@
         <ul class="hdr__menu-list" role="list">
           <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>
           <li class="hdr__menu-item" style="--i:1"><a class="hdr__menu-link" href="#about"><span class="t-label hdr__menu-num">02</span>Про нас</a></li>
-          <li class="hdr__menu-item" style="--i:2"><a class="hdr__menu-link" href="#process"><span class="t-label hdr__menu-num">03</span>Як працюємо</a></li>
-          <li class="hdr__menu-item" style="--i:3"><a class="hdr__menu-link" href="#faq"><span class="t-label hdr__menu-num">04</span>FAQ</a></li>
-          <li class="hdr__menu-item" style="--i:4"><a class="hdr__menu-link" href="#contact"><span class="t-label hdr__menu-num">05</span>Контакти</a></li>
+          <li class="hdr__menu-item" style="--i:2"><a class="hdr__menu-link" href="../team.html"><span class="t-label hdr__menu-num">03</span>Команда</a></li>
+          <li class="hdr__menu-item" style="--i:3"><a class="hdr__menu-link" href="#process"><span class="t-label hdr__menu-num">04</span>Як працюємо</a></li>
+          <li class="hdr__menu-item" style="--i:4"><a class="hdr__menu-link" href="#faq"><span class="t-label hdr__menu-num">05</span>FAQ</a></li>
+          <li class="hdr__menu-item" style="--i:5"><a class="hdr__menu-link" href="#contact"><span class="t-label hdr__menu-num">06</span>Контакти</a></li>
         </ul>
-        <div class="hdr__menu-foot" style="--i:5">
+        <div class="hdr__menu-foot" style="--i:6">
           <a class="btn btn--primary btn--block" href="#match">Підібрати послугу</a>
           <ul class="hdr__contacts" role="list">
             <li>Телефон: <span data-contact="phone"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
@@ -390,17 +394,21 @@
         indicator.style.opacity = "1";
       }
 
+      // Посилання на поточну сторінку (aria-current="page") лишається активним, коли розділ не вибрано
+      var pageLink = hdr.querySelector('.hdr__link[aria-current="page"]');
       function setActive(id) {
         var active = null;
         navLinks.concat(menuLinks).forEach(function (a) {
+          if (a.getAttribute("aria-current") === "page") return;
           var on = a.getAttribute("href") === "#" + id;
           if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
           if (on && a.classList.contains("hdr__link")) active = a;
         });
-        moveIndicator(active);
+        moveIndicator(active || pageLink);
       }
 
       var sections = navLinks
+        .filter(function (a) { return a.getAttribute("href").charAt(0) === "#"; })
         .map(function (a) { return document.querySelector(a.getAttribute("href")); })
         .filter(Boolean);
       if ("IntersectionObserver" in window && sections.length) {
@@ -413,11 +421,11 @@
         sections.forEach(function (s) { spyIO.observe(s); });
       }
       window.addEventListener("resize", function () {
-        moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]'));
+        moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]') || pageLink);
       }, { passive: true });
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(function () {
-          moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]'));
+          moveIndicator(hdr.querySelector('.hdr__link[aria-current="true"]') || pageLink);
         });
       }
 

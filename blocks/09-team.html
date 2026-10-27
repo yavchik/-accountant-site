@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>09 Команда — Happy Finance</title>
+  <meta name="robots" content="noindex">
+  <!-- Бібліотеки: немає. Колода, журнал, картки й шлях документа працюють на CSS + vanilla JS. -->
+  <link rel="preload" href="../assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <script src="../js/config.js"></script>
+  <script src="../js/contacts.js"></script>
+  <style>
+    /* ===== 09 Команда (окрема сторінка team.html). Префікс класів: tm- ===== */
+
+    /* ---------- Спільне ---------- */
+    .tm-label { color: var(--accent-text); }
+    [data-theme="dark"] .tm-label { color: var(--brand-beige); }
+    .tm-h2 { font-size: var(--fs-h2); max-width: 18ch; }
+    .tm-lead { color: var(--fg-muted); font-size: var(--fs-lead); max-width: 52ch; }
+    .tm-head { display: grid; gap: var(--sp-4); margin-bottom: var(--sp-8); }
+
+    .tm-reveal {
+      transition: opacity var(--dur-reveal) var(--ease-out), transform var(--dur-reveal) var(--ease-out);
+      transition-delay: calc(var(--i, 0) * var(--stagger));
+    }
+    @media (scripting: enabled) {
+      .tm-reveal:not(.is-shown) { opacity: 0; transform: translateY(var(--reveal-shift)); }
+    }
+
+    /* Фото в синьому тоні: оживає в кольорі при наведенні, фокусі або коли картка в центрі екрана */
+    .tm-photo {
+      position: relative;
+      overflow: hidden;
+      background: var(--navy-900);
+    }
+    .tm-photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 18%;
+      transform: scale(1.04);
+      transition: transform var(--dur-slow) var(--ease-out);
+    }
+    .tm-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--brand-navy);
+      mix-blend-mode: color;
+      opacity: 0.9;
+      transition: opacity var(--dur-slow) var(--ease-out);
+      pointer-events: none;
+    }
+    .is-alive .tm-photo::after { opacity: 0; }
+    .is-alive .tm-photo img { transform: scale(1); }
+    @media (hover: hover) {
+      .tm-alive-hover:hover .tm-photo::after,
+      .tm-alive-hover:focus-within .tm-photo::after { opacity: 0; }
+      .tm-alive-hover:hover .tm-photo img { transform: scale(1); }
+    }
+
+    /* Замість фото: «документ» з печаткою та підписом «Фото — у наступному звіті» */
+    .tm-nophoto {
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--brand-navy);
+      background-color: var(--paper-100);
+      background-image:
+        url("../assets/images/guilloche.svg"),
+        repeating-linear-gradient(180deg, transparent 0 27px, rgb(16 38 98 / 0.08) 27px 28px);
+      background-size: 170% auto, auto;
+      background-position: 30% 40%, 0 0;
+      background-repeat: no-repeat, repeat;
+    }
+    .tm-nophoto__no {
+      position: absolute;
+      top: 8%;
+      left: 9%;
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      letter-spacing: var(--ls-label);
+      color: var(--slate-600);
+      text-transform: uppercase;
+    }
+    .tm-nophoto__note {
+      position: absolute;
+      left: 9%;
+      right: 9%;
+      bottom: 8%;
+      padding-top: var(--sp-2);
+      border-top: var(--hairline) solid rgb(16 38 98 / 0.3);
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      letter-spacing: var(--ls-label);
+      color: var(--slate-600);
+      text-transform: uppercase;
+    }
+    .tm-stamp {
+      width: 64%;
+      max-width: 220px;
+      aspect-ratio: 1;
+      color: var(--brand-navy);
+      transform: rotate(-9deg);
+      opacity: 0.88;
+      transition: transform 520ms var(--ease-spring), opacity 260ms var(--ease-out);
+    }
+    .tm-stamp--orange { color: var(--orange-700); }
+    @media (scripting: enabled) {
+      .tm-nophoto:not(.is-stamped) .tm-stamp { opacity: 0; transform: rotate(-24deg) scale(1.6); }
+    }
+
+    /* ================= HERO: колода ================= */
+    .tm-hero {
+      position: relative;
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
+      padding-block: calc(var(--header-h) + var(--sp-8)) var(--sp-9);
+      overflow: clip;
+    }
+    .tm-hero__guilloche {
+      position: absolute;
+      top: 55%;
+      left: 72%;
+      width: min(980px, 150vw);
+      aspect-ratio: 1;
+      background: url("../assets/images/guilloche.svg") center / contain no-repeat;
+      opacity: 0.12;
+      transform: translate(-50%, -50%);
+      animation: tm-spin 240s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes tm-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .tm-hero__inner {
+      position: relative;
+      display: grid;
+      gap: var(--sp-8);
+      align-items: center;
+    }
+    .tm-hero__text { display: grid; gap: var(--sp-5); min-width: 0; }
+    .tm-hero__title { font-size: var(--fs-display); line-height: var(--lh-tight); letter-spacing: var(--ls-display); max-width: 13ch; }
+    .tm-hero__title em { font-style: normal; color: var(--accent); }
+    .tm-hero__names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2) var(--sp-4);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--fg-muted);
+    }
+    .tm-hero__names li + li::before { content: "·"; margin-right: var(--sp-4); color: var(--accent); }
+    .tm-hero__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-2); }
+
+    .tm-deck {
+      --card-w: clamp(112px, 29vw, 210px);
+      --spread: calc(var(--card-w) * 0.4);
+      --tilt: 4.5deg;
+      --p: 0;
+      --rx: 0deg;
+      --ry: 0deg;
+      position: relative;
+      height: calc(var(--card-w) * 1.62);
+      perspective: 1200px;
+      min-width: 0;
+    }
+    .tm-deck__fan {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(calc(var(--p) * -36px));
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    .tm-deck__card {
+      --lift: 0px;
+      position: absolute;
+      top: 6%;
+      left: 50%;
+      width: var(--card-w);
+      margin-left: calc(var(--card-w) / -2);
+      display: grid;
+      background: var(--bg-raised);
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      box-shadow: var(--shadow-lg);
+      color: var(--fg);
+      text-decoration: none;
+      transform-origin: 50% 120%;
+      transform:
+        translateX(calc(var(--o) * var(--spread) * (1 + var(--p) * 0.35)))
+        translateY(calc(var(--a) * var(--card-w) * 0.07 + var(--lift)))
+        rotate(calc(var(--o) * var(--tilt) * (1 - var(--p) * 0.6)));
+      transition:
+        transform 900ms var(--ease-spring) calc(var(--i) * 90ms),
+        opacity 500ms var(--ease-out) calc(var(--i) * 90ms),
+        box-shadow var(--dur-base) var(--ease-out);
+      z-index: calc(10 - var(--a));
+    }
+    .tm-deck.is-ready .tm-deck__card {
+      transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+    }
+    @media (scripting: enabled) {
+      .tm-deck:not(.is-dealt) .tm-deck__card {
+        opacity: 0;
+        transform: translateY(calc(var(--card-w) * 0.3)) rotate(calc(var(--o) * 2deg)) scale(0.92);
+      }
+    }
+    .tm-deck__card:hover,
+    .tm-deck__card:focus-visible { --lift: -18px; z-index: 20; }
+    .tm-deck__media { aspect-ratio: 4 / 5; border-radius: var(--r-xs) var(--r-xs) 0 0; }
+    .tm-deck__media .tm-stamp { width: 74%; }
+    .tm-deck__media .tm-nophoto__note,
+    .tm-deck__media .tm-nophoto__no { display: none; }
+    .tm-deck__cap { display: grid; gap: 2px; padding: var(--sp-2) var(--sp-3) var(--sp-3); min-width: 0; }
+    .tm-deck__name { font-weight: var(--fw-semibold); font-size: clamp(0.8125rem, 0.7rem + 0.4vw, 1rem); color: var(--fg-strong); line-height: 1.2; }
+    .tm-deck__role {
+      font-family: var(--font-mono);
+      font-size: clamp(0.5625rem, 0.5rem + 0.2vw, 0.6875rem);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg-muted);
+      line-height: 1.3;
+    }
+
+    /* ================= ЗАСНОВНИЦЯ + ЖУРНАЛ ================= */
+    .tm-founder {
+      position: relative;
+      --edge-color: var(--navy-900);
+      padding-block: var(--section-y);
+    }
+    .tm-founder__grid { display: grid; gap: var(--sp-7); align-items: start; }
+    .tm-founder__media { position: relative; max-width: 460px; }
+    .tm-founder__photo {
+      aspect-ratio: 4 / 5;
+      border-radius: var(--r-sm);
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 1200ms var(--ease-in-out);
+    }
+    .tm-founder__photo::after { display: none; }
+    .tm-founder__photo img { transform: scale(1.12); transition: transform 1600ms var(--ease-out); }
+    .tm-founder__media.is-shown .tm-founder__photo img { transform: scale(1); }
+    @media (scripting: enabled) {
+      .tm-founder__media:not(.is-shown) .tm-founder__photo { clip-path: inset(100% 0 0 0); }
+    }
+    .tm-founder__corner {
+      position: absolute;
+      top: calc(var(--sp-4) * -1);
+      right: calc(var(--sp-4) * -1);
+      width: 22%;
+      aspect-ratio: 1;
+      background: var(--accent);
+      border-radius: var(--r-xs);
+      z-index: -1;
+    }
+    .tm-founder__body { display: grid; gap: var(--sp-5); min-width: 0; }
+    .tm-founder__name { font-size: var(--fs-h2); }
+    .tm-founder__role { color: var(--fg-muted); }
+    .tm-founder__text { display: grid; gap: var(--sp-4); max-width: var(--measure); }
+    .tm-founder__text p { color: var(--fg); }
+    .tm-founder__text p:first-child { font-size: var(--fs-lead); line-height: 1.5; color: var(--fg-strong); }
+
+    .tm-results {
+      display: grid;
+      gap: var(--sp-4);
+      margin: var(--sp-3) 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .tm-results li {
+      display: grid;
+      grid-template-columns: 5.5rem minmax(0, 1fr);
+      gap: var(--sp-4);
+      align-items: baseline;
+      padding-top: var(--sp-4);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .tm-results__num {
+      font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+      font-weight: var(--fw-black);
+      line-height: 1;
+      letter-spacing: var(--ls-display);
+      color: var(--fg-strong);
+    }
+    .tm-results__num--accent { color: var(--accent); }
+    .tm-results__text { color: var(--fg-muted); }
+
+    /* Журнал проводок */
+    .tm-ledger {
+      margin-top: var(--section-y);
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      background: var(--bg-raised);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+    .tm-ledger__top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--sp-2) var(--sp-5);
+      padding: var(--sp-5);
+      border-bottom: 3px double var(--line-strong);
+    }
+    .tm-ledger__title { font-size: var(--fs-h3); }
+    .tm-ledger__meta { color: var(--fg-muted); align-self: end; }
+    .tm-ledger__cols,
+    .tm-ledger__row {
+      display: grid;
+      grid-template-columns: 2.25rem 4.5rem minmax(0, 1fr);
+      column-gap: var(--sp-4);
+      padding: var(--sp-4) var(--sp-5);
+    }
+    .tm-ledger__cols {
+      display: none;
+      color: var(--fg-muted);
+      border-bottom: var(--hairline) solid var(--line);
+      background: var(--bg-sunken);
+    }
+    .tm-ledger__rows { margin: 0; padding: 0; list-style: none; }
+    .tm-ledger__row { position: relative; border-bottom: var(--hairline) solid var(--line); }
+    .tm-ledger__row:last-child { border-bottom: 0; }
+    .tm-ledger__n { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--accent-text); padding-top: 3px; }
+    .tm-ledger__y { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--fg-strong); font-weight: var(--fw-medium); padding-top: 3px; }
+    .tm-ledger__what { display: grid; gap: 2px; min-width: 0; }
+    .tm-ledger__pos { font-weight: var(--fw-semibold); color: var(--fg-strong); line-height: 1.3; }
+    .tm-ledger__where { color: var(--fg-muted); font-size: var(--fs-small); }
+    .tm-ledger__res { grid-column: 3; margin-top: var(--sp-2); color: var(--fg); font-size: var(--fs-small); }
+    .tm-ledger__ink {
+      clip-path: inset(0 0 0 0);
+      transition: clip-path 900ms var(--ease-out), opacity 400ms var(--ease-out);
+    }
+    @media (scripting: enabled) {
+      .tm-ledger__row:not(.is-written) .tm-ledger__ink { clip-path: inset(0 100% 0 0); opacity: 0.2; }
+    }
+    .tm-ledger__row--now { background: var(--bg-sunken); }
+    .tm-ledger__row--now .tm-ledger__y { color: var(--accent-text); }
+    .tm-ledger__done {
+      position: absolute;
+      right: var(--sp-5);
+      top: 50%;
+      padding: 4px 10px;
+      border: 2px solid var(--accent-text);
+      border-radius: var(--r-xs);
+      color: var(--accent-text);
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.14em;
+      transform: translateY(-50%) rotate(-8deg);
+      transition: transform 420ms var(--ease-spring) 500ms, opacity 200ms var(--ease-out) 500ms;
+    }
+    @media (scripting: enabled) {
+      .tm-ledger__row:not(.is-written) .tm-ledger__done { opacity: 0; transform: translateY(-50%) rotate(-20deg) scale(1.8); }
+    }
+    @media (max-width: 559px) {
+      .tm-ledger__row { grid-template-columns: 3.25rem minmax(0, 1fr); padding-inline: var(--sp-4); }
+      .tm-ledger__n { display: none; }
+      .tm-ledger__res { grid-column: 2; }
+      .tm-ledger__done { position: static; justify-self: start; grid-column: 2; margin-top: var(--sp-3); transform: rotate(-6deg); }
+      .tm-ledger__row:not(.is-written) .tm-ledger__done { transform: rotate(-20deg) scale(1.6); }
+    }
+
+    /* ================= КОМАНДА: картки-перевертні ================= */
+    .tm-team {
+      position: relative;
+      --edge-color: var(--paper-100);
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
+      padding-block: var(--section-y);
+    }
+    .tm-team__grid {
+      display: grid;
+      gap: var(--grid-gap);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .tm-card {
+      perspective: 1600px;
+      scroll-margin-top: calc(var(--header-h) + var(--sp-5));
+      min-width: 0;
+    }
+    .tm-card__inner {
+      display: grid;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 800ms var(--ease-in-out);
+    }
+    .tm-card.is-flipped .tm-card__inner { transform: rotateY(180deg); }
+    .tm-card__face {
+      grid-area: 1 / 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--bg-raised);
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-sm);
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .tm-card__back { transform: rotateY(180deg); padding: var(--sp-5); gap: var(--sp-5); }
+    .tm-card__media { flex: none; aspect-ratio: 4 / 5; min-height: 0; }
+    .tm-card__body { flex: 1 1 auto; min-width: 0; display: grid; align-content: start; gap: var(--sp-3); padding: var(--sp-5); }
+    .tm-card__name { font-size: var(--fs-h3); }
+    .tm-card__role { color: var(--accent-text); }
+    .tm-card__focus { color: var(--fg-muted); }
+    .tm-card__flip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      justify-self: start;
+      margin-top: var(--sp-2);
+      padding: var(--sp-2) 0;
+      color: var(--fg-strong);
+      font-weight: var(--fw-medium);
+      border-bottom: var(--hairline) solid var(--accent);
+    }
+    .tm-card__flip svg { width: 18px; height: 18px; transition: transform var(--dur-base) var(--ease-out); }
+    .tm-card__flip:hover svg { transform: rotate(-180deg); }
+    .tm-card__back-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-4); }
+    .tm-card__back-name { font-size: var(--fs-h3); }
+    .tm-card__sect { display: grid; gap: var(--sp-2); }
+    .tm-card__sect-title { color: var(--fg-muted); }
+    .tm-card__list { display: grid; gap: var(--sp-2); margin: 0; padding: 0; list-style: none; }
+    .tm-card__list li { position: relative; padding-left: var(--sp-5); color: var(--fg); font-size: var(--fs-small); line-height: 1.5; }
+    .tm-card__list li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 0.62em;
+      width: 10px;
+      height: 1.5px;
+      background: var(--accent);
+    }
+    .tm-card__text { color: var(--fg); font-size: var(--fs-small); line-height: 1.55; }
+    .tm-card__quote {
+      margin: 0;
+      padding-left: var(--sp-4);
+      border-left: var(--stroke) solid var(--accent);
+      color: var(--fg-strong);
+      font-size: var(--fs-body);
+      line-height: 1.45;
+    }
+    .tm-card__back .tm-card__flip { margin-top: auto; align-self: flex-start; }
+
+    /* ================= ШЛЯХ ДОКУМЕНТА ================= */
+    .tm-flow {
+      position: relative;
+      --edge-color: var(--navy-900);
+      padding-block: var(--section-y);
+    }
+    .tm-flow__grid { display: grid; gap: var(--sp-7); align-items: start; }
+    .tm-doc {
+      display: none;
+      position: sticky;
+      top: calc(var(--header-h) + var(--sp-6));
+      aspect-ratio: 3 / 4;
+      max-height: calc(100svh - var(--header-h) - var(--sp-8));
+      padding: var(--sp-6);
+      background-color: var(--bg-raised);
+      background-image: repeating-linear-gradient(180deg, transparent 0 31px, var(--line) 31px 32px);
+      background-position: 0 120px;
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-xs);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+    .tm-doc__head { display: flex; justify-content: space-between; gap: var(--sp-4); padding-bottom: var(--sp-4); border-bottom: 3px double var(--line-strong); }
+    .tm-doc__title { font-size: var(--fs-h3); color: var(--fg-strong); font-weight: var(--fw-bold); }
+    .tm-doc__no { color: var(--fg-muted); }
+    .tm-doc__lines { display: grid; gap: var(--sp-3); margin-top: var(--sp-5); }
+    .tm-doc__line { height: 8px; border-radius: var(--r-xs); background: var(--bg-sunken); }
+    .tm-doc__line:nth-child(2) { width: 82%; }
+    .tm-doc__line:nth-child(3) { width: 64%; }
+    .tm-doc__line:nth-child(4) { width: 74%; }
+    .tm-doc__stamp {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      padding: 6px 12px;
+      border: 2.5px solid currentColor;
+      border-radius: var(--r-xs);
+      color: var(--brand-navy);
+      font-family: var(--font-mono);
+      font-size: clamp(0.75rem, 0.6rem + 0.35vw, 0.9375rem);
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.14em;
+      white-space: nowrap;
+      opacity: 0;
+      transform: rotate(var(--r)) scale(1.8);
+      transition: transform 420ms var(--ease-spring), opacity 180ms var(--ease-out);
+    }
+    .tm-doc__stamp:nth-child(odd) { color: var(--orange-700); }
+    .tm-doc__stamp.is-on { opacity: 0.9; transform: rotate(var(--r)) scale(1); }
+    .tm-doc__foot { position: absolute; left: var(--sp-6); right: var(--sp-6); bottom: var(--sp-5); color: var(--fg-muted); }
+
+    .tm-steps { position: relative; padding-left: var(--sp-7); min-width: 0; }
+    .tm-steps__list { display: grid; gap: var(--sp-7); margin: 0; padding: 0; list-style: none; }
+    .tm-steps__rail {
+      position: absolute;
+      left: 11px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: var(--line);
+    }
+    .tm-steps__fill {
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform-origin: top;
+      transform: scaleY(var(--fill, 0));
+      transition: transform var(--dur-slow) var(--ease-out);
+    }
+    .tm-step { position: relative; display: grid; gap: var(--sp-3); }
+    .tm-step::before {
+      content: "";
+      position: absolute;
+      left: calc(var(--sp-7) * -1 + 4px);
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--line-strong);
+      transition: background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-spring);
+    }
+    .tm-step.is-on::before { background: var(--accent); border-color: var(--accent); transform: scale(1.15); }
+    .tm-step__n { color: var(--accent-text); }
+    .tm-step__title { font-size: var(--fs-h3); }
+    .tm-step__text { color: var(--fg-muted); max-width: 46ch; }
+    .tm-step__who { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); margin: var(--sp-1) 0 0; padding: 0; list-style: none; }
+    .tm-who { display: inline-flex; align-items: center; gap: var(--sp-2); font-weight: var(--fw-medium); color: var(--fg-strong); }
+    .tm-who__pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex: none;
+      border: 2px solid var(--bg-raised);
+      box-shadow: 0 0 0 1px var(--line-strong);
+    }
+    .tm-who__pic img { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; }
+    .tm-who__pic--ini {
+      display: grid;
+      place-items: center;
+      background: var(--brand-navy);
+      color: var(--brand-white);
+      font-size: 0.8125rem;
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.02em;
+    }
+    .tm-step__stamp {
+      justify-self: start;
+      margin-top: var(--sp-2);
+      padding: 4px 10px;
+      border: 2px solid var(--accent-text);
+      border-radius: var(--r-xs);
+      color: var(--accent-text);
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-bold);
+      letter-spacing: 0.14em;
+      transform: rotate(-6deg);
+      transition: transform 420ms var(--ease-spring), opacity 180ms var(--ease-out);
+    }
+    @media (scripting: enabled) {
+      .tm-step:not(.is-on) .tm-step__stamp { opacity: 0; transform: rotate(-18deg) scale(1.6); }
+    }
+
+    /* ================= ЗАКЛИК ================= */
+    .tm-cta {
+      position: relative;
+      --edge-color: var(--paper-100);
+      background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
+      padding-block: var(--section-y);
+      overflow: clip;
+    }
+    .tm-cta__stamp {
+      position: absolute;
+      top: 50%;
+      right: -80px;
+      width: min(520px, 90vw);
+      aspect-ratio: 1;
+      color: var(--accent);
+      opacity: 0.14;
+      transform: translateY(-50%) rotate(12deg);
+      pointer-events: none;
+    }
+    .tm-cta__inner { position: relative; display: grid; gap: var(--sp-5); max-width: 760px; }
+    .tm-cta__title { font-size: var(--fs-h2); max-width: 20ch; }
+    .tm-cta__text { color: var(--fg-muted); font-size: var(--fs-lead); max-width: 48ch; }
+    .tm-cta__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); margin-top: var(--sp-3); }
+    .tm-cta__contacts { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-5); margin: var(--sp-3) 0 0; padding: 0; list-style: none; color: var(--fg-muted); }
+    .tm-cta__contacts a { color: var(--fg); }
+
+    /* ===== Планшет 640+ ===== */
+    @media (min-width: 640px) {
+      .tm-team__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tm-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tm-results li { grid-template-columns: 1fr; gap: var(--sp-2); }
+    }
+    @media (min-width: 560px) {
+      .tm-ledger__cols { display: grid; grid-template-columns: 2.25rem 4.5rem minmax(0, 1.1fr) minmax(0, 1fr); }
+      .tm-ledger__row { grid-template-columns: 2.25rem 4.5rem minmax(0, 1.1fr) minmax(0, 1fr); }
+      .tm-ledger__res { grid-column: 4; margin-top: 0; padding-top: 2px; }
+      .tm-ledger__row--now .tm-ledger__res { padding-right: 9rem; }
+    }
+
+    /* ===== Десктоп 1024+ ===== */
+    @media (min-width: 1024px) {
+      .tm-hero { padding-block: calc(var(--header-h) + var(--sp-9)) var(--sp-10); }
+      .tm-hero__inner { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--grid-gap); }
+      .tm-hero__title { font-size: clamp(3rem, 1rem + 3.4vw, 4.75rem); }
+      .tm-deck { --card-w: clamp(150px, 13vw, 210px); --spread: calc(var(--card-w) * 0.5); --tilt: 7deg; }
+      .tm-founder__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: calc(var(--grid-gap) * 2); }
+      .tm-founder__media { position: sticky; top: calc(var(--header-h) + var(--sp-6)); }
+      .tm-founder__photo { max-height: calc(100svh - var(--header-h) - var(--sp-9)); width: 100%; }
+
+      .tm-card__face--front { flex-direction: row; }
+      .tm-card__media { flex: 0 0 44%; aspect-ratio: auto; min-height: 100%; }
+      .tm-card__body { flex: 1 1 0; padding: var(--sp-6); }
+      .tm-card__back { padding: var(--sp-6); }
+
+      .tm-flow__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: calc(var(--grid-gap) * 2); }
+      .tm-doc { display: block; }
+      .tm-step__stamp { display: none; }
+      .tm-steps { padding-block: var(--sp-8); }
+      .tm-steps__list { gap: var(--sp-9); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .tm-hero__guilloche { animation: none; }
+      .tm-deck__fan, .tm-deck__card, .tm-reveal, .tm-founder__photo, .tm-founder__photo img,
+      .tm-ledger__ink, .tm-ledger__done, .tm-stamp, .tm-card__inner, .tm-doc__stamp, .tm-step__stamp, .tm-steps__fill,
+      .tm-photo img, .tm-photo::after { transition: none !important; }
+      .tm-card__inner { transform: none !important; }
+      .tm-card .tm-card__face { transition: opacity var(--dur-base) linear; }
+      .tm-card__back { transform: none; opacity: 0; }
+      .tm-card.is-flipped .tm-card__front { opacity: 0; }
+      .tm-card.is-flipped .tm-card__back { opacity: 1; }
+    }
+
+    /* ===== ДЕМО: у сайт не потрапляє ===== */
+    .tm-demo-note { padding: var(--sp-4); text-align: center; font-size: var(--fs-small); }
+  </style>
+</head>
+<body>
+<main id="main">
+
+  <!-- ================= БЛОК 09 КОМАНДА ================= -->
+  <section class="tm-hero" id="top" data-theme="dark" data-tm-hero aria-labelledby="tm-title">
+    <div class="tm-hero__guilloche" aria-hidden="true"></div>
+    <div class="container tm-hero__inner">
+      <div class="tm-hero__text">
+        <p class="t-label tm-label tm-reveal">Команда Happy Finance</p>
+        <h1 class="tm-hero__title tm-reveal" id="tm-title" style="--i:1">Люди, які тримають ваші цифри <em>в&nbsp;порядку</em></h1>
+        <p class="tm-lead tm-reveal" style="--i:2">За вашим обліком стоїть не одна людина, а команда. У кожної своя ділянка: первинні документи, закупівлі, зарплата, звітність і фінанси.</p>
+        <ul class="tm-hero__names t-small tm-reveal" style="--i:3" role="list">
+          <li>Марія</li><li>Євгенія</li><li>Карина</li><li>Юлія</li><li>Надія</li>
+        </ul>
+        <div class="tm-hero__actions tm-reveal" style="--i:4">
+          <a class="btn btn--primary" href="#people">
+            Знайомтеся
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          </a>
+          <a class="btn btn--ghost" href="#flow">Хто чим займається</a>
+        </div>
+      </div>
+
+      <div class="tm-deck" data-tm-deck>
+        <div class="tm-deck__fan">
+          <a class="tm-deck__card tm-alive-hover" href="#person-evgenia" style="--i:1;--o:-2;--a:2">
+            <span class="tm-photo tm-deck__media"><img src="../assets/images/team-evgenia-480.webp" width="480" height="600" alt="" decoding="async"></span>
+            <span class="tm-deck__cap"><span class="tm-deck__name">Євгенія</span><span class="tm-deck__role">Головний бухгалтер</span></span>
+          </a>
+          <a class="tm-deck__card" href="#person-yulia" style="--i:3;--o:-1;--a:1">
+            <span class="tm-nophoto tm-deck__media" data-tm-stamp>
+              <svg class="tm-stamp" viewBox="0 0 200 200" aria-hidden="true">
+                <defs><path id="tm-ring-d1" d="M100 100 m-73 0 a73 73 0 1 1 146 0 a73 73 0 1 1 -146 0"/></defs>
+                <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
+                <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
+                <circle cx="100" cy="100" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <text font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="currentColor"><textPath href="#tm-ring-d1" textLength="452">HAPPY FINANCE · КОМАНДА · HAPPY FINANCE · КОМАНДА ·</textPath></text>
+                <text x="100" y="117" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="46" fill="currentColor">ЮА</text>
+              </svg>
+            </span>
+            <span class="tm-deck__cap"><span class="tm-deck__name">Юлія</span><span class="tm-deck__role">Зарплата</span></span>
+          </a>
+          <a class="tm-deck__card tm-alive-hover" href="#founder" style="--i:0;--o:0;--a:0">
+            <span class="tm-photo tm-deck__media"><img src="../assets/images/team-maria-480.webp" width="480" height="600" alt="" decoding="async"></span>
+            <span class="tm-deck__cap"><span class="tm-deck__name">Марія</span><span class="tm-deck__role">Засновниця</span></span>
+          </a>
+          <a class="tm-deck__card tm-alive-hover" href="#person-karyna" style="--i:2;--o:1;--a:1">
+            <span class="tm-photo tm-deck__media"><img src="../assets/images/team-karyna-480.webp" width="480" height="600" alt="" decoding="async"></span>
+            <span class="tm-deck__cap"><span class="tm-deck__name">Карина</span><span class="tm-deck__role">Первинка і ПРРО</span></span>
+          </a>
+          <a class="tm-deck__card" href="#person-nadiia" style="--i:4;--o:2;--a:2">
+            <span class="tm-nophoto tm-deck__media" data-tm-stamp>
+              <svg class="tm-stamp tm-stamp--orange" viewBox="0 0 200 200" aria-hidden="true">
+                <defs><path id="tm-ring-d2" d="M100 100 m-73 0 a73 73 0 1 1 146 0 a73 73 0 1 1 -146 0"/></defs>
+                <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
+                <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
+                <circle cx="100" cy="100" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <text font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="currentColor"><textPath href="#tm-ring-d2" textLength="452">HAPPY FINANCE · КОМАНДА · HAPPY FINANCE · КОМАНДА ·</textPath></text>
+                <text x="100" y="117" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="46" fill="currentColor">НГ</text>
+              </svg>
+            </span>
+            <span class="tm-deck__cap"><span class="tm-deck__name">Надія</span><span class="tm-deck__role">Закупівлі</span></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tm-founder" id="founder" data-theme="light" data-edge aria-labelledby="tm-founder-name">
+    <div class="container">
+      <div class="tm-founder__grid">
+        <div class="tm-founder__media tm-reveal" data-tm-founder>
+          <span class="tm-founder__corner" aria-hidden="true"></span>
+          <div class="tm-photo tm-founder__photo">
+            <img src="../assets/images/maria-840.webp"
+                 srcset="../assets/images/maria-840.webp 840w, ../assets/images/maria-1260.webp 1260w"
+                 sizes="(min-width: 1024px) 34vw, 92vw"
+                 width="840" height="1050" alt="Марія Панченко" loading="lazy" decoding="async">
+          </div>
+        </div>
+
+        <div class="tm-founder__body">
+          <p class="t-label tm-label tm-reveal">Засновниця</p>
+          <div class="tm-reveal" style="--i:1">
+            <h2 class="tm-founder__name" id="tm-founder-name">Марія Панченко</h2>
+            <p class="t-label tm-founder__role">Фінансова експертка · кризова менеджерка</p>
+          </div>
+          <div class="tm-founder__text tm-reveal" style="--i:2">
+            <p>«Для мене фінанси — це не просто звіти, податки й цифри. Це інструмент, який допомагає власнику розуміти реальний стан підприємства й ухвалювати обґрунтовані рішення.»</p>
+            <p>Мій шлях у бізнесі почався з бухгалтерського обліку й привів до фінансового та операційного управління, керівництва підприємствами й антикризового менеджменту. Я працювала з ресторанами, виробництвом, дистрибуцією, роздрібною торгівлею й консалтингом.</p>
+            <p>Моя мета — допомагати власникам бачити за цифрами можливості й перетворювати хаос на зрозумілу систему.</p>
+          </div>
+          <ul class="tm-results tm-reveal" style="--i:3" role="list">
+            <li><span class="tm-results__num tm-results__num--accent">×4</span><span class="tm-results__text">збільшення товарообігу підприємства</span></li>
+            <li><span class="tm-results__num">300</span><span class="tm-results__text">працівників у підпорядкуванні на посаді в.&nbsp;о. директора</span></li>
+            <li><span class="tm-results__num tm-results__num--accent">+</span><span class="tm-results__text">вивела бізнес зі збитків у прибуток</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tm-ledger" data-tm-ledger>
+        <div class="tm-ledger__top">
+          <h3 class="tm-ledger__title">Журнал проводок</h3>
+          <p class="t-label tm-ledger__meta">Марія Панченко · 2008 — сьогодні</p>
+        </div>
+        <div class="tm-ledger__cols t-label" aria-hidden="true">
+          <span>№</span><span>Рік</span><span>Посада · де</span><span>Що зроблено</span>
+        </div>
+        <ol class="tm-ledger__rows" role="list">
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">01</span><span class="tm-ledger__y tm-ledger__ink">2008</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Обліковець</span><span class="tm-ledger__where">Корпорація Спецторг, Київ</span></span><span class="tm-ledger__res tm-ledger__ink">Первинні документи, податкові накладні, звірки з покупцями</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">02</span><span class="tm-ledger__y tm-ledger__ink">2009</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Бухгалтер, головний касир</span><span class="tm-ledger__where">Спецторг, управлінська компанія</span></span><span class="tm-ledger__res tm-ledger__ink">Головна каса, контроль касової дисципліни філій, звіти про рух коштів</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">03</span><span class="tm-ledger__y tm-ledger__ink">2010</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Головний бухгалтер магазину</span><span class="tm-ledger__where">Спецторг</span></span><span class="tm-ledger__res tm-ledger__ink">Облік і звітність магазину, бюджет, підготовка до перевірок</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">04</span><span class="tm-ledger__y tm-ledger__ink">2011</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Фахівець з обліку</span><span class="tm-ledger__where">Оптова торгівля електронікою</span></span><span class="tm-ledger__res tm-ledger__ink">Імпортні операції, рух товарів по складах</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">05</span><span class="tm-ledger__y tm-ledger__ink">2011</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Бухгалтер</span><span class="tm-ledger__where">Фоззі Фарм, мережа аптек</span></span><span class="tm-ledger__res tm-ledger__ink">Контроль кас і РРО в аптеках, облік зарплати, навчання персоналу</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">06</span><span class="tm-ledger__y tm-ledger__ink">2012</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Директор</span><span class="tm-ledger__where">Ресторан і кондитерський цех</span></span><span class="tm-ledger__res tm-ledger__ink">Облік у 1С з нуля, відкриття цеху, собівартість, закупівлі</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">07</span><span class="tm-ledger__y tm-ledger__ink">2017</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Фінансовий директор</span><span class="tm-ledger__where">Дистрибуція, імпорт та експорт</span></span><span class="tm-ledger__res tm-ledger__ink">Управлінський облік після реорганізації, річний бюджет, cash-flow</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">08</span><span class="tm-ledger__y tm-ledger__ink">2018</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">В. о. директора</span><span class="tm-ledger__where">Та сама компанія</span></span><span class="tm-ledger__res tm-ledger__ink">Управління підприємством: 300 працівників, три філії, логістика</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">09</span><span class="tm-ledger__y tm-ledger__ink">2019</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Операційний директор</span><span class="tm-ledger__where">Виробництво жіночого одягу</span></span><span class="tm-ledger__res tm-ledger__ink">Управлінський і складський облік у 1С, посадові інструкції, навчання</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">10</span><span class="tm-ledger__y tm-ledger__ink">2019</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Власна практика</span><span class="tm-ledger__where">Консалтинг і бухгалтерія</span></span><span class="tm-ledger__res tm-ledger__ink">Облік ФОП і ТОВ, з ПДВ і без, постановка управлінського обліку</span></li>
+          <li class="tm-ledger__row"><span class="tm-ledger__n tm-ledger__ink">11</span><span class="tm-ledger__y tm-ledger__ink">2021</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Кризовий менеджер</span><span class="tm-ledger__where">Виробництво текстилю для готелів і ресторанів</span></span><span class="tm-ledger__res tm-ledger__ink">Товарообіг ×4, нова колекція, вихід зі збитків у прибуток</span></li>
+          <li class="tm-ledger__row tm-ledger__row--now"><span class="tm-ledger__n tm-ledger__ink">12</span><span class="tm-ledger__y tm-ledger__ink">Зараз</span><span class="tm-ledger__what tm-ledger__ink"><span class="tm-ledger__pos">Засновниця</span><span class="tm-ledger__where">Happy Finance</span></span><span class="tm-ledger__res tm-ledger__ink">Бухгалтерський супровід ФОП і ТОВ разом із командою</span><span class="tm-ledger__done" aria-hidden="true">ПРОВЕДЕНО</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="tm-team" id="people" data-theme="dark" data-edge aria-labelledby="tm-team-title">
+    <div class="container">
+      <div class="tm-head">
+        <p class="t-label tm-label tm-reveal">Команда</p>
+        <h2 class="tm-h2 tm-reveal" id="tm-team-title" style="--i:1">Хто веде ваш облік щодня</h2>
+        <p class="tm-lead tm-reveal" style="--i:2">Натисніть «Більше», щоб перевернути картку: там досвід і те, чим кожна живе поза роботою.</p>
+      </div>
+
+      <ul class="tm-team__grid" role="list">
+        <!-- Євгенія -->
+        <li class="tm-card tm-reveal tm-alive-hover" id="person-evgenia" data-tm-card>
+          <div class="tm-card__inner">
+            <article class="tm-card__face tm-card__face--front tm-card__front" aria-labelledby="tm-n-evgenia">
+              <div class="tm-photo tm-card__media"><img src="../assets/images/team-evgenia-960.webp" srcset="../assets/images/team-evgenia-480.webp 480w, ../assets/images/team-evgenia-960.webp 960w" sizes="(min-width: 1024px) 270px, (min-width: 640px) 46vw, 92vw" width="960" height="1200" alt="Євгенія Мазепа" loading="lazy" decoding="async"></div>
+              <div class="tm-card__body">
+                <p class="t-label tm-card__role">Головний бухгалтер</p>
+                <h3 class="tm-card__name" id="tm-n-evgenia">Євгенія Мазепа</h3>
+                <p class="tm-card__focus">Облік і звітність: податкова, статистична, звіти до фондів. Вела одночасно ТОВ на загальній системі, ТОВ на єдиному податку і ФОП.</p>
+                <button class="tm-card__flip" type="button" aria-expanded="false" data-tm-flip>Більше про Євгенію <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+              </div>
+            </article>
+            <div class="tm-card__face tm-card__back" inert aria-hidden="true">
+              <div class="tm-card__back-head"><p class="tm-card__back-name">Євгенія</p><p class="t-label tm-card__role">Головний бухгалтер</p></div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Досвід</p>
+                <ul class="tm-card__list" role="list">
+                  <li>Автобізнес: первинна бухгалтерія, допомога з розмитненням вантажів</li>
+                  <li>Комісійна торгівля: каса, податкова і статистична звітність, звіти до фондів</li>
+                  <li>Будівельна компанія: повний облік, списання матеріалів за актами виконаних робіт, звірки з податковою</li>
+                  <li>Фінансовий директор у торгівлі підлоговим покриттям: облік від А до Я і управлінський облік</li>
+                </ul>
+              </div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Поза роботою</p>
+                <p class="tm-card__text">Настільні ігри вже 17 років (і велика колекція), інтелектуальні ігри, подорожі, кулінарія. Удома кіт і собака.</p>
+              </div>
+              <blockquote class="tm-card__quote">Не боюся показати, що чогось не знаю, і навчитися цьому.</blockquote>
+              <button class="tm-card__flip" type="button" data-tm-flip>Назад <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+            </div>
+          </div>
+        </li>
+
+        <!-- Карина -->
+        <li class="tm-card tm-reveal tm-alive-hover" id="person-karyna" style="--i:1" data-tm-card>
+          <div class="tm-card__inner">
+            <article class="tm-card__face tm-card__face--front tm-card__front" aria-labelledby="tm-n-karyna">
+              <div class="tm-photo tm-card__media"><img src="../assets/images/team-karyna-960.webp" srcset="../assets/images/team-karyna-480.webp 480w, ../assets/images/team-karyna-960.webp 960w" sizes="(min-width: 1024px) 270px, (min-width: 640px) 46vw, 92vw" width="960" height="1200" alt="Карина Омельченко" loading="lazy" decoding="async"></div>
+              <div class="tm-card__body">
+                <p class="t-label tm-card__role">Бухгалтер з первинних документів і ПРРО</p>
+                <h3 class="tm-card__name" id="tm-n-karyna">Карина Омельченко</h3>
+                <p class="tm-card__focus">Первинні документи і ПРРО: щоб кожна операція мала правильний документ ще до звітності.</p>
+                <button class="tm-card__flip" type="button" aria-expanded="false" data-tm-flip>Більше про Карину <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+              </div>
+            </article>
+            <div class="tm-card__face tm-card__back" inert aria-hidden="true">
+              <div class="tm-card__back-head"><p class="tm-card__back-name">Карина</p><p class="t-label tm-card__role">Первинка і ПРРО</p></div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Досвід</p>
+                <ul class="tm-card__list" role="list">
+                  <li>Роздрібна торгівля: продавець, потім адміністратор магазину</li>
+                  <li>Бухгалтер в агросервісній компанії</li>
+                  <li>Звідти одразу в команду Happy Finance</li>
+                </ul>
+              </div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Поза роботою</p>
+                <p class="tm-card__text">Читання і довгі прогулянки.</p>
+              </div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Цінує</p>
+                <p class="tm-card__text">Хороший колектив, баланс між роботою і сімʼєю, професійний розвиток. А в житті — сімʼю, комфорт, спокій і можливість робити те, що подобається.</p>
+              </div>
+              <button class="tm-card__flip" type="button" data-tm-flip>Назад <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+            </div>
+          </div>
+        </li>
+
+        <!-- Юлія -->
+        <li class="tm-card tm-reveal" id="person-yulia" data-tm-card>
+          <div class="tm-card__inner">
+            <article class="tm-card__face tm-card__face--front tm-card__front" aria-labelledby="tm-n-yulia">
+              <div class="tm-nophoto tm-card__media" data-tm-stamp>
+                <span class="tm-nophoto__no" aria-hidden="true">Особова картка № 04</span>
+                <svg class="tm-stamp" viewBox="0 0 200 200" aria-hidden="true">
+                  <defs><path id="tm-ring-c1" d="M100 100 m-73 0 a73 73 0 1 1 146 0 a73 73 0 1 1 -146 0"/></defs>
+                  <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
+                  <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
+                  <circle cx="100" cy="100" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <text font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="currentColor"><textPath href="#tm-ring-c1" textLength="452">HAPPY FINANCE · КОМАНДА · HAPPY FINANCE · КОМАНДА ·</textPath></text>
+                  <text x="100" y="117" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="46" fill="currentColor">ЮА</text>
+                </svg>
+                <span class="tm-nophoto__note">Фото — у наступному звіті</span>
+              </div>
+              <div class="tm-card__body">
+                <p class="t-label tm-card__role">Бухгалтер із заробітної плати</p>
+                <h3 class="tm-card__name" id="tm-n-yulia">Юлія Аверʼянова</h3>
+                <p class="tm-card__focus">Зарплата і все, що з нею повʼязано. У бухгалтерії з 2003 року: від касира до головного бухгалтера.</p>
+                <button class="tm-card__flip" type="button" aria-expanded="false" data-tm-flip>Більше про Юлію <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+              </div>
+            </article>
+            <div class="tm-card__face tm-card__back" inert aria-hidden="true">
+              <div class="tm-card__back-head"><p class="tm-card__back-name">Юлія</p><p class="t-label tm-card__role">Зарплата</p></div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Досвід</p>
+                <ul class="tm-card__list" role="list">
+                  <li>Касир, а через рік головний бухгалтер підприємства</li>
+                  <li>Бухгалтер і бухгалтер-операціоніст у кількох компаніях</li>
+                  <li>16 років бухгалтером в одній компанії</li>
+                  <li>Диплом спеціаліста з бухгалтерського обліку</li>
+                </ul>
+              </div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Поза роботою</p>
+                <p class="tm-card__text">Спорт, коли є час.</p>
+              </div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Цінує</p>
+                <p class="tm-card__text">Фізичне й ментальне благополуччя, постійне навчання і самовдосконалення.</p>
+              </div>
+              <button class="tm-card__flip" type="button" data-tm-flip>Назад <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+            </div>
+          </div>
+        </li>
+
+        <!-- Надія -->
+        <li class="tm-card tm-reveal" id="person-nadiia" style="--i:1" data-tm-card>
+          <div class="tm-card__inner">
+            <article class="tm-card__face tm-card__face--front tm-card__front" aria-labelledby="tm-n-nadiia">
+              <div class="tm-nophoto tm-card__media" data-tm-stamp>
+                <span class="tm-nophoto__no" aria-hidden="true">Особова картка № 05</span>
+                <svg class="tm-stamp tm-stamp--orange" viewBox="0 0 200 200" aria-hidden="true">
+                  <defs><path id="tm-ring-c2" d="M100 100 m-73 0 a73 73 0 1 1 146 0 a73 73 0 1 1 -146 0"/></defs>
+                  <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
+                  <circle cx="100" cy="100" r="87" fill="none" stroke="currentColor" stroke-width="1"/>
+                  <circle cx="100" cy="100" r="57" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  <text font-family="IBM Plex Mono, monospace" font-size="12" letter-spacing="2" fill="currentColor"><textPath href="#tm-ring-c2" textLength="452">HAPPY FINANCE · КОМАНДА · HAPPY FINANCE · КОМАНДА ·</textPath></text>
+                  <text x="100" y="117" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="46" fill="currentColor">НГ</text>
+                </svg>
+                <span class="tm-nophoto__note">Фото — у наступному звіті</span>
+              </div>
+              <div class="tm-card__body">
+                <p class="t-label tm-card__role">Менеджер із закупівель, бухгалтер з первинних документів</p>
+                <h3 class="tm-card__name" id="tm-n-nadiia">Надія Гончаренко</h3>
+                <p class="tm-card__focus">Закупівлі та первинка: постачальники, звірки, документообіг. Колись керувала відділом обліку первинних документів.</p>
+                <button class="tm-card__flip" type="button" aria-expanded="false" data-tm-flip>Більше про Надію <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+              </div>
+            </article>
+            <div class="tm-card__face tm-card__back" inert aria-hidden="true">
+              <div class="tm-card__back-head"><p class="tm-card__back-name">Надія</p><p class="t-label tm-card__role">Закупівлі і первинка</p></div>
+              <div class="tm-card__sect">
+                <p class="t-label tm-card__sect-title">Досвід</p>
+                <ul class="tm-card__list" role="list">
+                  <li>Оптова компанія: закупівлі, робота з постачальниками й дебіторською заборгованістю, інвентаризації</li>
+                  <li>Керівник відділу обліку первинної документації: 13 людей у трьох філіях</li>
+                  <li>Аудиторська практика: бухгалтерія кількох підприємств, підготовка до податкових перевірок</li>
+                  <li>Менеджер категорії в агропромисловому холдингу: асортимент, ціни, постачальники, звітність</li>
+                </ul>
+              </div>
+              <button class="tm-card__flip" type="button" data-tm-flip>Назад <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg></button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="tm-flow" id="flow" data-theme="light" data-edge aria-labelledby="tm-flow-title">
+    <div class="container">
+      <div class="tm-head">
+        <p class="t-label tm-label tm-reveal">Як ділимо роботу</p>
+        <h2 class="tm-h2 tm-reveal" id="tm-flow-title" style="--i:1">Шлях вашого документа через команду</h2>
+        <p class="tm-lead tm-reveal" style="--i:2">Кожен документ проходить кілька рук, і на кожному кроці є людина, яка за нього відповідає.</p>
+      </div>
+
+      <div class="tm-flow__grid">
+        <div class="tm-doc" aria-hidden="true" data-tm-doc>
+          <div class="tm-doc__head"><span class="tm-doc__title">Ваш документ</span><span class="t-label tm-doc__no">№ 0001</span></div>
+          <div class="tm-doc__lines"><span class="tm-doc__line"></span><span class="tm-doc__line"></span><span class="tm-doc__line"></span><span class="tm-doc__line"></span></div>
+          <div>
+            <span class="tm-doc__stamp" style="--x:10%;--y:36%;--r:-8deg">ПРИЙНЯТО</span>
+            <span class="tm-doc__stamp" style="--x:42%;--y:46%;--r:6deg">ЗВІРЕНО</span>
+            <span class="tm-doc__stamp" style="--x:8%;--y:57%;--r:4deg">НАРАХОВАНО</span>
+            <span class="tm-doc__stamp" style="--x:44%;--y:66%;--r:-10deg">ПОДАНО</span>
+            <span class="tm-doc__stamp" style="--x:14%;--y:77%;--r:-3deg">ПРОАНАЛІЗОВАНО</span>
+          </div>
+          <p class="t-label tm-doc__foot">Happy Finance · бухгалтерський супровід</p>
+        </div>
+
+        <div class="tm-steps" data-tm-steps>
+          <span class="tm-steps__rail" aria-hidden="true"><span class="tm-steps__fill"></span></span>
+          <ol class="tm-steps__list" role="list">
+          <li class="tm-step">
+            <p class="t-label tm-step__n">01 · Первинні документи і ПРРО</p>
+            <h3 class="tm-step__title">Документ потрапляє в облік</h3>
+            <p class="tm-step__text">Збираємо й перевіряємо рахунки, накладні, акти та касові операції, щоб нічого не загубилося.</p>
+            <ul class="tm-step__who" role="list">
+              <li class="tm-who"><span class="tm-who__pic"><img src="../assets/images/team-karyna-480.webp" width="480" height="600" alt="" loading="lazy"></span>Карина</li>
+              <li class="tm-who"><span class="tm-who__pic tm-who__pic--ini" aria-hidden="true">НГ</span>Надія</li>
+            </ul>
+            <span class="tm-step__stamp" aria-hidden="true">ПРИЙНЯТО</span>
+          </li>
+          <li class="tm-step">
+            <p class="t-label tm-step__n">02 · Закупівлі та звірки</p>
+            <h3 class="tm-step__title">Звіряємо з контрагентами</h3>
+            <p class="tm-step__text">Розрахунки з постачальниками й покупцями, акти звірки, документообіг.</p>
+            <ul class="tm-step__who" role="list">
+              <li class="tm-who"><span class="tm-who__pic tm-who__pic--ini" aria-hidden="true">НГ</span>Надія</li>
+            </ul>
+            <span class="tm-step__stamp" aria-hidden="true">ЗВІРЕНО</span>
+          </li>
+          <li class="tm-step">
+            <p class="t-label tm-step__n">03 · Зарплата</p>
+            <h3 class="tm-step__title">Нараховуємо зарплату</h3>
+            <p class="tm-step__text">Нарахування зарплати працівникам і звітність, повʼязана з нею.</p>
+            <ul class="tm-step__who" role="list">
+              <li class="tm-who"><span class="tm-who__pic tm-who__pic--ini" aria-hidden="true">ЮА</span>Юлія</li>
+            </ul>
+            <span class="tm-step__stamp" aria-hidden="true">НАРАХОВАНО</span>
+          </li>
+          <li class="tm-step">
+            <p class="t-label tm-step__n">04 · Облік і звітність</p>
+            <h3 class="tm-step__title">Готуємо й подаємо звітність</h3>
+            <p class="tm-step__text">Ведемо облік, готуємо податкову, статистичну звітність і звіти до фондів.</p>
+            <ul class="tm-step__who" role="list">
+              <li class="tm-who"><span class="tm-who__pic"><img src="../assets/images/team-evgenia-480.webp" width="480" height="600" alt="" loading="lazy"></span>Євгенія</li>
+            </ul>
+            <span class="tm-step__stamp" aria-hidden="true">ПОДАНО</span>
+          </li>
+          <li class="tm-step">
+            <p class="t-label tm-step__n">05 · Фінанси</p>
+            <h3 class="tm-step__title">Перетворюємо цифри на рішення</h3>
+            <p class="tm-step__text">Управлінський облік і розбір цифр із власником: що відбувається з бізнесом і що з цим робити.</p>
+            <ul class="tm-step__who" role="list">
+              <li class="tm-who"><span class="tm-who__pic"><img src="../assets/images/team-maria-480.webp" width="480" height="600" alt="" loading="lazy"></span>Марія</li>
+            </ul>
+            <span class="tm-step__stamp" aria-hidden="true">ПРОАНАЛІЗОВАНО</span>
+          </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="tm-cta" id="write" data-theme="dark" data-edge aria-labelledby="tm-cta-title">
+    <svg class="tm-cta__stamp" viewBox="0 0 400 400" aria-hidden="true">
+      <defs><path id="tm-cta-ring" d="M200 200 m-150 0 a150 150 0 1 1 300 0 a150 150 0 1 1 -300 0"/></defs>
+      <circle cx="200" cy="200" r="188" fill="none" stroke="currentColor" stroke-width="3"/>
+      <circle cx="200" cy="200" r="176" fill="none" stroke="currentColor" stroke-width="1"/>
+      <circle cx="200" cy="200" r="118" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <text font-family="IBM Plex Mono, monospace" font-size="21" letter-spacing="5" fill="currentColor"><textPath href="#tm-cta-ring">HAPPY FINANCE · БУХГАЛТЕРСЬКИЙ СУПРОВІД · ФОП · ТОВ ·</textPath></text>
+      <text x="200" y="214" text-anchor="middle" font-family="Onest, sans-serif" font-weight="800" font-size="44" letter-spacing="2" fill="currentColor">КОМАНДА</text>
+    </svg>
+    <div class="container">
+      <div class="tm-cta__inner">
+        <p class="t-label tm-label tm-reveal">Познайомимося?</p>
+        <h2 class="tm-cta__title tm-reveal" id="tm-cta-title" style="--i:1">Хочете, щоб вашим обліком займалася ця команда?</h2>
+        <p class="tm-cta__text tm-reveal" style="--i:2">Напишіть Марії: розкажете про свій бізнес, і ми підкажемо, з чого почати. Вартість після консультації.</p>
+        <div class="tm-cta__actions tm-reveal" style="--i:3">
+          <a class="btn btn--primary" href="https://t.me/" target="_blank" rel="noopener" data-tm-link="telegram">
+            Написати в Telegram
+            <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--outline" href="../index.html#match">Підібрати послугу</a>
+        </div>
+        <ul class="tm-cta__contacts t-small tm-reveal" style="--i:4" role="list">
+          <li>Телефон: <span data-contact="phone"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+          <li>Instagram: <span data-contact="instagram"><span class="placeholder">[ПЛЕЙСХОЛДЕР]</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+    function initTeam() {
+      var hero = document.querySelector("[data-tm-hero]");
+      if (!hero) return;
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var hasIO = "IntersectionObserver" in window;
+      var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+
+      /* ---------- Контакти (дані в js/config.js) ---------- */
+      var cta = document.querySelector("#write");
+      if (cta && window.HFContacts) {
+        window.HFContacts.fill(cta);
+        $$("[data-tm-link]", cta).forEach(function (a) {
+          var key = a.getAttribute("data-tm-link");
+          var v = window.HFContacts.data[key];
+          if (v) a.href = window.HFContacts.href(key, v); else a.hidden = true;
+        });
+      }
+
+      /* ---------- Поява блоків ---------- */
+      var reveals = $$(".tm-reveal");
+      var stamps = $$("[data-tm-stamp]");
+      if (reduce || !hasIO) {
+        reveals.forEach(function (el) { el.classList.add("is-shown"); });
+        stamps.forEach(function (el) { el.classList.add("is-stamped"); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add("is-shown"); io.unobserve(e.target); }
+          });
+        }, { rootMargin: "0px 0px -10% 0px" });
+        reveals.forEach(function (el) { io.observe(el); });
+
+        // печатка «ставиться», коли картка без фото зʼявляється на екрані
+        var sio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            var el = e.target;
+            setTimeout(function () { el.classList.add("is-stamped"); }, el.closest("[data-tm-deck]") ? 1100 : 350);
+            sio.unobserve(el);
+          });
+        }, { threshold: 0.5 });
+        stamps.forEach(function (el) { sio.observe(el); });
+      }
+
+      /* ---------- Колода: роздача, нахил за мишкою, розкриття при скролі ---------- */
+      var deck = hero.querySelector("[data-tm-deck]");
+      if (deck) {
+        if (reduce) {
+          deck.classList.add("is-dealt", "is-ready");
+        } else {
+          requestAnimationFrame(function () {
+            setTimeout(function () { deck.classList.add("is-dealt"); }, 250);
+            setTimeout(function () { deck.classList.add("is-ready"); }, 1700);
+          });
+          var fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+          hero.addEventListener("pointermove", function (e) {
+            if (!fine.matches) return;
+            var r = hero.getBoundingClientRect();
+            var x = (e.clientX - r.left) / r.width - 0.5;
+            var y = (e.clientY - r.top) / r.height - 0.5;
+            deck.style.setProperty("--ry", (x * 10).toFixed(2) + "deg");
+            deck.style.setProperty("--rx", (y * -8).toFixed(2) + "deg");
+          });
+          hero.addEventListener("pointerleave", function () {
+            deck.style.setProperty("--ry", "0deg");
+            deck.style.setProperty("--rx", "0deg");
+          });
+          var ticking = false;
+          var onScroll = function () {
+            ticking = false;
+            var h = hero.offsetHeight;
+            var p = Math.min(1, Math.max(0, window.scrollY / (h * 0.8)));
+            deck.style.setProperty("--p", p.toFixed(3));
+          };
+          window.addEventListener("scroll", function () {
+            if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+          }, { passive: true });
+        }
+      }
+
+      /* ---------- Журнал: рядки «записуються» по черзі ---------- */
+      var rows = $$(".tm-ledger__row");
+      if (reduce || !hasIO) {
+        rows.forEach(function (r) { r.classList.add("is-written"); });
+      } else {
+        var queue = [];
+        var busy = false;
+        var pump = function () {
+          if (!queue.length) { busy = false; return; }
+          busy = true;
+          queue.shift().classList.add("is-written");
+          setTimeout(pump, 140);
+        };
+        var lio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            queue.push(e.target);
+            lio.unobserve(e.target);
+          });
+          queue.sort(function (a, b) { return rows.indexOf(a) - rows.indexOf(b); });
+          if (!busy) pump();
+        }, { rootMargin: "0px 0px -12% 0px" });
+        rows.forEach(function (r) { lio.observe(r); });
+      }
+
+      /* ---------- Картки: перевертання ---------- */
+      $$("[data-tm-card]").forEach(function (card) {
+        var front = card.querySelector(".tm-card__front");
+        var back = card.querySelector(".tm-card__back");
+        var openBtn = front.querySelector("[data-tm-flip]");
+        var backBtn = back.querySelector("[data-tm-flip]");
+        var setFace = function (flipped) {
+          card.classList.toggle("is-flipped", flipped);
+          openBtn.setAttribute("aria-expanded", String(flipped));
+          [front, back].forEach(function (face, i) {
+            var hide = flipped ? i === 0 : i === 1;
+            face.inert = hide;
+            if (hide) face.setAttribute("aria-hidden", "true"); else face.removeAttribute("aria-hidden");
+          });
+          setTimeout(function () { (flipped ? backBtn : openBtn).focus({ preventScroll: true }); }, reduce ? 0 : 420);
+        };
+        openBtn.addEventListener("click", function () { setFace(true); });
+        backBtn.addEventListener("click", function () { setFace(false); });
+        card.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && card.classList.contains("is-flipped")) setFace(false);
+        });
+      });
+
+      /* ---------- Фото оживають у кольорі, коли картка в центрі екрана (на телефоні) ---------- */
+      var alive = $$(".tm-card");
+      var touch = window.matchMedia("(hover: none)");
+      if (hasIO && touch.matches) {
+        var aio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { e.target.classList.toggle("is-alive", e.isIntersecting); });
+        }, { rootMargin: "-30% 0px -30% 0px" });
+        alive.forEach(function (el) { aio.observe(el); });
+      }
+
+      /* ---------- Шлях документа: печатки за кроками ---------- */
+      var stepsWrap = document.querySelector("[data-tm-steps]");
+      if (stepsWrap) {
+        var steps = $$(".tm-step", stepsWrap);
+        var docStamps = $$(".tm-doc__stamp");
+        var fill = stepsWrap.querySelector(".tm-steps__rail");
+        var setStep = function (n) {
+          steps.forEach(function (s, i) { s.classList.toggle("is-on", i <= n); });
+          docStamps.forEach(function (s, i) { s.classList.toggle("is-on", i <= n); });
+          var k = steps.length > 1 ? Math.max(0, n) / (steps.length - 1) : 1;
+          fill.style.setProperty("--fill", n < 0 ? 0 : k.toFixed(3));
+        };
+        if (reduce || !hasIO) {
+          setStep(steps.length - 1);
+        } else {
+          var passed = steps.map(function () { return false; });
+          var fio = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              var i = steps.indexOf(e.target);
+              // крок пройдено, коли його верх піднявся вище середини екрана
+              passed[i] = e.isIntersecting || e.boundingClientRect.top < 0;
+            });
+            setStep(passed.lastIndexOf(true));
+          }, { rootMargin: "0px 0px -50% 0px" });
+          steps.forEach(function (s) { fio.observe(s); });
+        }
+      }
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initTeam);
+    else initTeam();
+    })();
+  </script>
+  <!-- ================= /БЛОК 09 КОМАНДА ================= -->
+
+</main>
+<p class="tm-demo-note t-muted">Демо блоку 09. На сайті сторінка team.html має шапку й підвал.</p>
+</body>
+</html>

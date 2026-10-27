@@ -89,7 +89,8 @@
   transition: opacity var(--dur-fast) var(--ease-out);
 }
 .hdr__link:hover,
-.hdr__link[aria-current="true"] { opacity: 1; }
+.hdr__link[aria-current="true"],
+.hdr__link[aria-current="page"] { opacity: 1; }
 
 /* Лінія активного розділу: рухається і масштабується лише через transform */
 .hdr__indicator {
@@ -192,7 +193,8 @@
   transform: scale(0);
   transition: transform var(--dur-base) var(--ease-spring);
 }
-.hdr__menu-link[aria-current="true"] .hdr__menu-num::after { transform: scale(1); }
+.hdr__menu-link[aria-current="true"] .hdr__menu-num::after,
+.hdr__menu-link[aria-current="page"] .hdr__menu-num::after { transform: scale(1); }
 
 .hdr__menu-foot {
   display: grid;
@@ -1345,6 +1347,20 @@
   line-height: 1.45;
 }
 .abt__quote footer { margin-top: var(--sp-3); color: var(--fg-muted); }
+
+.abt__team {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  justify-self: start;
+  padding-block: var(--sp-2);
+  color: var(--fg-strong);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  border-bottom: var(--hairline) solid var(--accent);
+}
+.abt__team svg { width: 18px; height: 18px; transition: transform var(--dur-base) var(--ease-out); }
+.abt__team:hover svg { transform: translateX(4px); }
 
 /* --- Історія --- */
 .abt__story { min-width: 0; }
