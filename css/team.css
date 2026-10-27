@@ -525,7 +525,7 @@
 .tm-results__num--accent { color: var(--accent); }
 .tm-results__text { color: var(--fg-muted); }
 
-/* Журнал проводок */
+/* Шлях Марії за роками (у стилі бухгалтерського журналу) */
 .tm-ledger {
   margin-top: var(--section-y);
   border: var(--hairline) solid var(--line-strong);
