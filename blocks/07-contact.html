@@ -531,17 +531,8 @@
         else showResult();
       }
 
-      form.addEventListener("change", function (e) {
-        refreshNext();
-        // одиночний вибір мишею чи пальцем — одразу далі; з клавіатури — кнопкою «Далі»
-        if (e.target.type === "radio" && lastPointer && Date.now() - lastPointer < 600) {
-          setTimeout(goNext, reduce ? 0 : 220);
-        }
-      });
-      var lastPointer = 0;
-      form.addEventListener("pointerdown", function (e) {
-        if (e.target.closest(".cta__option")) lastPointer = Date.now();
-      });
+      // вибір лише позначає відповідь; далі людина переходить сама кнопкою «Далі»
+      form.addEventListener("change", function () { refreshNext(); });
       form.addEventListener("submit", function (e) { e.preventDefault(); goNext(); });
       back.addEventListener("click", function () { if (current > 0) show(current - 1, -1); });
 
