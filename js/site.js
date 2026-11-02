@@ -861,14 +861,22 @@ const DICT = [
 ];
 
 const SKIP = "a, button, h1, h2, h3, h4, summary, label, input, textarea, select, script, style, svg, " +
-             "[aria-hidden='true'], [hidden], .gls, .gls-tip, .svc__node, [data-no-gls]";
-const scopes = document.querySelectorAll("main section");
+             "[aria-hidden='true'], .gls, .gls-tip, .svc__node, [data-no-gls]";
+/* Окремі «картки», які розкриваються (послуга, питання FAQ), мають свій лік:
+   термін позначається в кожній із них, щоб пояснення було там, де людина читає. */
+const SUB = ".svc__station, .faq__item";
+const scopes = [...document.querySelectorAll("main section"), ...document.querySelectorAll(SUB)];
 
 scopes.forEach(scope => {
   const used = new Set();
+  const isSub = scope.matches(SUB);
   const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
-    acceptNode: n => (!n.nodeValue.trim() || n.parentElement.closest(SKIP))
-      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+    acceptNode: n => {
+      const el = n.parentElement;
+      if (!n.nodeValue.trim() || el.closest(SKIP)) return NodeFilter.FILTER_REJECT;
+      if (!isSub && el.closest(SUB)) return NodeFilter.FILTER_REJECT;   // це рахує сама картка
+      return NodeFilter.FILTER_ACCEPT;
+    }
   });
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
