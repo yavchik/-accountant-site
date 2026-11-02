@@ -417,6 +417,21 @@
   animation-delay: calc(120ms + var(--i, 0) * 110ms);
 }
 .hero__line-in--accent { color: var(--accent); }
+
+/* «Цифри → букви»: поки букву не «розшифровано», замість неї видно цифру.
+   Сама буква лишається в розмітці (прозора), тому ширина рядка не стрибає,
+   а пошуковики й скрінрідери завжди бачать справжній текст. */
+.hero__ch { position: relative; }
+.hero__ch--num { -webkit-text-fill-color: transparent; }
+.hero__ch--num::after {
+  content: attr(data-d);
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-text-fill-color: var(--brand-beige);
+  font-variant-numeric: tabular-nums;
+}
 @keyframes hero-line-in {
   from { transform: translateY(105%); }
   to { transform: translateY(0); }
