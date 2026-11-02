@@ -14,18 +14,20 @@
     /* Скрипт сам знаходить терміни в текстах сайту (перша згадка в кожній секції)
        і робить їх кнопками з поясненням простою мовою. Словник — у скрипті нижче. */
 
+    /* Пунктир малюється рамкою знизу, а не text-decoration: Safari на iPhone
+       не показує пунктирне підкреслення з кольором і товщиною. */
     .gls {
       cursor: help;
-      text-decoration: underline dotted var(--accent);
-      text-decoration-thickness: 2px;
-      text-underline-offset: 0.22em;
-      border-radius: var(--r-xs);
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+      text-decoration: none;
+      border-bottom: 2px dotted var(--accent);
+      padding-bottom: 1px;
+      -webkit-tap-highlight-color: transparent;
+      transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
     }
     .gls:hover,
     .gls[aria-expanded="true"] {
       color: var(--accent-text);
-      text-decoration-style: solid;
+      border-bottom-style: solid;
     }
     .gls:focus-visible {
       outline: 2px solid var(--accent);
