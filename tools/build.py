@@ -90,7 +90,7 @@ def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
   <meta property="og:title" content="{title}">
   <meta property="og:description" content="{description}">
   <meta property="og:url" content="{url}">
-  <meta property="og:image" content="{SITE_URL}assets/images/og-image.png">
+  <meta property="og:image" content="{SITE_URL}{ver('assets/images/og-image.png')}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="{og_alt}">
@@ -185,7 +185,7 @@ def main():
 </main>
 
 {parts["08-footer"]["html"]}"""
-    (ROOT / "index.html").write_text(page(TITLE, DESCRIPTION, "", "Happy Finance. Бухгалтерія — це ваш спокій.",
+    (ROOT / "index.html").write_text(page(TITLE, DESCRIPTION, "", "Happy Finance. Цифри стають рішеннями.",
                                           "site.css", "site.js", True, ld, body), encoding="utf-8")
 
     # ---------- Команда ----------
