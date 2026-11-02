@@ -248,6 +248,9 @@ try {
         trigger = window.ScrollTrigger.create({
           trigger: root,
           pin: pin,
+      // Готова обгортка з розмітки: ScrollTrigger не переносить блок у нову,
+      // тож CSS-анімація заголовка не стартує вдруге
+      pinSpacer: root.querySelector(".hero__spacer"),
           start: "top top",
           end: "+=110%",
           scrub: 0.8,
