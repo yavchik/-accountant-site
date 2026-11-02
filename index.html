@@ -29,14 +29,14 @@
   <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml">
   <link rel="stylesheet" href="css/tokens.css?v=6640c38c">
   <link rel="stylesheet" href="css/base.css?v=5a3c53d5">
-  <link rel="stylesheet" href="css/site.css?v=874fecea">
+  <link rel="stylesheet" href="css/site.css?v=f07d5a62">
 
   <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="js/config.js?v=a1ab9a52" defer></script>
   <script src="js/contacts.js?v=53737d2c" defer></script>
-  <script src="js/site.js?v=52261e17" defer></script>
+  <script src="js/site.js?v=053d18f2" defer></script>
   <script type="application/ld+json">
 {
 "@context": "https://schema.org",
@@ -682,25 +682,25 @@
               <h3 class="abt__step-title">Перші документи</h3>
               <p class="abt__step-text">Ще під час навчання на бухгалтера почала працювати оператором: первинні документи для клієнтів, податкові накладні, акти звірки, довіреності.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">02</span> · Управлінська компанія</p>
               <h3 class="abt__step-title">Старший бухгалтер</h3>
               <p class="abt__step-text">Опанувала касову дисципліну й авансові звіти. Відповідала за касу, банківські платежі, авансові звіти та послуги по всіх філіях компанії.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">03</span> · Спецторг</p>
               <h3 class="abt__step-title">Головний бухгалтер</h3>
               <p class="abt__step-text">Повернулась у магазин, з якого починала, вже головним бухгалтером.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">04</span> · Фоззі Фарм</p>
               <h3 class="abt__step-title">Касова дисципліна всієї мережі</h3>
               <p class="abt__step-text">Помітила, що звіти після зміни виправляти важко або вже неможливо. Тож почала попереджати помилки: проводила навчання для фармацевтів, писала інструкції, презентації й шпаргалки для новачків.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">05</span> · Кропивницький</p>
               <h3 class="abt__step-title">Облік з нуля і директорка кафе</h3>
@@ -729,6 +729,10 @@
             </li>
           </ol>
           </div>
+          <button type="button" class="abt__more" data-abt-more aria-expanded="false" hidden>
+            <span data-abt-more-text>Показати весь шлях · ще 4 кроки</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
 
           <div class="abt__dash">
             <div class="abt__dash-head abt__reveal">
@@ -783,32 +787,10 @@
                   </ul>
                 </li>
               </ul>
+              <p class="t-label abt__swipe" aria-hidden="true">Гортайте →</p>
             </figure>
           </div>
 
-          <div class="abt__approach">
-            <div class="abt__approach-head abt__reveal">
-              <p class="t-label abt__approach-label">Наш підхід</p>
-              <h3 class="abt__approach-title">Бухгалтерія — це не лише документи для податкової. Це цифри, за якими власник ухвалює рішення.</h3>
-            </div>
-            <ul class="abt__principles" role="list">
-              <li class="abt__principle abt__reveal" style="--i:0">
-                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M17.5 17.5L24 24"/></svg>
-                <h4 class="abt__principle-title">Спершу аналіз</h4>
-                <p class="abt__principle-text">Перш ніж будувати облік, розбираємось, як бізнес працює зараз. Лише так видно вузькі місця і те, що варто автоматизувати.</p>
-              </li>
-              <li class="abt__principle abt__reveal" style="--i:1">
-                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 22V6M4 14h10l4-8M14 14l4 8M18 6h6M18 22h6"/></svg>
-                <h4 class="abt__principle-title">Варіанти рішень</h4>
-                <p class="abt__principle-text">У будь-якій ситуації пропонуємо варіанти, а для кожного рішення готуємо фінансові показники й законодавчі норми.</p>
-              </li>
-              <li class="abt__principle abt__reveal" style="--i:2">
-                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 24h20M7 24V14M12.5 24V9M18 24v-7M23 24V5"/></svg>
-                <h4 class="abt__principle-title">Управлінський погляд</h4>
-                <p class="abt__principle-text">Через цифри й документообіг видно, як працює команда. Допомагаємо власнику бачити ситуацію в бізнесі й аналізувати її.</p>
-              </li>
-            </ul>
-          </div>
         </div>
 
       </div>

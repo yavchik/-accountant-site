@@ -126,6 +126,24 @@
       padding-bottom: var(--sp-7);
     }
     .abt__step:last-child { padding-bottom: 0; }
+    /* Згорнутий шлях: видно перший крок, фінансову директорку і сьогодні */
+    .abt.is-collapsible:not(.is-expanded) .abt__step--extra { display: none; }
+    .abt__more {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin: var(--sp-5) 0 0 calc(var(--sp-6) + 6px);
+      padding: var(--sp-2) var(--sp-4);
+      border: var(--hairline) solid var(--line-strong);
+      border-radius: var(--r-pill);
+      color: var(--fg-strong);
+      font-weight: var(--fw-medium);
+      transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+    }
+    .abt__more[hidden] { display: none; }
+    .abt__more:hover { border-color: var(--accent); background: rgb(255 255 255 / 0.04); }
+    .abt__more svg { width: 18px; height: 18px; transition: transform var(--dur-base) var(--ease-out); }
+    .abt__more[aria-expanded="true"] svg { transform: rotate(180deg); }
     .abt__dot {
       position: absolute;
       top: 0.3rem;
@@ -390,50 +408,30 @@
       .abt__panel .abt__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
+    .abt__swipe { display: none; margin-top: var(--sp-2); color: var(--fg-muted); text-align: right; }
+    /* Вузька панель (телефон): картки гортаються вбік, щоб блок не розтягувався на кілька екранів */
+    @container (max-width: 599px) {
+      .abt__panel .abt__cards {
+        display: flex;
+        gap: var(--sp-3);
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        padding-bottom: var(--sp-2);
+      }
+      .abt__panel .abt__cards::-webkit-scrollbar { display: none; }
+      .abt__card { flex: 0 0 86%; scroll-snap-align: start; display: flex; flex-direction: column; }
+      .abt__card > :last-child { margin-top: auto; }
+      .abt__swipe { display: block; }
+    }
+
     /* Початковий стан анімації — лише коли JS готовий її запустити */
     .abt__panel.is-armed:not(.is-run) .abt__bar { transform: scaleY(0); }
     .abt__panel.is-armed:not(.is-run) .abt__meter-fill { transform: scaleX(0); }
     .abt__panel.is-armed:not(.is-run) .abt__check-mark { transform: scale(0); }
 
     /* --- Підхід --- */
-    .abt__approach {
-      margin-top: var(--sp-9);
-      padding-top: var(--sp-7);
-      border-top: var(--hairline) solid var(--line);
-    }
-    .abt__approach-head {
-      display: grid;
-      gap: var(--sp-3);
-      margin-bottom: var(--sp-7);
-    }
-    .abt__approach-label { color: var(--brand-beige); }
-    .abt__approach-title { font-size: var(--fs-h3); font-weight: var(--fw-semibold); max-width: 28ch; }
-    .abt__principles {
-      display: grid;
-      gap: var(--sp-6);
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .abt__principle {
-      display: grid;
-      gap: var(--sp-3);
-      align-content: start;
-      padding-top: var(--sp-5);
-      border-top: var(--hairline) solid var(--line-strong);
-    }
-    .abt__principle-mark {
-      width: 28px;
-      height: 28px;
-      color: var(--accent);
-    }
-    .abt__principle-title {
-      font-size: var(--fs-lead);
-      font-weight: var(--fw-semibold);
-      line-height: 1.3;
-      letter-spacing: -0.005em;
-    }
-    .abt__principle-text { color: var(--fg-muted); }
 
     /* --- Поява --- */
     .abt__reveal {
@@ -450,7 +448,6 @@
 
     /* ===== Планшет 768+ ===== */
     @media (min-width: 768px) {
-      .abt__principles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--grid-gap); }
       .abt__panel { padding: var(--sp-5); }
       .abt__person { grid-template-columns: minmax(0, 300px) minmax(0, 1fr); column-gap: var(--grid-gap); align-items: end; }
       .abt__label { grid-column: 1 / -1; }
@@ -477,12 +474,6 @@
         max-height: max(220px, calc(100svh - var(--header-h) - 360px));
       }
       .abt__story { grid-column: 6 / -1; }
-      .abt__approach-head {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        align-items: end;
-        column-gap: var(--grid-gap);
-      }
-      .abt__approach-label { grid-column: 1 / -1; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -534,25 +525,25 @@
               <h3 class="abt__step-title">Перші документи</h3>
               <p class="abt__step-text">Ще під час навчання на бухгалтера почала працювати оператором: первинні документи для клієнтів, податкові накладні, акти звірки, довіреності.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">02</span> · Управлінська компанія</p>
               <h3 class="abt__step-title">Старший бухгалтер</h3>
               <p class="abt__step-text">Опанувала касову дисципліну й авансові звіти. Відповідала за касу, банківські платежі, авансові звіти та послуги по всіх філіях компанії.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">03</span> · Спецторг</p>
               <h3 class="abt__step-title">Головний бухгалтер</h3>
               <p class="abt__step-text">Повернулась у магазин, з якого починала, вже головним бухгалтером.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">04</span> · Фоззі Фарм</p>
               <h3 class="abt__step-title">Касова дисципліна всієї мережі</h3>
               <p class="abt__step-text">Помітила, що звіти після зміни виправляти важко або вже неможливо. Тож почала попереджати помилки: проводила навчання для фармацевтів, писала інструкції, презентації й шпаргалки для новачків.</p>
             </li>
-            <li class="abt__step abt__reveal">
+            <li class="abt__step abt__step--extra abt__reveal">
               <span class="abt__dot" aria-hidden="true"></span>
               <p class="t-label abt__step-label"><span class="abt__step-num">05</span> · Кропивницький</p>
               <h3 class="abt__step-title">Облік з нуля і директорка кафе</h3>
@@ -581,6 +572,10 @@
             </li>
           </ol>
           </div>
+          <button type="button" class="abt__more" data-abt-more aria-expanded="false" hidden>
+            <span data-abt-more-text>Показати весь шлях · ще 4 кроки</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
 
           <div class="abt__dash">
             <div class="abt__dash-head abt__reveal">
@@ -635,32 +630,10 @@
                   </ul>
                 </li>
               </ul>
+              <p class="t-label abt__swipe" aria-hidden="true">Гортайте →</p>
             </figure>
           </div>
 
-          <div class="abt__approach">
-            <div class="abt__approach-head abt__reveal">
-              <p class="t-label abt__approach-label">Наш підхід</p>
-              <h3 class="abt__approach-title">Бухгалтерія — це не лише документи для податкової. Це цифри, за якими власник ухвалює рішення.</h3>
-            </div>
-            <ul class="abt__principles" role="list">
-              <li class="abt__principle abt__reveal" style="--i:0">
-                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M17.5 17.5L24 24"/></svg>
-                <h4 class="abt__principle-title">Спершу аналіз</h4>
-                <p class="abt__principle-text">Перш ніж будувати облік, розбираємось, як бізнес працює зараз. Лише так видно вузькі місця і те, що варто автоматизувати.</p>
-              </li>
-              <li class="abt__principle abt__reveal" style="--i:1">
-                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 22V6M4 14h10l4-8M14 14l4 8M18 6h6M18 22h6"/></svg>
-                <h4 class="abt__principle-title">Варіанти рішень</h4>
-                <p class="abt__principle-text">У будь-якій ситуації пропонуємо варіанти, а для кожного рішення готуємо фінансові показники й законодавчі норми.</p>
-              </li>
-              <li class="abt__principle abt__reveal" style="--i:2">
-                <svg class="abt__principle-mark" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 24h20M7 24V14M12.5 24V9M18 24v-7M23 24V5"/></svg>
-                <h4 class="abt__principle-title">Управлінський погляд</h4>
-                <p class="abt__principle-text">Через цифри й документообіг видно, як працює команда. Допомагаємо власнику бачити ситуацію в бізнесі й аналізувати її.</p>
-              </li>
-            </ul>
-          </div>
         </div>
 
       </div>
@@ -726,6 +699,23 @@
           })(start);
         }, { threshold: 0.35 });
         dio.observe(dash);
+      }
+
+      /* ---------- Згорнутий шлях: кнопка «Показати весь шлях» ---------- */
+      var more = root.querySelector("[data-abt-more]");
+      if (more) {
+        var moreText = more.querySelector("[data-abt-more-text]");
+        root.classList.add("is-collapsible");
+        more.hidden = false;
+        more.addEventListener("click", function () {
+          var open = !root.classList.contains("is-expanded");
+          root.classList.toggle("is-expanded", open);
+          more.setAttribute("aria-expanded", open ? "true" : "false");
+          moreText.textContent = open ? "Згорнути шлях" : "Показати весь шлях · ще 4 кроки";
+          root.querySelectorAll(".abt__step--extra").forEach(function (el) { el.classList.add("is-shown"); });
+          if (!open) more.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+          window.dispatchEvent(new Event("resize"));
+        });
       }
 
       /* ---------- Лінія таймлайну: доходить до точки на 60% висоти екрана ---------- */

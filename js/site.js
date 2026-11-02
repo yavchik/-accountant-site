@@ -519,6 +519,23 @@ try {
     dio.observe(dash);
   }
 
+  /* ---------- Згорнутий шлях: кнопка «Показати весь шлях» ---------- */
+  var more = root.querySelector("[data-abt-more]");
+  if (more) {
+    var moreText = more.querySelector("[data-abt-more-text]");
+    root.classList.add("is-collapsible");
+    more.hidden = false;
+    more.addEventListener("click", function () {
+      var open = !root.classList.contains("is-expanded");
+      root.classList.toggle("is-expanded", open);
+      more.setAttribute("aria-expanded", open ? "true" : "false");
+      moreText.textContent = open ? "Згорнути шлях" : "Показати весь шлях · ще 4 кроки";
+      root.querySelectorAll(".abt__step--extra").forEach(function (el) { el.classList.add("is-shown"); });
+      if (!open) more.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" });
+      window.dispatchEvent(new Event("resize"));
+    });
+  }
+
   /* ---------- Лінія таймлайну: доходить до точки на 60% висоти екрана ---------- */
   if (reduce) {
     steps.forEach(function (s) { s.classList.add("is-lit"); });

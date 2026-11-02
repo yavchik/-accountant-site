@@ -239,6 +239,19 @@
       .fnd__reveal:not(.is-shown) { opacity: 0; transform: translateY(var(--reveal-shift)); }
     }
 
+    /* ===== Телефон: компактніше, щоб блок не розтягувався ===== */
+    @media (max-width: 767px) {
+      .fnd__head { margin-bottom: var(--sp-6); }
+      .fnd__lead { font-size: var(--fs-body); }
+      .fnd__body { gap: var(--sp-5); }
+      .fnd__house { max-width: 300px; }
+      .fnd__card { padding: var(--sp-4); }
+      .fnd__card-title { font-size: 1.125rem; }
+      .fnd__card-text { font-size: var(--fs-small); }
+      .fnd__session { margin-top: var(--sp-7); gap: var(--sp-5); }
+      .fnd__topics { margin-top: var(--sp-4); }
+    }
+
     /* ===== Планшет 768+ ===== */
     @media (min-width: 768px) {
       .fnd__head {
