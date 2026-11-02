@@ -210,7 +210,11 @@ try {
       var spread = desktop ? 1 : 0.55;
 
       gsap.set(pieces, chaos(spread));
-      gsap.set(pieces, { opacity: 0, scale: 0.86 });
+      // Поява анімується на внутрішньому шарі, а не на самих уламках: так вона не
+      // конфліктує з таймлайном «хаос → порядок», який ScrollTrigger перезаписує при оновленні
+      var inners = floats.map(function (f) { return f.firstElementChild; });
+      gsap.set(pieces, { opacity: 1 });
+      gsap.set(inners, { opacity: 0, scale: 0.86 });
       gsap.set(checks, { scale: 0 });
       gsap.set(frameX, { scaleX: 0 });
       gsap.set(frameY, { scaleY: 0 });
@@ -219,7 +223,7 @@ try {
       gsap.set(wordChaos, { opacity: 1, y: 0 });
 
       // Поява сцени після заголовка
-      gsap.to(pieces, {
+      gsap.to(inners, {
         opacity: 1, scale: 1, duration: 0.9, ease: "power2.out",
         stagger: { each: 0.05, from: "random" }, delay: 0.45
       });
@@ -228,7 +232,7 @@ try {
       var tl = gsap.timeline({ paused: true, defaults: { ease: "power3.inOut" } });
       tl.to(bubbles, { opacity: 0, scale: 0.7, z: "+=80", duration: 0.35, stagger: 0.06, ease: "power2.in" }, 0)
         .to(tiles, {
-          x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotation: 0, scale: 1, opacity: 1,
+          x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotation: 0,
           duration: 1, stagger: { each: 0.045, from: "random" }
         }, 0.05)
         .to(wordChaos, { opacity: 0, y: -8, duration: 0.2, ease: "power1.in" }, 0.45)

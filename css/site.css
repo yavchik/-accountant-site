@@ -708,9 +708,14 @@
    Без JS (scripting: none) одразу видно зібраний звіт. */
 @media (scripting: enabled) {
   .hero__piece { opacity: 0; }
+  /* рамка й галочки зʼявляються лише в стані «порядок»; ховаємо їх одразу, щоб не блимали до запуску скрипта */
+  .hero__frame-line--t, .hero__frame-line--b { transform: scaleX(0); }
+  .hero__frame-line--l, .hero__frame-line--r { transform: scaleY(0); }
+  .hero__frame-corner, .hero__check { transform: scale(0); }
 }
 /* Статичний стан: reduced motion або GSAP не завантажився */
 .hero--static .hero__piece { opacity: 1; transform: none; }
+.hero--static .hero__frame-line, .hero--static .hero__frame-corner { transform: none; }
 .hero--static .hero__piece--bubble { display: none; }
 .hero--static .hero__check { transform: scale(1); }
 .hero--static .hero__state-word--chaos { opacity: 0; }
