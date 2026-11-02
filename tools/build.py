@@ -4,6 +4,7 @@
 Блоки лишаються джерелом: правите блок, запускаєте `python3 tools/build.py`,
 і сторінка сайту оновлюється. Потрібен лише Python 3, без сторонніх пакетів.
 """
+import hashlib
 import re
 from pathlib import Path
 
@@ -51,9 +52,16 @@ HEAD = "/* Згенеровано з blocks/ скриптом tools/build.py —
 def write_assets(parts, names, css_name, js_name):
     css = HEAD + "\n\n".join(f"/* ================= {n} ================= */\n{parts[n]['css']}" for n in names) + "\n"
     (ROOT / "css" / css_name).write_text(css, encoding="utf-8")
-    js = HEAD + "\n\n".join(f"/* ================= {n} ================= */\n" + "\n\n".join(parts[n]["js"])
+    # кожен блок у власному try: помилка в одному блоці (наприклад, у старому браузері) не зупиняє решту
+    js = HEAD + "\n\n".join(f"/* ================= {n} ================= */\ntry {{\n" + "\n\n".join(parts[n]["js"])
+                             + f"\n}} catch (e) {{ console.error(\"{n}\", e); }}"
                              for n in names if parts[n]["js"]) + "\n"
     (ROOT / "js" / js_name).write_text(js, encoding="utf-8")
+
+
+def ver(rel):
+    """Короткий відбиток файлу: браузер бачить нову адресу і не бере стару копію з памʼяті."""
+    return rel + "?v=" + hashlib.md5((ROOT / rel).read_bytes()).hexdigest()[:8]
 
 
 def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
@@ -91,13 +99,13 @@ def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
 
   <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml">
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/{css_name}">
+  <link rel="stylesheet" href="{ver('css/tokens.css')}">
+  <link rel="stylesheet" href="{ver('css/base.css')}">
+  <link rel="stylesheet" href="{ver('css/' + css_name)}">
 {gsap_tags}
-  <script src="js/config.js" defer></script>
-  <script src="js/contacts.js" defer></script>
-  <script src="js/{js_name}" defer></script>
+  <script src="{ver('js/config.js')}" defer></script>
+  <script src="{ver('js/contacts.js')}" defer></script>
+  <script src="{ver('js/' + js_name)}" defer></script>
 {ld}
 </head>
 <body>

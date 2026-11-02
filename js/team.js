@@ -1,5 +1,6 @@
 /* Згенеровано з blocks/ скриптом tools/build.py — правте блоки, а не цей файл. */
 /* ================= 01-header ================= */
+try {
 (function () {
 function initHeader() {
   var hdr = document.querySelector("[data-hdr]");
@@ -153,8 +154,10 @@ function initHeader() {
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initHeader);
 else initHeader();
 })();
+} catch (e) { console.error("01-header", e); }
 
 /* ================= 09-team ================= */
+try {
 (function () {
 function initTeam() {
   var hero = document.querySelector("[data-tm-hero]");
@@ -290,8 +293,10 @@ function initTeam() {
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initTeam);
 else initTeam();
 })();
+} catch (e) { console.error("09-team", e); }
 
 /* ================= 08-footer ================= */
+try {
 (function initFooter() {
   var root = document.querySelector("[data-ftr]");
   if (!root) return;
@@ -351,3 +356,4 @@ else initTeam();
   }, { rootMargin: "0px 0px -10% 0px" });
   reveals.forEach(function (el) { io.observe(el); });
 })();
+} catch (e) { console.error("08-footer", e); }

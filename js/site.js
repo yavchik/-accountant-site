@@ -1,5 +1,6 @@
 /* Згенеровано з blocks/ скриптом tools/build.py — правте блоки, а не цей файл. */
 /* ================= 01-header ================= */
+try {
 (function () {
 function initHeader() {
   var hdr = document.querySelector("[data-hdr]");
@@ -153,8 +154,10 @@ function initHeader() {
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initHeader);
 else initHeader();
 })();
+} catch (e) { console.error("01-header", e); }
 
 /* ================= 02-hero ================= */
+try {
 (function () {
   function initHero() {
     var root = document.querySelector("[data-hero]");
@@ -300,8 +303,10 @@ else initHeader();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initHero);
   else initHero();
 })();
+} catch (e) { console.error("02-hero", e); }
 
 /* ================= 03-services ================= */
+try {
 (function initServices() {
   var root = document.querySelector("[data-svc]");
   if (!root) return;
@@ -450,8 +455,10 @@ else initHeader();
   }, { rootMargin: "0px 0px -15% 0px" });
   io.observe(root);
 })();
+} catch (e) { console.error("03-services", e); }
 
 /* ================= 04-about ================= */
+try {
 (function initAbout() {
   var root = document.querySelector("[data-abt]");
   if (!root) return;
@@ -534,8 +541,10 @@ else initHeader();
   window.addEventListener("resize", onScroll, { passive: true });
   update();
 })();
+} catch (e) { console.error("04-about", e); }
 
 /* ================= 05-process ================= */
+try {
 (function initProcess() {
   var root = document.querySelector("[data-prc]");
   if (!root) return;
@@ -588,8 +597,10 @@ else initHeader();
   window.addEventListener("resize", update, { passive: true });
   update();
 })();
+} catch (e) { console.error("05-process", e); }
 
 /* ================= 06-faq ================= */
+try {
 (function initFaq() {
   var root = document.querySelector("[data-faq]");
   if (!root) return;
@@ -621,8 +632,10 @@ else initHeader();
   }, { rootMargin: "0px 0px -10% 0px" });
   Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
 })();
+} catch (e) { console.error("06-faq", e); }
 
 /* ================= 07-contact ================= */
+try {
 (function initContact() {
   // Контакти заповнюються в одному місці: js/config.js
   var CONTACTS = window.HFContacts.data;
@@ -837,8 +850,10 @@ else initHeader();
 
   show(0, 1);
 })();
+} catch (e) { console.error("07-contact", e); }
 
 /* ================= 10-glossary ================= */
+try {
   (() => {
 const tip = document.getElementById("gls-tip");
 if (!tip) return;
@@ -993,8 +1008,10 @@ document.addEventListener("keydown", e => {
 window.addEventListener("scroll", () => { if (current) hide(true); }, { passive: true });
 window.addEventListener("resize", () => { if (current) place(current); });
   })();
+} catch (e) { console.error("10-glossary", e); }
 
 /* ================= 08-footer ================= */
+try {
 (function initFooter() {
   var root = document.querySelector("[data-ftr]");
   if (!root) return;
@@ -1054,3 +1071,4 @@ window.addEventListener("resize", () => { if (current) place(current); });
   }, { rootMargin: "0px 0px -10% 0px" });
   reveals.forEach(function (el) { io.observe(el); });
 })();
+} catch (e) { console.error("08-footer", e); }
