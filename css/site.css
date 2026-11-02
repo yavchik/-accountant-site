@@ -40,8 +40,7 @@
 .hdr.is-scrolled .hdr__inner { transform: translateY(calc(var(--hdr-shift) / 2)); }
 .hdr.is-scrolled .hdr__bg { opacity: 1; }
 
-/* Ховається при скролі вниз */
-.hdr.is-hidden { transform: translateY(-100%); }
+/* Шапка закріплена: лишається видимою під час прокрутки */
 
 /* --- Лого: дві версії, перехід через opacity --- */
 .hdr__logo {
@@ -62,7 +61,7 @@
 }
 .hdr__logo-img--dark {
   position: absolute;
-  inset: 0;
+  inset: 14px 0;               /* та сама позиція, що й у світлого лого, з урахуванням padding-block */
   opacity: 0;
 }
 .hdr[data-theme="light"] .hdr__logo-img--light { opacity: 0; }
