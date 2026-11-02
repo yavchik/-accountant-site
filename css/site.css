@@ -1407,6 +1407,7 @@
 .abt__step:last-child { padding-bottom: 0; }
 /* Згорнутий шлях: видно перший крок, фінансову директорку і сьогодні */
 .abt.is-collapsible:not(.is-expanded) .abt__step--extra { display: none; }
+.abt.is-collapsible { overflow-anchor: none; }   /* прокрутку під час згортання веде скрипт */
 .abt__more {
   display: inline-flex;
   align-items: center;
