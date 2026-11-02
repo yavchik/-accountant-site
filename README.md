@@ -18,6 +18,8 @@ js/site.js            — скрипти блоків головної (зген
 js/team.js            — скрипти сторінки «Команда» (згенеровано)
 blocks/NN-*.html      — блоки сайту, кожен відкривається окремо (джерело для index.html)
                         (10-glossary — «перекладач з бухгалтерської»: словник термінів і підказки)
+robots.txt, sitemap.xml — для пошуковиків (генерує tools/build.py з SITE_URL)
+vercel.json           — заголовки безпеки й кешу для Vercel
 404.html              — сторінка «Ця сторінка не пройшла звірку» (самодостатня, без збирання)
 tools/build.py        — збирає index.html і team.html з їхніми css/js з blocks/
 assets/fonts          — Onest, IBM Plex Mono (woff2, кирилиця + латиниця)

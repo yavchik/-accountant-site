@@ -5,6 +5,7 @@
 і сторінка сайту оновлюється. Потрібен лише Python 3, без сторонніх пакетів.
 """
 import hashlib
+import json
 import re
 from pathlib import Path
 
@@ -78,7 +79,7 @@ def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
   <!-- Згенеровано з blocks/ скриптом tools/build.py — правте блоки, а не цей файл. -->
   <title>{title}</title>
   <meta name="description" content="{description}">
-  <meta name="theme-color" content="#121420">
+  <meta name="theme-color" content="#102662">
   <link rel="canonical" href="{url}">
 
   <meta property="og:type" content="website">
@@ -115,6 +116,48 @@ def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
 """
 
 
+def contacts():
+    """Контакти з js/config.js — щоб розмітка для Google завжди збігалася з сайтом."""
+    src = (ROOT / "js" / "config.js").read_text(encoding="utf-8")
+    return {k: v for k, v in re.findall(r'(phone|telegram|instagram):\s*"([^"]*)"', src)}
+
+
+def org_ld():
+    """Розмітка компанії (schema.org) для пошуковиків: назва, телефон, соцмережі. Без адреси й міста."""
+    c = contacts()
+    data = {
+        "@context": "https://schema.org",
+        "@type": "AccountingService",
+        "name": "Happy Finance",
+        "url": SITE_URL,
+        "logo": SITE_URL + "assets/images/apple-touch-icon.png",
+        "image": SITE_URL + "assets/images/og-image.png",
+        "description": DESCRIPTION,
+        "areaServed": {"@type": "Country", "name": "Україна"},
+        "founder": {"@type": "Person", "name": "Марія Панченко"},
+    }
+    if c.get("phone"):
+        data["telephone"] = "+" + re.sub(r"\D", "", c["phone"])
+    same = []
+    if c.get("instagram"):
+        same.append("https://instagram.com/" + c["instagram"].lstrip("@"))
+    if c.get("telegram"):
+        same.append("https://t.me/" + c["telegram"].lstrip("@"))
+    if same:
+        data["sameAs"] = same
+    body = json.dumps(data, ensure_ascii=False, indent=2)
+    return f'  <script type="application/ld+json">\n{body}\n  </script>'
+
+
+def write_seo_files():
+    """robots.txt і sitemap.xml для пошуковиків (адреса сайту — SITE_URL вгорі файлу)."""
+    (ROOT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE_URL}sitemap.xml\n", encoding="utf-8")
+    urls = "".join(f"  <url><loc>{SITE_URL}{path}</loc></url>\n" for path in ["", "team.html"])
+    (ROOT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
+                                      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+                                      f"{urls}</urlset>\n", encoding="utf-8")
+
+
 def to_home(html):
     """Шапка й підвал на інших сторінках: якорі ведуть на головну, а не в межах сторінки."""
     html = re.sub(r'href="#(services|about|process|faq|contact|match)"', r'href="./#\1"', html)
@@ -129,7 +172,7 @@ def main():
 
     # ---------- Головна ----------
     write_assets(parts, BLOCKS, "site.css", "site.js")
-    ld = "\n".join(f'  <script type="application/ld+json">\n{l}\n  </script>' for n in BLOCKS for l in parts[n]["ld"])
+    ld = "\n".join([org_ld()] + [f'  <script type="application/ld+json">\n{l}\n  </script>' for n in BLOCKS for l in parts[n]["ld"]])
     main_html = "\n\n".join(parts[n]["html"] for n in BLOCKS[1:-1])
     body = f"""{parts["01-header"]["html"]}
 
@@ -161,7 +204,8 @@ def main():
 {to_home(parts["08-footer"]["html"])}"""
     (ROOT / "team.html").write_text(page(TEAM_TITLE, TEAM_DESCRIPTION, "team.html", "Команда Happy Finance.",
                                          "team.css", "team.js", False, "", body), encoding="utf-8")
-    print("index.html, team.html, css/site.css, css/team.css, js/site.js, js/team.js оновлено")
+    write_seo_files()
+    print("robots.txt, sitemap.xml, index.html, team.html, css/site.css, css/team.css, js/site.js, js/team.js оновлено")
 
 
 if __name__ == "__main__":
