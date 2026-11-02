@@ -47,64 +47,12 @@
       padding-block: calc(var(--header-h) + var(--sp-7)) var(--sp-8);
     }
 
-    /* --- Фон «Цінний папір»: захисна розетка, як на банкноті --- */
+    /* --- Фон: глибокий синій, мʼяке світло за сценою і рідкісний відблиск --- */
     .hero__bg {
       position: absolute;
       inset: 0;
       overflow: clip;
       pointer-events: none;
-    }
-
-    /* Розетка: обгортка рухається за курсором і «стягується» в порядку, шари всередині обертаються */
-    .hero__rosette {
-      --rs: min(1040px, 160vw);
-      position: absolute;
-      top: calc(50% - var(--rs) / 2);
-      left: calc(74% - var(--rs) / 2);
-      width: var(--rs);
-      height: var(--rs);
-    }
-    @media (max-width: 760px) {
-      .hero__rosette { --rs: 150vw; top: calc(26% - var(--rs) / 2); left: calc(88% - var(--rs) / 2); }
-    }
-    .hero__guilloche,
-    .hero__ring {
-      position: absolute;
-      inset: 0;
-      animation: hero-spin 240s linear infinite;
-    }
-    @keyframes hero-spin { to { transform: rotate(360deg); } }
-    /* Кольоровий гільош: штрих SVG має перелив бренду (помаранчевий → беж → білий) */
-    .hero__guilloche {
-      background: url("../assets/images/guilloche-color.svg") center / contain no-repeat;
-      opacity: 0.34;
-    }
-    .hero__guilloche--inner {
-      inset: 20%;
-      opacity: 0.2;
-      animation-duration: 160s;
-      animation-direction: reverse;
-    }
-    .hero__ring {
-      inset: 13.5%;
-      width: 73%;
-      height: 73%;
-      animation-duration: 300s;
-      animation-direction: reverse;
-    }
-    .hero__ring circle { fill: none; stroke: var(--brand-beige); stroke-opacity: 0.28; stroke-width: 0.6; }
-    .hero__ring .hero__ring-dash { stroke: var(--brand-orange); stroke-opacity: 0.5; stroke-width: 1.4; stroke-dasharray: 0.6 5.4; }
-    .hero__ring text {
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: var(--fw-medium);
-      fill: var(--brand-beige);
-      opacity: 0.55;
-    }
-    @media (max-width: 760px) {
-      .hero__guilloche { opacity: 0.17; }
-      .hero__guilloche--inner { opacity: 0.12; }
-      .hero__ring text { opacity: 0.35; }
     }
 
     /* Відблиск, що зрідка пробігає фоном, як по голограмі */
@@ -130,22 +78,7 @@
       transform: translate(-50%, -50%);
     }
 
-    /* Захисна хвиля внизу, як край цінного паперу */
-    .hero__band {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: var(--sp-5);
-      height: 88px;
-      background: url("../assets/images/hero-band.svg") 0 0 / 100% 100% no-repeat;
-      opacity: 0.3;
-    }
-    @media (max-width: 760px) {
-      .hero__band { height: 64px; bottom: var(--sp-4); opacity: 0.24; }
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      .hero__guilloche, .hero__ring, .hero__sheen { animation: none; }
       .hero__sheen { display: none; }
     }
 
@@ -626,18 +559,6 @@
       <div class="hero__bg" aria-hidden="true">
         <div class="hero__glow"></div>
         <div class="hero__sheen"></div>
-        <div class="hero__rosette">
-          <div class="hero__guilloche"></div>
-          <div class="hero__guilloche hero__guilloche--inner"></div>
-          <svg class="hero__ring" viewBox="0 0 400 400" focusable="false">
-            <defs><path id="hero-ring-path" d="M200 200m-176 0a176 176 0 1 1 352 0a176 176 0 1 1-352 0"/></defs>
-            <circle cx="200" cy="200" r="194" class="hero__ring-dash"/>
-            <circle cx="200" cy="200" r="187"/>
-            <circle cx="200" cy="200" r="166"/>
-            <text><textPath href="#hero-ring-path" textLength="1104" lengthAdjust="spacing">HAPPY FINANCE · ОБЛІК · ЗВІТНІСТЬ · ПОДАТКИ · КАДРИ · СПОКІЙ · HAPPY FINANCE · ОБЛІК · ЗВІТНІСТЬ · ПОДАТКИ · КАДРИ · СПОКІЙ · </textPath></text>
-          </svg>
-        </div>
-        <div class="hero__band"></div>
       </div>
 
       <div class="container hero__inner">
@@ -845,7 +766,6 @@
         var wordChaos = root.querySelector(".hero__state-word--chaos");
         var wordOrder = root.querySelector(".hero__state-word--order");
         var hint = root.querySelector(".hero__hint");
-        var rosette = root.querySelector(".hero__rosette");
 
         // Стан «хаос» кожного уламка: зсув у частках сторони дошки + 3D-поворот
         function chaos(spread) {
@@ -902,8 +822,6 @@
             .to(corners, { scale: 1, duration: 0.3, ease: "back.out(2)" }, 1.1)
             .to(checks, { scale: 1, duration: 0.35, stagger: 0.035, ease: "back.out(2.2)" }, 0.95);
           if (hint) tl.to(hint, { opacity: 0, duration: 0.15 }, 0);
-          // Розетка фону трохи «стягується», коли документи стають на місця
-          if (rosette) tl.fromTo(rosette, { scale: 1 }, { scale: 0.9, duration: 1.1, ease: "power2.inOut" }, 0.05);
 
           var trigger;
           if (desktop) {
@@ -949,16 +867,12 @@
           if (desktop) {
             var rotY = gsap.quickTo(scene, "rotationY", { duration: 0.9, ease: "power3.out" });
             var rotX = gsap.quickTo(scene, "rotationX", { duration: 0.9, ease: "power3.out" });
-            // Фон зсувається проти курсора: сцена ніби стоїть ближче, ніж розетка
-            var bgX = rosette && gsap.quickTo(rosette, "x", { duration: 1.6, ease: "power3.out" });
-            var bgY = rosette && gsap.quickTo(rosette, "y", { duration: 1.6, ease: "power3.out" });
             onMove = function (e) {
               var px = e.clientX / window.innerWidth - 0.5;
               var py = e.clientY / window.innerHeight - 0.5;
               var k = 1 - tl.progress() * 0.5;
               rotY(px * 16 * k);
               rotX(-py * 12 * k);
-              if (bgX) { bgX(-px * 28); bgY(-py * 20); }
             };
             window.addEventListener("pointermove", onMove, { passive: true });
           }
@@ -969,7 +883,6 @@
             if (onMove) window.removeEventListener("pointermove", onMove);
             if (trigger) trigger.kill();
             floats.forEach(function (f) { f.style.transform = ""; });
-            if (rosette) gsap.set(rosette, { clearProps: "transform" });
           };
         });
 
