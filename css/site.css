@@ -257,8 +257,21 @@
 
 .hero {
   position: relative;
-  background-image: linear-gradient(180deg, var(--navy-700) 0%, var(--navy-900) 100%);
+  /* Низ — точно --navy-900: у цей колір зафарбовані зубці «чека» наступного блоку */
+  background-color: var(--navy-900);
+  background-image:
+    linear-gradient(180deg, rgba(6, 14, 40, 0.5) 0%, transparent 22%),
+    radial-gradient(60% 70% at 74% 48%, rgba(52, 96, 214, 0.5) 0%, transparent 72%),
+    linear-gradient(180deg, var(--navy-700) 0%, var(--brand-navy) 40%, var(--navy-900) 100%);
   overflow: clip;              /* уламки в 3D не створюють горизонтального скролу */
+}
+@media (max-width: 760px) {
+  .hero {
+    background-image:
+      linear-gradient(180deg, rgba(6, 14, 40, 0.5) 0%, transparent 12%),
+      radial-gradient(90% 40% at 88% 24%, rgba(52, 96, 214, 0.5) 0%, transparent 72%),
+      linear-gradient(180deg, var(--navy-700) 0%, var(--brand-navy) 40%, var(--navy-900) 100%);
+  }
 }
 
 .hero__pin {
@@ -270,39 +283,106 @@
   padding-block: calc(var(--header-h) + var(--sp-7)) var(--sp-8);
 }
 
-/* --- Фон: сітка бренду і мʼяке світло --- */
+/* --- Фон «Цінний папір»: захисна розетка, як на банкноті --- */
 .hero__bg {
   position: absolute;
   inset: 0;
+  overflow: clip;
   pointer-events: none;
 }
-.hero__guilloche {
+
+/* Розетка: обгортка рухається за курсором і «стягується» в порядку, шари всередині обертаються */
+.hero__rosette {
+  --rs: min(1040px, 160vw);
   position: absolute;
-  top: 50%;
-  left: 74%;
-  width: min(980px, 150vw);
-  aspect-ratio: 1;
-  background: url("../assets/images/guilloche.svg") center / contain no-repeat;
-  opacity: 0.13;
-  transform: translate(-50%, -50%);
+  top: calc(50% - var(--rs) / 2);
+  left: calc(74% - var(--rs) / 2);
+  width: var(--rs);
+  height: var(--rs);
+}
+@media (max-width: 760px) {
+  .hero__rosette { --rs: 150vw; top: calc(26% - var(--rs) / 2); left: calc(88% - var(--rs) / 2); }
+}
+.hero__guilloche,
+.hero__ring {
+  position: absolute;
+  inset: 0;
   animation: hero-spin 240s linear infinite;
 }
-@keyframes hero-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes hero-spin { to { transform: rotate(360deg); } }
+/* Кольоровий гільош: штрих SVG має перелив бренду (помаранчевий → беж → білий) */
+.hero__guilloche {
+  background: url("../assets/images/guilloche-color.svg") center / contain no-repeat;
+  opacity: 0.34;
+}
+.hero__guilloche--inner {
+  inset: 20%;
+  opacity: 0.2;
+  animation-duration: 160s;
+  animation-direction: reverse;
+}
+.hero__ring {
+  inset: 13.5%;
+  width: 73%;
+  height: 73%;
+  animation-duration: 300s;
+  animation-direction: reverse;
+}
+.hero__ring circle { fill: none; stroke: var(--brand-beige); stroke-opacity: 0.28; stroke-width: 0.6; }
+.hero__ring .hero__ring-dash { stroke: var(--brand-orange); stroke-opacity: 0.5; stroke-width: 1.4; stroke-dasharray: 0.6 5.4; }
+.hero__ring text {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: var(--fw-medium);
+  fill: var(--brand-beige);
+  opacity: 0.55;
+}
 @media (max-width: 760px) {
-  .hero__guilloche { left: 85%; top: 30%; }
+  .hero__guilloche { opacity: 0.17; }
+  .hero__guilloche--inner { opacity: 0.12; }
+  .hero__ring text { opacity: 0.35; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .hero__guilloche { animation: none; }
+
+/* Відблиск, що зрідка пробігає фоном, як по голограмі */
+.hero__sheen {
+  position: absolute;
+  inset: 0 -60%;
+  background: linear-gradient(110deg, transparent 42%, rgba(202, 174, 153, 0.1) 48%, rgba(251, 104, 53, 0.08) 52%, transparent 58%);
+  transform: translateX(-35%);
+  animation: hero-sheen 11s var(--ease-in-out) 1.6s infinite;
 }
+@keyframes hero-sheen {
+  0% { transform: translateX(-35%); }
+  55%, 100% { transform: translateX(35%); }
+}
+
 .hero__glow {
   position: absolute;
   top: 50%;
   left: 72%;
   width: min(900px, 120vw);
   aspect-ratio: 1;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 62%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 16%, transparent) 0%, transparent 62%);
   transform: translate(-50%, -50%);
-  opacity: 0.7;
+}
+
+/* Захисна хвиля внизу, як край цінного паперу */
+.hero__band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--sp-5);
+  height: 88px;
+  background: url("../assets/images/hero-band.svg") 0 0 / 100% 100% no-repeat;
+  opacity: 0.3;
+}
+@media (max-width: 760px) {
+  .hero__band { height: 64px; bottom: var(--sp-4); opacity: 0.24; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__guilloche, .hero__ring, .hero__sheen { animation: none; }
+  .hero__sheen { display: none; }
 }
 
 .hero__inner {
