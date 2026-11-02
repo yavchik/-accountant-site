@@ -79,6 +79,10 @@
       padding-block: var(--sp-4);
       border-bottom: var(--hairline) solid var(--line);
     }
+    /* найвужчі телефони: вужча колонка підписів, щоб нік Instagram не розривався */
+    @media (max-width: 374px) {
+      .cta__contact { grid-template-columns: 6.25rem minmax(0, 1fr); gap: var(--sp-3); }
+    }
     .cta__contact-key { color: var(--fg-muted); }
     .cta__contact-val { min-width: 0; overflow-wrap: anywhere; color: var(--fg); font-size: var(--fs-lead); }
     .cta__contact-val a { text-decoration: none; }

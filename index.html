@@ -6,7 +6,7 @@
   <!-- Згенеровано з blocks/ скриптом tools/build.py — правте блоки, а не цей файл. -->
   <title>Happy Finance — бухгалтерський супровід ФОП і ТОВ</title>
   <meta name="description" content="Бухгалтерський супровід ФОП і ТОВ: облік, звітність, податки, кадри й фінансовий моніторинг у банку. Вартість після консультації.">
-  <meta name="theme-color" content="#121420">
+  <meta name="theme-color" content="#102662">
   <link rel="canonical" href="https://happy-finance-beta.vercel.app/">
 
   <meta property="og:type" content="website">
@@ -26,17 +26,41 @@
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 
   <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml" fetchpriority="high">
   <link rel="stylesheet" href="css/tokens.css?v=6640c38c">
   <link rel="stylesheet" href="css/base.css?v=5a3c53d5">
-  <link rel="stylesheet" href="css/site.css?v=e321af1b">
+  <link rel="stylesheet" href="css/site.css?v=fef77e02">
 
   <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="js/config.js?v=a1ab9a52" defer></script>
   <script src="js/contacts.js?v=53737d2c" defer></script>
-  <script src="js/site.js?v=c73331f9" defer></script>
+  <script src="js/site.js?v=eae1da6a" defer></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AccountingService",
+  "name": "Happy Finance",
+  "url": "https://happy-finance-beta.vercel.app/",
+  "logo": "https://happy-finance-beta.vercel.app/assets/images/apple-touch-icon.png",
+  "image": "https://happy-finance-beta.vercel.app/assets/images/og-image.png",
+  "description": "Бухгалтерський супровід ФОП і ТОВ: облік, звітність, податки, кадри й фінансовий моніторинг у банку. Вартість після консультації.",
+  "areaServed": {
+    "@type": "Country",
+    "name": "Україна"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Марія Панченко"
+  },
+  "telephone": "+380663568040",
+  "sameAs": [
+    "https://instagram.com/Mariia_Panchenko_ua",
+    "https://t.me/MariiaPanchenko_ua"
+  ]
+}
+  </script>
   <script type="application/ld+json">
 {
 "@context": "https://schema.org",
@@ -88,7 +112,7 @@
       </button>
     </div>
 
-    <div class="hdr__menu" id="hdr-menu" data-theme="dark" aria-label="Меню">
+    <div class="hdr__menu" id="hdr-menu" data-theme="dark" role="dialog" aria-modal="true" aria-label="Меню">
       <div class="container hdr__menu-inner">
         <ul class="hdr__menu-list" role="list">
           <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>
@@ -671,7 +695,7 @@
 
         <div class="abt__story">
           <h2 class="abt__title abt__reveal" id="abt-title">Від первинних документів до фінансового директора</h2>
-          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу, а згодом керувала командою понад 200 людей. Понад 10 років в управлінні бізнесами. Сьогодні вона структурує хаос у бізнесі клієнтів і консультує з погляду не лише законодавства, а й живого бізнесу.</p>
+          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу, а згодом керувала підприємством зі штатом близько 300 людей. Понад 10 років в управлінні бізнесами. Сьогодні вона структурує хаос у бізнесі клієнтів і консультує з погляду не лише законодавства, а й живого бізнесу.</p>
 
           <div class="abt__tl" data-abt-timeline>
             <span class="abt__rail" aria-hidden="true"></span>
@@ -715,11 +739,11 @@
               <p class="abt__step-text">Прийшла в момент продажу бізнесу, переносу бази й переїзду складу. Побудувала фінансовий відділ, змінила документообіг і вибудувала систему контролю.</p>
               <div class="abt__fact">
                 <p class="t-label abt__fact-label">Нестачі на складі за місяць</p>
-                <dl class="abt__fact-pair">
-                  <div class="abt__fact-col"><dt class="abt__fact-term">Було</dt><dd class="abt__fact-num abt__fact-num--before t-num">1,5&nbsp;млн&nbsp;грн</dd></div>
+                <div class="abt__fact-pair">
+                  <p class="abt__fact-col"><span class="abt__fact-term">Було</span> <span class="abt__fact-num abt__fact-num--before t-num">1,5&nbsp;млн&nbsp;грн</span></p>
                   <span class="abt__fact-arrow" aria-hidden="true">→</span>
-                  <div class="abt__fact-col"><dt class="abt__fact-term">Стало</dt><dd class="abt__fact-num abt__fact-num--after t-num">10–12&nbsp;тис&nbsp;грн</dd></div>
-                </dl>
+                  <p class="abt__fact-col"><span class="abt__fact-term">Стало</span> <span class="abt__fact-num abt__fact-num--after t-num">10–12&nbsp;тис&nbsp;грн</span></p>
+                </div>
                 <p class="abt__fact-text">Після того як Марія змінила документообіг і команду.</p>
               </div>
             </li>

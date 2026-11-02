@@ -424,6 +424,8 @@
       .abt__panel .abt__cards::-webkit-scrollbar { display: none; }
       .abt__card { flex: 0 0 86%; scroll-snap-align: start; display: flex; flex-direction: column; }
       .abt__card > :last-child { margin-top: auto; }
+      /* стовпчики доходу займають вільну висоту картки, а не лишають порожнечу */
+      .abt__card > .abt__bars { flex: 1 1 auto; height: auto; min-height: 64px; margin-top: var(--sp-4); }
       .abt__swipe { display: block; }
     }
 
@@ -513,7 +515,7 @@
 
         <div class="abt__story">
           <h2 class="abt__title abt__reveal" id="abt-title">Від первинних документів до фінансового директора</h2>
-          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу, а згодом керувала командою понад 200 людей. Понад 10 років в управлінні бізнесами. Сьогодні вона структурує хаос у бізнесі клієнтів і консультує з погляду не лише законодавства, а й живого бізнесу.</p>
+          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу, а згодом керувала підприємством зі штатом близько 300 людей. Понад 10 років в управлінні бізнесами. Сьогодні вона структурує хаос у бізнесі клієнтів і консультує з погляду не лише законодавства, а й живого бізнесу.</p>
 
           <div class="abt__tl" data-abt-timeline>
             <span class="abt__rail" aria-hidden="true"></span>
@@ -557,11 +559,11 @@
               <p class="abt__step-text">Прийшла в момент продажу бізнесу, переносу бази й переїзду складу. Побудувала фінансовий відділ, змінила документообіг і вибудувала систему контролю.</p>
               <div class="abt__fact">
                 <p class="t-label abt__fact-label">Нестачі на складі за місяць</p>
-                <dl class="abt__fact-pair">
-                  <div class="abt__fact-col"><dt class="abt__fact-term">Було</dt><dd class="abt__fact-num abt__fact-num--before t-num">1,5&nbsp;млн&nbsp;грн</dd></div>
+                <div class="abt__fact-pair">
+                  <p class="abt__fact-col"><span class="abt__fact-term">Було</span> <span class="abt__fact-num abt__fact-num--before t-num">1,5&nbsp;млн&nbsp;грн</span></p>
                   <span class="abt__fact-arrow" aria-hidden="true">→</span>
-                  <div class="abt__fact-col"><dt class="abt__fact-term">Стало</dt><dd class="abt__fact-num abt__fact-num--after t-num">10–12&nbsp;тис&nbsp;грн</dd></div>
-                </dl>
+                  <p class="abt__fact-col"><span class="abt__fact-term">Стало</span> <span class="abt__fact-num abt__fact-num--after t-num">10–12&nbsp;тис&nbsp;грн</span></p>
+                </div>
                 <p class="abt__fact-text">Після того як Марія змінила документообіг і команду.</p>
               </div>
             </li>
