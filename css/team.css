@@ -51,6 +51,9 @@
   width: 156px;
   margin-right: auto;
   line-height: 0;
+  /* більша зона дотику без зміни вигляду */
+  padding-block: 14px;
+  margin-block: -14px;
 }
 .hdr__logo-img {
   width: 100%;
@@ -204,6 +207,7 @@
   transform: translateY(var(--reveal-shift));
   transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
 }
+.hdr__contacts a { display: inline-block; padding-block: 4px; margin-block: -4px; }
 .hdr__contacts {
   display: grid;
   gap: var(--sp-2);
@@ -941,7 +945,7 @@
 }
 .ftr__contact-key { color: var(--fg-muted); }
 .ftr__contact-val { min-width: 0; overflow-wrap: anywhere; }
-.ftr__contact-val a { color: var(--fg); text-decoration: none; }
+.ftr__contact-val a { display: inline-block; padding-block: 4px; margin-block: -4px; color: var(--fg); text-decoration: none; }
 @media (hover: hover) {
   .ftr__contact-val a:hover { color: var(--accent); }
 }

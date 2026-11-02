@@ -63,6 +63,9 @@
       width: 156px;
       margin-right: auto;
       line-height: 0;
+      /* більша зона дотику без зміни вигляду */
+      padding-block: 14px;
+      margin-block: -14px;
     }
     .hdr__logo-img {
       width: 100%;
@@ -216,6 +219,7 @@
       transform: translateY(var(--reveal-shift));
       transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
     }
+    .hdr__contacts a { display: inline-block; padding-block: 4px; margin-block: -4px; }
     .hdr__contacts {
       display: grid;
       gap: var(--sp-2);
@@ -311,7 +315,7 @@
       </button>
     </div>
 
-    <div class="hdr__menu" id="hdr-menu" data-theme="dark" aria-label="Меню">
+    <div class="hdr__menu" id="hdr-menu" data-theme="dark" role="dialog" aria-modal="true" aria-label="Меню">
       <div class="container hdr__menu-inner">
         <ul class="hdr__menu-list" role="list">
           <li class="hdr__menu-item" style="--i:0"><a class="hdr__menu-link" href="#services"><span class="t-label hdr__menu-num">01</span>Послуги</a></li>
