@@ -98,7 +98,7 @@ def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 
   <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml" fetchpriority="high">
   <link rel="stylesheet" href="{ver('css/tokens.css')}">
   <link rel="stylesheet" href="{ver('css/base.css')}">
   <link rel="stylesheet" href="{ver('css/' + css_name)}">
