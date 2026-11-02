@@ -838,6 +838,154 @@ else initHeader();
   show(0, 1);
 })();
 
+/* ================= 10-glossary ================= */
+  (() => {
+const tip = document.getElementById("gls-tip");
+if (!tip) return;
+
+/* Словник: що шукати в тексті → як пояснити простою мовою.
+   Шукається перша згадка в кожній секції. Щоб додати термін, додайте рядок. */
+const DICT = [
+  { re: /ПДВ/, term: "ПДВ", text: "Податок на додану вартість, зазвичай 20%. Його закладають у ціну товарів і послуг, а платник ПДВ щомісяця звітує та реєструє податкові накладні." },
+  { re: /ПРРО/, term: "ПРРО", text: "Касовий апарат у телефоні чи планшеті. Видає покупцю чек і сам передає дані про продаж у податкову." },
+  { re: /фінансов[а-яіїєґ’ʼ']* моніторинг[а-яіїєґ’ʼ']*/i, term: "Фінансовий моніторинг", text: "Перевірка банком, звідки гроші і для чого операції. Банк може попросити документи й пояснення, а без них обмежити рахунок." },
+  { re: /податков[а-яіїєґ’ʼ']* накладн[а-яіїєґ’ʼ']*/i, term: "Податкова накладна", text: "Документ, який платник ПДВ складає на кожен продаж і реєструє в податковій. Від нього залежить, чи зможе покупець зменшити свій ПДВ." },
+  { re: /акт[а-яіїєґ’ʼ']* звірки/i, term: "Акт звірки", text: "Документ, у якому дві компанії звіряють розрахунки: хто кому і скільки винен на певну дату." },
+  { re: /авансов[а-яіїєґ’ʼ']* звіт[а-яіїєґ’ʼ']*/i, term: "Авансовий звіт", text: "Звіт працівника про гроші, видані на витрати компанії: відрядження, покупки. До нього додають чеки." },
+  { re: /касов[а-яіїєґ’ʼ']* дисциплін[а-яіїєґ’ʼ']*/i, term: "Касова дисципліна", text: "Правила роботи з готівкою: вчасно видавати чеки, правильно оформлювати внесення й видачу грошей, закривати касові зміни." },
+  { re: /єдин[а-яіїєґ’ʼ']* податк[а-яіїєґ’ʼ']*/i, term: "Єдиний податок", text: "Спрощений податок для ФОП (а на 3 групі й для деяких ТОВ): фіксована сума щомісяця або відсоток від доходу замість складних податків." },
+  { re: /первинн[а-яіїєґ’ʼ']* документ[а-яіїєґ’ʼ']*/i, term: "Первинні документи", text: "Рахунки, накладні, акти, чеки. Папери, які підтверджують кожну операцію. На них тримається весь облік." },
+  { re: /P&L/, term: "P&L", text: "Звіт про прибутки і збитки: скільки заробили, скільки витратили і що в результаті лишилось." },
+  { re: /Cash Flow/i, term: "Cash Flow", text: "Рух грошей: коли і скільки грошей прийшло та пішло. Показує, чи вистачить коштів на зарплати й платежі." },
+  { re: /1С/, term: "1С", text: "Програма для ведення бухгалтерського обліку. Зараз її сучасна українська версія називається BAS." }
+];
+
+const SKIP = "a, button, h1, h2, h3, h4, summary, label, input, textarea, select, script, style, svg, " +
+             "[aria-hidden='true'], [hidden], .gls, .gls-tip, .svc__node, [data-no-gls]";
+const scopes = document.querySelectorAll("main section");
+
+scopes.forEach(scope => {
+  const used = new Set();
+  const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+    acceptNode: n => (!n.nodeValue.trim() || n.parentElement.closest(SKIP))
+      ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(node => {
+    let cur = node;
+    while (cur) {
+      // найраніша в рядку згадка терміна, який у цій секції ще не позначений
+      let best = null;
+      DICT.forEach((d, i) => {
+        if (used.has(i)) return;
+        const m = cur.nodeValue.match(d.re);
+        if (m && (!best || m.index < best.m.index)) best = { i, m };
+      });
+      if (!best) break;
+      used.add(best.i);
+      const hit = cur.splitText(best.m.index);
+      const rest = hit.splitText(best.m[0].length);
+      // span, а не button: кнопка не дає рядку переноситись разом із розділовими знаками
+      const btn = document.createElement("span");
+      btn.setAttribute("role", "button");
+      btn.tabIndex = 0;
+      btn.className = "gls";
+      btn.dataset.gls = best.i;
+      btn.setAttribute("aria-expanded", "false");
+      btn.setAttribute("aria-describedby", "gls-tip");
+      btn.textContent = hit.nodeValue;
+      hit.replaceWith(btn);
+      cur = rest.nodeValue ? rest : null;   // наступні терміни шукаємо в залишку рядка
+    }
+  });
+});
+
+const termEl = tip.querySelector("[data-gls-term]");
+const textEl = tip.querySelector("[data-gls-text]");
+let current = null, pinned = false, hideT = 0, showT = 0;
+
+function place(btn) {
+  const r = btn.getClientRects()[0] || btn.getBoundingClientRect();
+  const w = tip.offsetWidth, h = tip.offsetHeight, gap = 12, pad = 12;
+  const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  let left = r.left + r.width / 2 - w / 2;
+  left = Math.max(pad, Math.min(left, vw - w - pad));
+  const above = r.bottom + gap + h > vh - pad && r.top - gap - h > pad;
+  const top = above ? r.top - gap - h : r.bottom + gap;
+  tip.style.left = left + "px";
+  tip.style.top = top + "px";
+  tip.style.setProperty("--ax", Math.max(16, Math.min(w - 16, r.left + r.width / 2 - left)) + "px");
+  tip.classList.toggle("is-above", above);
+}
+
+function show(btn) {
+  clearTimeout(hideT);
+  if (current && current !== btn) current.setAttribute("aria-expanded", "false");
+  const d = DICT[+btn.dataset.gls];
+  termEl.textContent = d.term;
+  textEl.textContent = d.text;
+  tip.hidden = false;
+  current = btn;
+  btn.setAttribute("aria-expanded", "true");
+  place(btn);
+  requestAnimationFrame(() => tip.classList.add("is-on"));
+}
+
+function hide(now) {
+  clearTimeout(showT);
+  const go = () => {
+    tip.classList.remove("is-on");
+    if (current) current.setAttribute("aria-expanded", "false");
+    current = null; pinned = false;
+    setTimeout(() => { if (!current) tip.hidden = true; }, 200);
+  };
+  clearTimeout(hideT);
+  if (now) go(); else hideT = setTimeout(go, 120);
+}
+
+const canHover = matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".gls");
+  if (btn) {
+    e.preventDefault();
+    if (current === btn && pinned) { hide(true); return; }
+    show(btn); pinned = true;
+    return;
+  }
+  if (current && !e.target.closest(".gls-tip")) hide(true);
+});
+
+if (canHover) {
+  document.addEventListener("pointerover", e => {
+    const btn = e.target.closest(".gls");
+    if (btn && !pinned) { clearTimeout(hideT); clearTimeout(showT); showT = setTimeout(() => show(btn), 120); }
+    else if (e.target.closest(".gls-tip")) clearTimeout(hideT);
+  });
+  document.addEventListener("pointerout", e => {
+    if (pinned) return;
+    if (e.target.closest(".gls") || e.target.closest(".gls-tip")) hide(false);
+  });
+}
+
+document.addEventListener("focusin", e => {
+  const btn = e.target.closest(".gls");
+  if (btn) show(btn);
+  else if (current && !e.target.closest(".gls-tip")) hide(true);
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && current) { const b = current; hide(true); b.focus(); return; }
+  const btn = e.target.closest && e.target.closest(".gls");
+  if (btn && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault();
+    if (current === btn && pinned) hide(true); else { show(btn); pinned = true; }
+  }
+});
+window.addEventListener("scroll", () => { if (current) hide(true); }, { passive: true });
+window.addEventListener("resize", () => { if (current) place(current); });
+  })();
+
 /* ================= 08-footer ================= */
 (function initFooter() {
   var root = document.querySelector("[data-ftr]");
