@@ -1675,30 +1675,6 @@
 .abt__panel.is-armed:not(.is-run) .abt__check-mark { transform: scale(0); }
 
 /* --- Підхід --- */
-/* --- Виступи й партнерства --- */
-.abt__talks {
-  margin-top: var(--sp-9);
-  padding-top: var(--sp-7);
-  border-top: var(--hairline) solid var(--line);
-}
-.abt__talks-label { color: var(--brand-beige); margin-bottom: var(--sp-5); }
-.abt__talks-list { display: grid; gap: var(--sp-3); }
-.abt__talk {
-  display: grid;
-  gap: var(--sp-1);
-  padding: var(--sp-5);
-  border: var(--hairline) solid var(--line);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--r-sm);
-  background: rgb(255 255 255 / 0.03);
-}
-.abt__talk-meta { color: var(--fg-muted); }
-.abt__talk-title { color: var(--fg-strong); font-size: 1.125rem; font-weight: var(--fw-semibold); line-height: 1.3; }
-.abt__talk-text { color: var(--fg-muted); font-size: var(--fs-small); }
-@media (min-width: 768px) {
-  .abt__talks-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
 .abt__approach {
   margin-top: var(--sp-9);
   padding-top: var(--sp-7);
