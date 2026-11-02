@@ -417,6 +417,7 @@
   animation-delay: calc(120ms + var(--i, 0) * 110ms);
 }
 .hero__line-in--accent { color: var(--accent); }
+.hero__title--wait .hero__line-in { animation-play-state: paused; }
 
 /* «Цифри → букви»: поки букву не «розшифровано», замість неї видно цифру.
    Сама буква лишається в розмітці (прозора), тому ширина рядка не стрибає,

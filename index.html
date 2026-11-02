@@ -29,7 +29,7 @@
   <link rel="preload" href="assets/images/guilloche-color.svg" as="image" type="image/svg+xml" fetchpriority="high">
   <link rel="stylesheet" href="css/tokens.css?v=6640c38c">
   <link rel="stylesheet" href="css/base.css?v=5a3c53d5">
-  <link rel="stylesheet" href="css/site.css?v=6101993e">
+  <link rel="stylesheet" href="css/site.css?v=d7ba9d4d">
 
   <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -165,49 +165,6 @@
             <span class="hero__line"><span class="hero__line-in" style="--i:1">це ваш</span></span>
             <span class="hero__line"><span class="hero__line-in hero__line-in--accent" style="--i:2">спокій</span></span>
           </h1>
-          <!-- Окремий вбудований скрипт (не в site.js): запускається одразу після заголовка,
-               ще до першого показу, тож букви не встигають блимнути перед цифрами -->
-          <script data-inline>
-            (function () {
-              var h = document.getElementById("hero-title");
-              if (!h || !window.requestAnimationFrame) return;
-              if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-              var chars = [];
-              var lines = h.querySelectorAll(".hero__line-in");
-              for (var i = 0; i < lines.length; i++) {
-                var text = lines[i].textContent, k = 0;
-                lines[i].textContent = "";
-                for (var j = 0; j < text.length; j++) {
-                  var c = text.charAt(j);
-                  if (/[A-Za-zА-Яа-яЁёІіЇїЄєҐґ']/.test(c)) {
-                    var s = document.createElement("span");
-                    s.className = "hero__ch hero__ch--num";
-                    s.textContent = c;
-                    s.setAttribute("data-d", (Math.random() * 10) | 0);
-                    lines[i].appendChild(s);
-                    // буква «розшифровується» після появи рядка, зліва направо
-                    chars.push({ el: s, at: 500 + i * 200 + k * 70, next: 0 });
-                    k++;
-                  } else {
-                    lines[i].appendChild(document.createTextNode(c));
-                  }
-                }
-              }
-              var t0 = performance.now();
-              function tick(now) {
-                var t = now - t0, left = 0;
-                for (var n = 0; n < chars.length; n++) {
-                  var ch = chars[n];
-                  if (!ch.el) continue;
-                  if (t >= ch.at) { ch.el.classList.remove("hero__ch--num"); ch.el.removeAttribute("data-d"); ch.el = null; continue; }
-                  left++;
-                  if (t >= ch.next) { ch.el.setAttribute("data-d", (Math.random() * 10) | 0); ch.next = t + 70; }
-                }
-                if (left) requestAnimationFrame(tick);
-              }
-              requestAnimationFrame(tick);
-            })();
-          </script>
           <p class="t-lead hero__lead hero__fade" style="--i:1">Ведемо облік, звітність і кадри, щоб ви бачили цифри свого бізнесу і займалися його розвитком.</p>
           <div class="hero__actions hero__fade" style="--i:2">
             <a class="btn btn--primary btn--lg" href="#match">
@@ -375,6 +332,75 @@
     </div>
     </div>
   </section>
+
+  <!-- «Цифри → букви» в заголовку. Окремий вбудований скрипт (не в site.js): запускається одразу після
+       першого екрана, поки рядки заголовка ще сховані за маскою, тож букви не встигають блимнути перед цифрами.
+       Стоїть ПІСЛЯ секції, а не всередині: інакше браузер може показати недочитаний перший екран і потім
+       його досунути (стрибок макета).
+       Чекає на шрифт Onest (до 0,6 с): якби букви ділилися на окремі шматочки до його
+       завантаження, підміна шрифту зсунула б їх і зіпсувала б показник стабільності (CLS).
+       Не встиг шрифт — заголовок просто виїжджає звичайними буквами. -->
+  <script data-inline>
+    (function () {
+      var h = document.getElementById("hero-title");
+      if (!h || !window.requestAnimationFrame) return;
+      if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      var lines = h.querySelectorAll(".hero__line-in");
+      var sample = h.textContent;
+      var font = "800 1em Onest";
+
+      function start() {
+        var chars = [];
+        for (var i = 0; i < lines.length; i++) {
+          var text = lines[i].textContent, k = 0;
+          lines[i].textContent = "";
+          for (var j = 0; j < text.length; j++) {
+            var c = text.charAt(j);
+            if (/[A-Za-zА-Яа-яЁёІіЇїЄєҐґ']/.test(c)) {
+              var s = document.createElement("span");
+              s.className = "hero__ch hero__ch--num";
+              s.textContent = c;
+              s.setAttribute("data-d", (Math.random() * 10) | 0);
+              lines[i].appendChild(s);
+              // буква «розшифровується» після появи рядка, зліва направо
+              chars.push({ el: s, at: 500 + i * 200 + k * 70, next: 0 });
+              k++;
+            } else {
+              lines[i].appendChild(document.createTextNode(c));
+            }
+          }
+        }
+        var t0 = performance.now();
+        function tick(now) {
+          var t = now - t0, left = 0;
+          for (var n = 0; n < chars.length; n++) {
+            var ch = chars[n];
+            if (!ch.el) continue;
+            if (t >= ch.at) { ch.el.classList.remove("hero__ch--num"); ch.el.removeAttribute("data-d"); ch.el = null; continue; }
+            left++;
+            if (t >= ch.next) { ch.el.setAttribute("data-d", (Math.random() * 10) | 0); ch.next = t + 70; }
+          }
+          if (left) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      var fonts = document.fonts;
+      if (!fonts || !fonts.load) { start(); return; }
+      if (fonts.check(font, sample)) { start(); return; }
+      // шрифт ще їде: рядки заголовка чекають за маскою (їхня поява на паузі)
+      h.classList.add("hero__title--wait");
+      var done = false;
+      function go(ok) {
+        if (done) return;
+        done = true;
+        if (ok) start();
+        h.classList.remove("hero__title--wait");
+      }
+      fonts.load(font, sample).then(function () { go(fonts.check(font, sample)); }, function () { go(false); });
+      setTimeout(function () { go(false); }, 600);
+    })();
+  </script>
   
 
   <section class="svc" id="services" data-theme="light" data-edge data-svc aria-labelledby="svc-title">
