@@ -17,25 +17,18 @@ function initHeader() {
   var headerH = function () { return hdr.offsetHeight; };
 
   /* ---------- 1. Тема і стан при скролі ---------- */
-  var lastY = window.scrollY;
   var ticking = false;
   var isOpen = false;
 
   function updateOnScroll() {
     var y = window.scrollY;
     hdr.classList.toggle("is-scrolled", y > 8);
-    // ховаємо при скролі вниз, показуємо при скролі вгору; не ховаємо, якщо фокус у шапці
-    var goingDown = y > lastY;
-    var hide = goingDown && y > headerH() * 3 && !isOpen && !hdr.contains(document.activeElement);
-    if (Math.abs(y - lastY) > 4) hdr.classList.toggle("is-hidden", hide);
-    lastY = y;
     updateTheme();
     ticking = false;
   }
   window.addEventListener("scroll", function () {
     if (!ticking) { ticking = true; requestAnimationFrame(updateOnScroll); }
   }, { passive: true });
-  hdr.addEventListener("focusin", function () { hdr.classList.remove("is-hidden"); });
 
   // Тема шапки = тема секції верхнього рівня, що зараз під нею
   var themed = Array.prototype.slice.call(document.querySelectorAll("main > [data-theme], body > footer[data-theme]"));
@@ -108,7 +101,6 @@ function initHeader() {
     themeBeforeOpen = hdr.getAttribute("data-theme");
     hdr.setAttribute("data-theme", "dark");
     hdr.classList.add("is-open");
-    hdr.classList.remove("is-hidden");
     burger.setAttribute("aria-expanded", "true");
     burger.setAttribute("aria-label", "Закрити меню");
     document.documentElement.style.overflow = "hidden";
