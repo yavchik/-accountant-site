@@ -419,20 +419,36 @@
 .hero__line-in--accent { color: var(--accent); }
 .hero__title--wait .hero__line-in { animation-play-state: paused; }
 
-/* «Цифри → букви»: поки букву не «розшифровано», замість неї видно цифру.
-   Сама буква лишається в розмітці (прозора), тому ширина рядка не стрибає,
-   а пошуковики й скрінрідери завжди бачать справжній текст. */
-.hero__ch { position: relative; }
-.hero__ch--num { -webkit-text-fill-color: transparent; }
-.hero__ch--num::after {
-  content: attr(data-d);
+/* «Цифри → букви»: кожна буква спершу — барабан із цифрами, що крутиться, як лічильник;
+   потім цифри тануть, а буква мʼяко виїжджає знизу. Увесь рух на CSS (transform/opacity),
+   тому він плавний, навіть коли сторінка ще довантажується. Справжня буква весь час у розмітці. */
+.hero__title--roll .hero__line-in { white-space: nowrap; }   /* щоб слово не розірвалося між буквами */
+.hero__title--roll .hero__ch {
+  position: relative;
+  display: inline-block;
+  height: 1.02em;
+  clip-path: inset(0 -0.1em);   /* барабан видно лише у віконці висотою з букву */
+}
+.hero__title--roll .hero__ch-l {
+  display: inline-block;
+  animation: hero-ch-in 560ms var(--ease-out) var(--d) both;
+}
+.hero__title--roll .hero__ch::after {
+  content: attr(data-r);
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  -webkit-text-fill-color: var(--brand-beige);
+  left: 0;
+  right: 0;
+  text-align: center;
+  white-space: pre;
+  line-height: 1.02em;
+  color: var(--brand-beige);
   font-variant-numeric: tabular-nums;
+  animation: hero-reel 1.1s linear var(--p) infinite, hero-reel-out 280ms ease-in var(--d) forwards;
 }
+@keyframes hero-ch-in { from { transform: translateY(110%); } to { transform: none; } }
+@keyframes hero-reel { to { transform: translateY(-10.2em); } }   /* 10 цифр × висота рядка 1.02em */
+@keyframes hero-reel-out { to { opacity: 0; } }
 @keyframes hero-line-in {
   from { transform: translateY(105%); }
   to { transform: translateY(0); }

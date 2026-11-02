@@ -29,7 +29,7 @@
   <link rel="preload" href="assets/images/guilloche-color.svg" as="image" type="image/svg+xml" fetchpriority="high">
   <link rel="stylesheet" href="css/tokens.css?v=6640c38c">
   <link rel="stylesheet" href="css/base.css?v=5a3c53d5">
-  <link rel="stylesheet" href="css/site.css?v=d7ba9d4d">
+  <link rel="stylesheet" href="css/site.css?v=c6a3a160">
 
   <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -349,40 +349,48 @@
       var sample = h.textContent;
       var font = "800 1em Onest";
 
+      function reel() {
+        // 10 цифр у випадковому порядку + перша ще раз у кінці, щоб барабан крутився без шва
+        var d = "0123456789".split("");
+        for (var i = d.length - 1; i > 0; i--) { var r = (Math.random() * (i + 1)) | 0, x = d[i]; d[i] = d[r]; d[r] = x; }
+        d.push(d[0]);
+        return d.join("\n");
+      }
+
       function start() {
-        var chars = [];
+        var texts = [], last = 0;
         for (var i = 0; i < lines.length; i++) {
           var text = lines[i].textContent, k = 0;
+          texts.push(text);
           lines[i].textContent = "";
           for (var j = 0; j < text.length; j++) {
             var c = text.charAt(j);
             if (/[A-Za-zА-Яа-яЁёІіЇїЄєҐґ']/.test(c)) {
-              var s = document.createElement("span");
-              s.className = "hero__ch hero__ch--num";
-              s.textContent = c;
-              s.setAttribute("data-d", (Math.random() * 10) | 0);
-              lines[i].appendChild(s);
               // буква «розшифровується» після появи рядка, зліва направо
-              chars.push({ el: s, at: 500 + i * 200 + k * 70, next: 0 });
+              var at = 520 + i * 200 + k * 70;
+              var s = document.createElement("span");
+              s.className = "hero__ch";
+              s.setAttribute("data-r", reel());
+              s.style.setProperty("--d", at + "ms");
+              s.style.setProperty("--p", (-Math.random() * 1.1).toFixed(2) + "s");
+              var l = document.createElement("span");
+              l.className = "hero__ch-l";
+              l.textContent = c;
+              s.appendChild(l);
+              lines[i].appendChild(s);
+              last = Math.max(last, at);
               k++;
             } else {
               lines[i].appendChild(document.createTextNode(c));
             }
           }
         }
-        var t0 = performance.now();
-        function tick(now) {
-          var t = now - t0, left = 0;
-          for (var n = 0; n < chars.length; n++) {
-            var ch = chars[n];
-            if (!ch.el) continue;
-            if (t >= ch.at) { ch.el.classList.remove("hero__ch--num"); ch.el.removeAttribute("data-d"); ch.el = null; continue; }
-            left++;
-            if (t >= ch.next) { ch.el.setAttribute("data-d", (Math.random() * 10) | 0); ch.next = t + 70; }
-          }
-          if (left) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
+        h.classList.add("hero__title--roll");
+        // коли всі букви стали на місце — повертаємо звичайний текст і зупиняємо барабани
+        setTimeout(function () {
+          for (var i = 0; i < lines.length; i++) lines[i].textContent = texts[i];
+          h.classList.remove("hero__title--roll");
+        }, last + 700);
       }
 
       var fonts = document.fonts;
