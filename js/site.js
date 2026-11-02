@@ -305,6 +305,38 @@ try {
         floats.forEach(function (f) { f.style.transform = ""; });
       };
     });
+
+    // Перехід з іншої сторінки на розділ (team.html → ./#faq). Браузер плавно їде до розділу,
+    // а ScrollTrigger під час завантаження перераховує сторінку й повертає прокрутку на початок.
+    // Тому після завантаження й перерахунку ставимо сторінку на розділ миттєво, якщо людина ще не гортала сама.
+    var id = location.hash.slice(1);
+    var target = null;
+    try { target = id && document.getElementById(decodeURIComponent(id)); } catch (e) { target = null; }
+    if (target) {
+      var touched = false;
+      var markTouched = function () { touched = true; };
+      ["wheel", "touchstart", "keydown"].forEach(function (ev) {
+        window.addEventListener(ev, markTouched, { once: true, passive: true });
+      });
+      var jump = function () {
+        if (touched) return;
+        var html = document.documentElement;
+        var before = html.style.scrollBehavior;
+        html.style.scrollBehavior = "auto";
+        target.scrollIntoView({ block: "start" });
+        html.style.scrollBehavior = before;
+      };
+      var settle = function () {
+        requestAnimationFrame(jump);
+        window.ScrollTrigger.addEventListener("refresh", function onRefresh() {
+          window.ScrollTrigger.removeEventListener("refresh", onRefresh);
+          requestAnimationFrame(jump);
+        });
+        setTimeout(jump, 400);   // запасний крок: шрифти й картинки могли змінити висоту
+      };
+      if (document.readyState === "complete") settle();
+      else window.addEventListener("load", settle, { once: true });
+    }
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initHero);
