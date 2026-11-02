@@ -178,6 +178,7 @@ try {
     var wordChaos = root.querySelector(".hero__state-word--chaos");
     var wordOrder = root.querySelector(".hero__state-word--order");
     var hint = root.querySelector(".hero__hint");
+    var rosette = root.querySelector(".hero__rosette");
 
     // Стан «хаос» кожного уламка: зсув у частках сторони дошки + 3D-поворот
     function chaos(spread) {
@@ -234,6 +235,8 @@ try {
         .to(corners, { scale: 1, duration: 0.3, ease: "back.out(2)" }, 1.1)
         .to(checks, { scale: 1, duration: 0.35, stagger: 0.035, ease: "back.out(2.2)" }, 0.95);
       if (hint) tl.to(hint, { opacity: 0, duration: 0.15 }, 0);
+      // Розетка фону трохи «стягується», коли документи стають на місця
+      if (rosette) tl.fromTo(rosette, { scale: 1 }, { scale: 0.9, duration: 1.1, ease: "power2.inOut" }, 0.05);
 
       var trigger;
       if (desktop) {
@@ -279,12 +282,16 @@ try {
       if (desktop) {
         var rotY = gsap.quickTo(scene, "rotationY", { duration: 0.9, ease: "power3.out" });
         var rotX = gsap.quickTo(scene, "rotationX", { duration: 0.9, ease: "power3.out" });
+        // Фон зсувається проти курсора: сцена ніби стоїть ближче, ніж розетка
+        var bgX = rosette && gsap.quickTo(rosette, "x", { duration: 1.6, ease: "power3.out" });
+        var bgY = rosette && gsap.quickTo(rosette, "y", { duration: 1.6, ease: "power3.out" });
         onMove = function (e) {
           var px = e.clientX / window.innerWidth - 0.5;
           var py = e.clientY / window.innerHeight - 0.5;
           var k = 1 - tl.progress() * 0.5;
           rotY(px * 16 * k);
           rotX(-py * 12 * k);
+          if (bgX) { bgX(-px * 28); bgY(-py * 20); }
         };
         window.addEventListener("pointermove", onMove, { passive: true });
       }
@@ -295,6 +302,7 @@ try {
         if (onMove) window.removeEventListener("pointermove", onMove);
         if (trigger) trigger.kill();
         floats.forEach(function (f) { f.style.transform = ""; });
+        if (rosette) gsap.set(rosette, { clearProps: "transform" });
       };
     });
 

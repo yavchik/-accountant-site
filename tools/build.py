@@ -67,9 +67,8 @@ def ver(rel):
 
 def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
     url = SITE_URL + path
-    # на сторінці команди перший екран має гільош — його вантажимо заздалегідь; на головній фон без картинок
-    hero_preload = "" if gsap else """
-  <link rel="preload" href="assets/images/guilloche.svg" as="image" type="image/svg+xml" fetchpriority="high">"""
+    # фон першого екрана: на головній кольоровий гільош, на сторінці команди — білий
+    hero_img = "assets/images/guilloche-color.svg" if gsap else "assets/images/guilloche.svg"
     gsap_tags = """
   <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
@@ -101,7 +100,8 @@ def page(title, description, path, og_alt, css_name, js_name, gsap, ld, body):
   <link rel="icon" href="assets/images/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 
-  <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>{hero_preload}
+  <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{hero_img}" as="image" type="image/svg+xml" fetchpriority="high">
   <link rel="stylesheet" href="{ver('css/tokens.css')}">
   <link rel="stylesheet" href="{ver('css/base.css')}">
   <link rel="stylesheet" href="{ver('css/' + css_name)}">
