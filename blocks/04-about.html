@@ -396,6 +396,30 @@
     .abt__panel.is-armed:not(.is-run) .abt__check-mark { transform: scale(0); }
 
     /* --- Підхід --- */
+    /* --- Виступи й партнерства --- */
+    .abt__talks {
+      margin-top: var(--sp-9);
+      padding-top: var(--sp-7);
+      border-top: var(--hairline) solid var(--line);
+    }
+    .abt__talks-label { color: var(--brand-beige); margin-bottom: var(--sp-5); }
+    .abt__talks-list { display: grid; gap: var(--sp-3); }
+    .abt__talk {
+      display: grid;
+      gap: var(--sp-1);
+      padding: var(--sp-5);
+      border: var(--hairline) solid var(--line);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--r-sm);
+      background: rgb(255 255 255 / 0.03);
+    }
+    .abt__talk-meta { color: var(--fg-muted); }
+    .abt__talk-title { color: var(--fg-strong); font-size: 1.125rem; font-weight: var(--fw-semibold); line-height: 1.3; }
+    .abt__talk-text { color: var(--fg-muted); font-size: var(--fs-small); }
+    @media (min-width: 768px) {
+      .abt__talks-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
     .abt__approach {
       margin-top: var(--sp-9);
       padding-top: var(--sp-7);
@@ -507,7 +531,7 @@
                width="840" height="1050" alt="Марія Панченко" loading="lazy" decoding="async">
           <div>
             <p class="abt__name">Марія Панченко</p>
-            <p class="t-label abt__role">Засновниця Happy Finance</p>
+            <p class="t-label abt__role">Засновниця Happy Finance · антикризова менеджерка</p>
           </div>
           <blockquote class="abt__quote">
             <p>Без цифр управління бізнесом неможливе. Тоді це не управління, а ілюзія.</p>
@@ -521,7 +545,7 @@
 
         <div class="abt__story">
           <h2 class="abt__title abt__reveal" id="abt-title">Від первинних документів до фінансового директора</h2>
-          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу. Тому консультує з погляду не лише законодавства, а й живого бізнесу.</p>
+          <p class="abt__intro abt__reveal" style="--i:1">Марія пройшла облік з усіх боків: від виписування документів до побудови фінансового відділу, а згодом керувала командою понад 200 людей. Понад 10 років в управлінні бізнесами. Сьогодні вона структурує хаос у бізнесі клієнтів і консультує з погляду не лише законодавства, а й живого бізнесу.</p>
 
           <div class="abt__tl" data-abt-timeline>
             <span class="abt__rail" aria-hidden="true"></span>
@@ -580,6 +604,27 @@
               <p class="abt__step-text">Компанія виросла сама, з рекомендацій клієнтів. Сьогодні ми ведемо ФОП і ТОВ у виробництві, агросекторі, освіті, імпорті та сфері послуг.</p>
             </li>
           </ol>
+          </div>
+
+          <div class="abt__talks">
+            <p class="t-label abt__talks-label abt__reveal">Виступає й консультує</p>
+            <ul class="abt__talks-list" role="list">
+              <li class="abt__talk abt__reveal" style="--i:0">
+                <p class="t-label abt__talk-meta">8 листопада 2026 · Львів</p>
+                <p class="abt__talk-title">Спікерка UHMC 2026</p>
+                <p class="abt__talk-text">«Реалії бізнесу в Україні: очікування власника vs реальне життя під час кризи»</p>
+              </li>
+              <li class="abt__talk abt__reveal" style="--i:1">
+                <p class="t-label abt__talk-meta">Кропивницький</p>
+                <p class="abt__talk-title">Експертка Центру підтримки підприємництва</p>
+                <p class="abt__talk-text">Зустрічі з кризового менеджменту й емоційного інтелекту керівника для підприємців міста</p>
+              </li>
+              <li class="abt__talk abt__reveal" style="--i:2">
+                <p class="t-label abt__talk-meta">Український жіночий фонд</p>
+                <p class="abt__talk-title">Проєкт «Стійкі»</p>
+                <p class="abt__talk-text">Економічне посилення жінок через підприємництво, за підтримки Уряду Великої Британії</p>
+              </li>
+            </ul>
           </div>
 
           <div class="abt__dash">

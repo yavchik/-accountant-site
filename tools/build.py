@@ -9,7 +9,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BLOCKS = ["01-header", "02-hero", "03-services", "04-about", "05-process", "06-faq", "07-contact", "10-glossary", "08-footer"]
+BLOCKS = ["01-header", "02-hero", "03-services", "04-about", "11-foundation", "05-process", "06-faq", "07-contact", "10-glossary", "08-footer"]
 TEAM = ["09-team"]   # сторінка team.html: шапка + ці блоки + підвал
 SITE_URL = "https://happy-finance-beta.vercel.app/"   # основна адреса; змініть, коли буде свій домен
 

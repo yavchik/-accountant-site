@@ -543,6 +543,65 @@ try {
 })();
 } catch (e) { console.error("04-about", e); }
 
+/* ================= 11-foundation ================= */
+try {
+(function initFoundation() {
+  var root = document.querySelector("[data-fnd]");
+  if (!root) return;
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var layers = Array.prototype.slice.call(root.querySelectorAll(".fnd__layer"));
+  var cards = Array.prototype.slice.call(root.querySelectorAll(".fnd__card"));
+  var reveals = root.querySelectorAll(".fnd__reveal");
+
+  /* ---------- Поява й будівництво ---------- */
+  function build() { root.classList.add("is-built"); setTimeout(function () { root.classList.add("is-fixed"); }, reduce ? 0 : 50); }
+  if (reduce || !("IntersectionObserver" in window)) {
+    Array.prototype.forEach.call(reveals, function (el) { el.classList.add("is-shown"); });
+    build();
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("is-shown"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -10% 0px" });
+    Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
+    var hio = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { build(); hio.disconnect(); }
+    }, { rootMargin: "0px 0px -30% 0px" });
+    hio.observe(root.querySelector(".fnd__house"));
+  }
+
+  /* ---------- Шар будинку ↔ картка ---------- */
+  function activate(name) {
+    layers.forEach(function (l) { l.classList.toggle("is-active", l.getAttribute("data-layer") === name); });
+    cards.forEach(function (c) {
+      var on = c.getAttribute("data-layer") === name;
+      c.classList.toggle("is-active", on);
+      c.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+  cards.forEach(function (c) {
+    var name = c.getAttribute("data-layer");
+    c.addEventListener("click", function () { activate(name); });
+    c.addEventListener("mouseenter", function () { activate(name); });
+    c.addEventListener("focus", function () { activate(name); });
+  });
+  layers.forEach(function (l) {
+    var name = l.getAttribute("data-layer");
+    l.addEventListener("click", function () { activate(name); });
+    l.addEventListener("mouseenter", function () { activate(name); });
+  });
+  activate("base");   // за замовчуванням підсвічено фундамент: з нього починаємо
+
+  /* ---------- Запис на сесію: готове повідомлення в Telegram ---------- */
+  var btn = root.querySelector("[data-fnd-session]");
+  var C = window.HFContacts;
+  if (btn && C && C.data.telegram) {
+    btn.href = C.message("telegram", C.data.telegram, "Добрий день, Маріє! Хочу записатися на бізнес-сесію. Коротко про мій бізнес: ");
+  }
+})();
+} catch (e) { console.error("11-foundation", e); }
+
 /* ================= 05-process ================= */
 try {
 (function initProcess() {
