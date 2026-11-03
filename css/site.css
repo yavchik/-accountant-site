@@ -291,8 +291,9 @@
   pointer-events: none;
 }
 
-/* --- Фон «Живий знак»: знак Happy Finance (квадрат, дві «пігулки» й кільце-ланка між ними)
-   промальовується лініями, кільце спалахує помаранчевим, по контурах біжить світло --- */
+/* --- Фон «Ланка»: знак Happy Finance (рамка, дві опори й кільце між ними) як велика фонова композиція.
+   Одноразово промальовується, далі безшовні повільні цикли: кільце-ланка повертається,
+   контурами тихо біжить світло, відлуння рамки «дихають». На десктопі шари ледь зсуваються за курсором. --- */
 .hero__rosette {
   --lw: min(820px, 58vw);
   position: absolute;
@@ -304,21 +305,37 @@
 @media (max-width: 760px) {
   .hero__rosette { --lw: 80vw; top: calc(21% - var(--lw) / 2); left: calc(80% - var(--lw) / 2); }
 }
-.hero__mark {
+.hero__mark,
+.hero__echo {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   overflow: visible;
   transform: rotate(-6deg);
-  animation: hero-logo-drift 16s var(--ease-in-out) 3s infinite alternate;
-}
-@keyframes hero-logo-drift {
-  from { transform: rotate(-6deg) translateY(0); }
-  to   { transform: rotate(-3deg) translateY(-12px); }
 }
 .hero__mark-lines > *,
 .hero__mark-run > *,
-.hero__mark-pulse { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.hero__echo rect { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Відлуння рамки */
+.hero__echo rect {
+  stroke: var(--brand-beige);
+  stroke-width: 0.25;
+  opacity: 0;
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: hero-echo-in 2s var(--ease-out) forwards, hero-echo-breathe 12s var(--ease-in-out) infinite alternate;
+  animation-delay: calc(1.6s + var(--e) * 0.25s), calc(3.6s + var(--e) * -4s);
+}
+.hero__echo rect:nth-child(1) { --eo: 0.2; }
+.hero__echo rect:nth-child(2) { --eo: 0.12; }
+.hero__echo rect:nth-child(3) { --eo: 0.06; }
+@keyframes hero-echo-in { to { opacity: var(--eo); } }
+@keyframes hero-echo-breathe { from { transform: scale(1); } to { transform: scale(1.025); } }
+
+/* Промальовка знака при завантаженні */
 .hero__mark-lines > * {
   stroke: var(--brand-beige);
   stroke-width: 0.5;
@@ -328,50 +345,56 @@
   animation: hero-logo-draw 1.6s var(--ease-out) forwards;
   animation-delay: calc(0.3s + var(--k) * 0.35s);
 }
-.hero__mark-lines > ellipse {
+.hero__mark-lines > .hero__ring-el {
   stroke: var(--brand-orange);
-  stroke-opacity: 0.75;
-  stroke-width: 0.7;
+  stroke-opacity: 0.7;
+  stroke-width: 0.6;
 }
 @keyframes hero-logo-draw { to { stroke-dashoffset: 0; } }
-/* Ледь помітна заливка «пігулок» після промальовки */
+
+/* Кільце-ланка повільно повертається навколо свого центру: безшовне коло за 60 с */
+.hero__ring-el {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(32deg);
+}
+.hero__mark-lines > .hero__ring-el {
+  animation: hero-logo-draw 1.6s var(--ease-out) 1.35s forwards, hero-ring-turn 60s linear 1.35s infinite;
+}
+@keyframes hero-ring-turn { from { transform: rotate(32deg); } to { transform: rotate(392deg); } }
+
+/* Ледь помітна заливка опор після промальовки */
 .hero__mark-fill {
   fill: #fff;
   opacity: 0;
   animation: hero-logo-fill 1.6s ease-out 2s forwards;
 }
-@keyframes hero-logo-fill { to { opacity: 0.04; } }
-/* Світло, що біжить контурами, як струм по ланцюгу */
+@keyframes hero-logo-fill { to { opacity: 0.035; } }
+
+/* Світло, що тихо біжить контурами: безперервний цикл без стрибка */
 .hero__mark-run > * {
-  stroke: var(--brand-orange);
-  stroke-width: 0.8;
-  stroke-dasharray: 0.07 0.93;
+  stroke: var(--brand-beige);
+  stroke-width: 0.7;
+  stroke-dasharray: 0.06 0.94;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation: hero-logo-run 7s linear infinite, hero-logo-in 1s ease-out forwards;
-  animation-delay: calc(2.6s + var(--k) * -1.3s), 2.6s;
+  animation: hero-logo-run 9s linear infinite, hero-logo-in 1.2s ease-out forwards;
+  animation-delay: calc(2.6s + var(--k) * -2.2s), 2.6s;
 }
-.hero__mark-run > rect:first-child { stroke: var(--brand-beige); animation-duration: 14s, 1s; }
-@keyframes hero-logo-run { to { stroke-dashoffset: 0; } }
-@keyframes hero-logo-in { to { opacity: 0.85; } }
-/* Кільце-ланка зрідка «дихає» хвилею */
-.hero__mark-pulse {
+.hero__mark-run > rect:first-child { animation-duration: 18s, 1.2s; }
+.hero__mark-run > .hero__ring-el {
   stroke: var(--brand-orange);
-  stroke-width: 0.6;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: hero-logo-pulse 4s ease-out 2.4s infinite;
+  animation: hero-logo-run 6s linear -1s infinite, hero-logo-in 1.2s ease-out 2.6s forwards, hero-ring-turn 60s linear 1.35s infinite;
 }
-@keyframes hero-logo-pulse {
-  0%   { opacity: 0.7; transform: rotate(32deg) scale(1); }
-  70%, 100% { opacity: 0; transform: rotate(32deg) scale(2.4); }
-}
+@keyframes hero-logo-run { to { stroke-dashoffset: 0; } }
+@keyframes hero-logo-in { to { opacity: 0.8; } }
+
 @media (max-width: 760px) {
   .hero__mark-lines > * { stroke-width: 0.7; stroke-opacity: 0.32; }
-  .hero__mark-lines > ellipse { stroke-width: 0.9; stroke-opacity: 0.4; }
-  .hero__mark-run > * { stroke-width: 1; }
-  @keyframes hero-logo-in { to { opacity: 0.55; } }
+  .hero__mark-lines > .hero__ring-el { stroke-width: 0.8; stroke-opacity: 0.45; }
+  .hero__mark-run > * { stroke-width: 0.9; }
+  .hero__echo rect { stroke-width: 0.35; }
+  @keyframes hero-logo-in { to { opacity: 0.5; } }
 }
 
 /* Відблиск, що зрідка пробігає фоном, як по голограмі */
@@ -398,10 +421,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero__sheen, .hero__mark { animation: none; }
-  .hero__sheen, .hero__mark-run, .hero__mark-pulse { display: none; }
-  .hero__mark-lines > * { animation: none; stroke-dashoffset: 0; }
-  .hero__mark-fill { animation: none; opacity: 0.04; }
+  .hero__sheen { animation: none; display: none; }
+  .hero__mark-run { display: none; }
+  .hero__mark-lines > *, .hero__mark-lines > .hero__ring-el { animation: none; stroke-dashoffset: 0; }
+  .hero__mark-fill { animation: none; opacity: 0.035; }
+  .hero__echo rect { animation: none; opacity: var(--eo); }
 }
 
 .hero__inner {

@@ -285,13 +285,17 @@ try {
         // Фон зсувається проти курсора: сцена ніби стоїть ближче, ніж розетка
         var bgX = rosette && gsap.quickTo(rosette, "x", { duration: 1.6, ease: "power3.out" });
         var bgY = rosette && gsap.quickTo(rosette, "y", { duration: 1.6, ease: "power3.out" });
+        var echo = root.querySelector(".hero__echo");
+        var echoX = echo && gsap.quickTo(echo, "x", { duration: 2.2, ease: "power3.out" });
+        var echoY = echo && gsap.quickTo(echo, "y", { duration: 2.2, ease: "power3.out" });
         onMove = function (e) {
           var px = e.clientX / window.innerWidth - 0.5;
           var py = e.clientY / window.innerHeight - 0.5;
           var k = 1 - tl.progress() * 0.5;
           rotY(px * 16 * k);
           rotX(-py * 12 * k);
-          if (bgX) { bgX(-px * 28); bgY(-py * 20); }
+          if (bgX) { bgX(-px * 22); bgY(-py * 16); }
+          if (echoX) { echoX(-px * 26); echoY(-py * 18); }
         };
         window.addEventListener("pointermove", onMove, { passive: true });
       }
@@ -303,6 +307,8 @@ try {
         if (trigger) trigger.kill();
         floats.forEach(function (f) { f.style.transform = ""; });
         if (rosette) gsap.set(rosette, { clearProps: "transform" });
+        var echoEl = root.querySelector(".hero__echo");
+        if (echoEl) gsap.set(echoEl, { clearProps: "transform" });
       };
     });
 

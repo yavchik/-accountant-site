@@ -28,14 +28,14 @@
   <link rel="preload" href="assets/fonts/onest-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/tokens.css?v=6640c38c">
   <link rel="stylesheet" href="css/base.css?v=5a3c53d5">
-  <link rel="stylesheet" href="css/site.css?v=53885907">
+  <link rel="stylesheet" href="css/site.css?v=cb8bb899">
 
   <!-- GSAP + ScrollTrigger: лише для сцени «Хаос → порядок» на головному екрані -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="js/config.js?v=a1ab9a52" defer></script>
   <script src="js/contacts.js?v=53737d2c" defer></script>
-  <script src="js/site.js?v=5c9e9be5" defer></script>
+  <script src="js/site.js?v=ec17460b" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -143,6 +143,13 @@
         <div class="hero__glow"></div>
         <div class="hero__sheen"></div>
         <div class="hero__rosette hero__logo">
+          <!-- Відлуння рамки знака: дає глибину й рухається за курсором трохи сильніше за сам знак -->
+          <svg class="hero__echo" viewBox="-12 -12 124 124" focusable="false">
+            <rect x="-7" y="-7" width="114" height="114" style="--e:0"/>
+            <rect x="-15" y="-15" width="130" height="130" style="--e:1"/>
+            <rect x="-25" y="-25" width="150" height="150" style="--e:2"/>
+          </svg>
+          <!-- Знак Happy Finance: рамка, дві «опори» і кільце-ланка між ними -->
           <svg class="hero__mark" viewBox="-12 -12 124 124" focusable="false">
             <g class="hero__mark-fill">
               <rect x="21.5" y="20" width="14" height="62.5" rx="7"/>
@@ -152,15 +159,14 @@
               <rect pathLength="1" style="--k:0" x="0" y="0" width="100" height="100"/>
               <rect pathLength="1" style="--k:1" x="21.5" y="20" width="14" height="62.5" rx="7"/>
               <rect pathLength="1" style="--k:2" x="62.5" y="20" width="14" height="62.5" rx="7"/>
-              <ellipse pathLength="1" style="--k:3" cx="48.5" cy="52" rx="13" ry="10" transform="rotate(32 48.5 52)"/>
+              <ellipse class="hero__ring-el" pathLength="1" style="--k:3" cx="48.5" cy="52" rx="13" ry="10" transform="rotate(32 48.5 52)"/>
             </g>
             <g class="hero__mark-run">
               <rect pathLength="1" style="--k:0" x="0" y="0" width="100" height="100"/>
               <rect pathLength="1" style="--k:1" x="21.5" y="20" width="14" height="62.5" rx="7"/>
               <rect pathLength="1" style="--k:2" x="62.5" y="20" width="14" height="62.5" rx="7"/>
-              <ellipse pathLength="1" style="--k:3" cx="48.5" cy="52" rx="13" ry="10" transform="rotate(32 48.5 52)"/>
+              <ellipse class="hero__ring-el" pathLength="1" style="--k:3" cx="48.5" cy="52" rx="13" ry="10" transform="rotate(32 48.5 52)"/>
             </g>
-            <ellipse class="hero__mark-pulse" cx="48.5" cy="52" rx="13" ry="10" transform="rotate(32 48.5 52)"/>
           </svg>
         </div>
       </div>
