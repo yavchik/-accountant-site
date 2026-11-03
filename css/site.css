@@ -291,85 +291,87 @@
   pointer-events: none;
 }
 
-/* --- Фон «Живий логотип»: великий знак HAPPY FINANCE промальовується лініями,
-   наливається кольором, крапка «падає» на місце і пульсує, по буквах ходить відблиск --- */
+/* --- Фон «Живий знак»: знак Happy Finance (квадрат, дві «пігулки» й кільце-ланка між ними)
+   промальовується лініями, кільце спалахує помаранчевим, по контурах біжить світло --- */
 .hero__rosette {
-  --lw: min(940px, 66vw);
+  --lw: min(820px, 58vw);
   position: absolute;
-  top: 52%;
-  right: 10vw;
+  top: calc(52% - var(--lw) / 2);
+  left: calc(73% - var(--lw) / 2);
   width: var(--lw);
-  margin-top: calc(var(--lw) * -0.179);
+  height: var(--lw);
 }
 @media (max-width: 760px) {
-  .hero__rosette { --lw: 116vw; top: 9%; right: auto; left: -18vw; margin-top: 0; }
+  .hero__rosette { --lw: 80vw; top: calc(21% - var(--lw) / 2); left: calc(80% - var(--lw) / 2); }
 }
 .hero__mark {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   overflow: visible;
-  transform: rotate(-7deg);
-  animation: hero-logo-drift 18s var(--ease-in-out) 3s infinite alternate;
+  transform: rotate(-6deg);
+  animation: hero-logo-drift 16s var(--ease-in-out) 3s infinite alternate;
 }
 @keyframes hero-logo-drift {
-  from { transform: rotate(-7deg) translateY(0); }
-  to   { transform: rotate(-5.5deg) translateY(-14px); }
+  from { transform: rotate(-6deg) translateY(0); }
+  to   { transform: rotate(-3deg) translateY(-12px); }
 }
-.hero__mark-lines path {
-  fill: none;
+.hero__mark-lines > *,
+.hero__mark-run > *,
+.hero__mark-pulse { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.hero__mark-lines > * {
   stroke: var(--brand-beige);
-  stroke-width: 7;
-  stroke-linejoin: round;
-  stroke-opacity: 0.42;
+  stroke-width: 0.5;
+  stroke-opacity: 0.5;
   stroke-dasharray: 1 1;
   stroke-dashoffset: 1;
-  animation: hero-logo-draw 1.8s var(--ease-out, ease-out) forwards;
-  animation-delay: calc(0.35s + var(--k) * 0.09s);
+  animation: hero-logo-draw 1.6s var(--ease-out) forwards;
+  animation-delay: calc(0.3s + var(--k) * 0.35s);
+}
+.hero__mark-lines > ellipse {
+  stroke: var(--brand-orange);
+  stroke-opacity: 0.75;
+  stroke-width: 0.7;
 }
 @keyframes hero-logo-draw { to { stroke-dashoffset: 0; } }
+/* Ледь помітна заливка «пігулок» після промальовки */
 .hero__mark-fill {
   fill: #fff;
   opacity: 0;
-  animation: hero-logo-fill 1.6s ease-out 1.9s forwards;
+  animation: hero-logo-fill 1.6s ease-out 2s forwards;
 }
-@keyframes hero-logo-fill { to { opacity: 0.045; } }
-.hero__mark-sheen { opacity: 0.6; }
-.hero__mark-dot {
-  fill: var(--brand-orange);
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: hero-logo-dot 0.9s cubic-bezier(.3, 1.5, .5, 1) 2.3s forwards;
-}
-@keyframes hero-logo-dot {
-  0%   { opacity: 0; transform: translateY(-900px) scale(.7, 1.3); }
-  60%  { opacity: 0.85; transform: translateY(0) scale(1.25, .75); }
-  100% { opacity: 0.8; transform: translateY(0) scale(1); }
-}
-.hero__mark-pulse {
-  fill: none;
+@keyframes hero-logo-fill { to { opacity: 0.04; } }
+/* Світло, що біжить контурами, як струм по ланцюгу */
+.hero__mark-run > * {
   stroke: var(--brand-orange);
-  stroke-width: 10;
+  stroke-width: 0.8;
+  stroke-dasharray: 0.07 0.93;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: hero-logo-run 7s linear infinite, hero-logo-in 1s ease-out forwards;
+  animation-delay: calc(2.6s + var(--k) * -1.3s), 2.6s;
+}
+.hero__mark-run > rect:first-child { stroke: var(--brand-beige); animation-duration: 14s, 1s; }
+@keyframes hero-logo-run { to { stroke-dashoffset: 0; } }
+@keyframes hero-logo-in { to { opacity: 0.85; } }
+/* Кільце-ланка зрідка «дихає» хвилею */
+.hero__mark-pulse {
+  stroke: var(--brand-orange);
+  stroke-width: 0.6;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  animation: hero-logo-pulse 3.6s ease-out 3.2s infinite;
+  animation: hero-logo-pulse 4s ease-out 2.4s infinite;
 }
 @keyframes hero-logo-pulse {
-  0%   { opacity: 0.7; transform: scale(1); }
-  70%, 100% { opacity: 0; transform: scale(3.2); }
+  0%   { opacity: 0.7; transform: rotate(32deg) scale(1); }
+  70%, 100% { opacity: 0; transform: rotate(32deg) scale(2.4); }
 }
 @media (max-width: 760px) {
-  .hero__mark-lines path { stroke-opacity: 0.34; stroke-width: 12; }
-  @keyframes hero-logo-fill { to { opacity: 0.035; } }
-  .hero__mark-sheen { opacity: 0.35; }
-  .hero__mark-dot { animation-name: hero-logo-dot-m; }
-  @keyframes hero-logo-dot-m {
-    0%   { opacity: 0; transform: translateY(-900px) scale(.7, 1.3); }
-    60%  { opacity: 0.6; transform: translateY(0) scale(1.25, .75); }
-    100% { opacity: 0.55; transform: translateY(0) scale(1); }
-  }
+  .hero__mark-lines > * { stroke-width: 0.7; stroke-opacity: 0.32; }
+  .hero__mark-lines > ellipse { stroke-width: 0.9; stroke-opacity: 0.4; }
+  .hero__mark-run > * { stroke-width: 1; }
+  @keyframes hero-logo-in { to { opacity: 0.55; } }
 }
 
 /* Відблиск, що зрідка пробігає фоном, як по голограмі */
@@ -397,10 +399,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .hero__sheen, .hero__mark { animation: none; }
-  .hero__sheen, .hero__mark-sheen, .hero__mark-pulse { display: none; }
-  .hero__mark-lines path { animation: none; stroke-dashoffset: 0; }
-  .hero__mark-fill { animation: none; opacity: 0.045; }
-  .hero__mark-dot { animation: none; opacity: 0.8; }
+  .hero__sheen, .hero__mark-run, .hero__mark-pulse { display: none; }
+  .hero__mark-lines > * { animation: none; stroke-dashoffset: 0; }
+  .hero__mark-fill { animation: none; opacity: 0.04; }
 }
 
 .hero__inner {
