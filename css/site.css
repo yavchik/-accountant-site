@@ -2102,7 +2102,24 @@
   color: var(--brand-white);
 }
 .fnd__motto footer { margin-top: var(--sp-2); color: var(--slate-300); }
-.fnd__session-meta { color: var(--slate-300); font-size: var(--fs-small); }
+.fnd__cta {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  border: var(--hairline) solid rgb(255 255 255 / 0.18);
+  border-radius: var(--r-md, 12px);
+  background: rgb(255 255 255 / 0.06);
+}
+.fnd__session-meta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  color: var(--brand-white);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+}
+.fnd__session-meta strong { color: var(--brand-orange); font-weight: var(--fw-semibold); }
+.fnd__session-meta-icon { flex: none; width: 1.5rem; height: 1.5rem; margin-top: 0.05em; color: var(--brand-orange); }
 .fnd__session .btn { justify-self: start; }
 
 .fnd__reveal {
